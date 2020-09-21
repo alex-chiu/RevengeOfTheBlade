@@ -1,2 +1,5 @@
-# CS329ETeam5
-C S 329E Game Development Team 5
+# C S 329E Team 5
+GitHub Repository for Team 5
+
+Game: Obsidian Bones (Tentative)
+Side-Scrolling, Rogue-Like Platformer
