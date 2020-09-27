@@ -2,6 +2,7 @@ var obstacles;
 var player;
 var boss;
 var cursors;
+var spaceBar;
 var life = 100;
 var lifeText;
 
@@ -12,49 +13,65 @@ class Scene1 extends Phaser.Scene{
 
     preload() {
         this.load.image('obstacle', 'assets/sprites/obstacle.png');
-        this.load.spritesheet('hero', 'assets/sprites/hero.png', { frameWidth: 32, frameHeight: 48 });
-        this.load.spritesheet('robotBoss', 'assets/sprites/hero.png', { frameWidth: 32, frameHeight: 48 });
+        this.load.spritesheet('hero', 'assets/sprites/hero-walk-sprite.png', { frameWidth: 169, frameHeight: 230 });
+        this.load.spritesheet('hero_attack', 'assets/sprites/hero-attack-sprite.png', { frameWidth: 200, frameHeight: 230 });
+        this.load.spritesheet('hero_pre_attack', 'assets/sprites/hero-preattack-sprite.png', { frameWidth: 200, frameHeight: 230 });
+        this.load.image('robotBoss', 'assets/sprites/RobotBoss1.jpg');
     }
 
     create() {
         this.cameras.main.setBackgroundColor('#828b99')
         lifeText = this.add.text(16, 16, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
 
+        // Create Obstacles
         obstacles = this.physics.add.staticGroup();
         obstacles.create(300, 580, 'obstacle');
         obstacles.create(200, 565, 'obstacle');
         obstacles.create(200, 600, 'obstacle');
         obstacles.create(600, 600, 'obstacle');
         
-        boss = this.add.image(650, 555, 'robotBoss')
+        // Create Boss
+        boss = this.physics.add.image(650, 400, 'robotBoss')
+        boss.setBounce(0.1);
+        boss.setCollideWorldBounds(true);
+        boss.displayWidth = game.config.width * 0.2;
+        boss.scaleY = boss.scaleX;
+        boss.body.setGravityY(300);
 
-        player = this.physics.add.sprite(100, 450, 'hero');
-        player.setBounce(0.1);
+        // Create Player
+        player = this.physics.add.sprite(100, 475, 'hero');
+        player.setBounce(0.25);
         player.setCollideWorldBounds(true);
+        player.displayWidth = game.config.width * 0.1;
+        player.scaleY = player.scaleX;
+        player.body.setGravityY(300);
+
+        // Create Player Animations
         this.anims.create({
             key: 'left',
-            frames: this.anims.generateFrameNumbers('hero', { start: 0, end: 3 }),
+            frames: this.anims.generateFrameNumbers('hero', { start: 0, end: 5 }),
             frameRate: 10,
             repeat: -1
         });
-
         this.anims.create({
             key: 'turn',
-            frames: [ { key: 'hero', frame: 4 } ],
-            frameRate: 20
+            frames: [ { key: 'hero', frame: 6 } ],
+            frameRate: 10
         });
         this.anims.create({
             key: 'right',
-            frames: this.anims.generateFrameNumbers('hero', { start: 5, end: 8 }),
+            frames: this.anims.generateFrameNumbers('hero', { start: 7, end: 12 }),
             frameRate: 10,
             repeat: -1
         });
 
         cursors = this.input.keyboard.createCursorKeys();
-        player.body.setGravityY(300)
-
+        spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        
+        // Add Colliders
         this.physics.add.collider(player, obstacles);
         this.physics.add.collider(player, boss);
+        this.physics.add.collider(boss, obstacles);
     }
 
     update() {
@@ -74,9 +91,9 @@ class Scene1 extends Phaser.Scene{
             player.anims.play('turn');
         }
 
-        if (cursors.up.isDown && player.body.touching.down)
+        if ((spaceBar.isDown || cursors.up.isDown) && player.body.touching.down)
         {
-            player.setVelocityY(-160);
+            player.setVelocityY(-250);
         }
     }
 }
