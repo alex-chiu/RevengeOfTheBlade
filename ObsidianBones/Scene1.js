@@ -15,10 +15,10 @@ class Scene1 extends Phaser.Scene{
 
     preload() {
         this.load.image('obstacle', 'assets/sprites/obstacle.png');
+        this.load.image('robotBoss', 'assets/sprites/RobotBoss1.jpg');
         this.load.spritesheet('hero', 'assets/sprites/hero-walk-sprite.png', { frameWidth: 169, frameHeight: 230 });
         this.load.spritesheet('hero_attack', 'assets/sprites/hero-attack-sprite.png', { frameWidth: 200, frameHeight: 230 });
         this.load.spritesheet('hero_pre_attack', 'assets/sprites/hero-preattack-sprite.png', { frameWidth: 200, frameHeight: 230 });
-        this.load.image('robotBoss', 'assets/sprites/RobotBoss1.jpg');
     }
 
     create() {
