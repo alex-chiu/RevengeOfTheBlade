@@ -3,6 +3,8 @@ var player;
 var boss;
 var cursors;
 var spaceBar;
+var A;
+var D;
 var life = 100;
 var lifeText;
 
@@ -34,7 +36,7 @@ class Scene1 extends Phaser.Scene{
         boss = this.physics.add.image(650, 400, 'robotBoss')
         boss.setBounce(0.1);
         boss.setCollideWorldBounds(true);
-        boss.displayWidth = game.config.width * 0.2;
+        boss.displayWidth = game.config.width * 0.1;
         boss.scaleY = boss.scaleX;
         boss.body.setGravityY(300);
 
@@ -42,7 +44,7 @@ class Scene1 extends Phaser.Scene{
         player = this.physics.add.sprite(100, 475, 'hero');
         player.setBounce(0.25);
         player.setCollideWorldBounds(true);
-        player.displayWidth = game.config.width * 0.1;
+        player.displayWidth = game.config.width * 0.05;
         player.scaleY = player.scaleX;
         player.body.setGravityY(300);
 
@@ -65,8 +67,9 @@ class Scene1 extends Phaser.Scene{
             repeat: -1
         });
 
-        cursors = this.input.keyboard.createCursorKeys();
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        A = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        D = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         
         // Add Colliders
         this.physics.add.collider(player, obstacles);
@@ -75,12 +78,12 @@ class Scene1 extends Phaser.Scene{
     }
 
     update() {
-        if (cursors.left.isDown)
+        if (A.isDown)
         {
             player.setVelocityX(-160);
             player.anims.play('left', true);
         }
-        else if (cursors.right.isDown)
+        else if (D.isDown)
         {
             player.setVelocityX(160);
             player.anims.play('right', true);
@@ -91,7 +94,7 @@ class Scene1 extends Phaser.Scene{
             player.anims.play('turn');
         }
 
-        if ((spaceBar.isDown || cursors.up.isDown) && player.body.touching.down)
+        if (spaceBar.isDown && player.body.touching.down)
         {
             player.setVelocityY(-250);
         }
