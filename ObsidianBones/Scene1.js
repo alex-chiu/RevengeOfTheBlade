@@ -3,8 +3,7 @@ var player;
 var boss;
 var cursors;
 var spaceBar;
-var A;
-var D;
+var W, A, S, D;
 var life = 100;
 var lifeText;
 
@@ -16,9 +15,9 @@ class Scene1 extends Phaser.Scene{
     preload() {
         this.load.image('obstacle', 'assets/sprites/obstacle.png');
         this.load.image('robotBoss', 'assets/sprites/RobotBoss1.jpg');
-        this.load.spritesheet('hero', 'assets/sprites/hero-walk-sprite.png', { frameWidth: 169, frameHeight: 230 });
-        this.load.spritesheet('hero_attack', 'assets/sprites/hero-attack-sprite.png', { frameWidth: 200, frameHeight: 230 });
-        this.load.spritesheet('hero_pre_attack', 'assets/sprites/hero-preattack-sprite.png', { frameWidth: 200, frameHeight: 230 });
+        this.load.spritesheet('hero', 'assets/sprites/hero-walk-sprite.png', { frameWidth: 150, frameHeight: 230 });
+        this.load.spritesheet('hero_attack', 'assets/sprites/hero-attack-sprite.png', { frameWidth: 256, frameHeight: 230 });
+        this.load.spritesheet('hero_pre_attack', 'assets/sprites/hero-preattack-sprite.png', { frameWidth: 130, frameHeight: 230 });
     }
 
     create() {
@@ -36,7 +35,7 @@ class Scene1 extends Phaser.Scene{
         boss = this.physics.add.image(650, 400, 'robotBoss')
         boss.setBounce(0.1);
         boss.setCollideWorldBounds(true);
-        boss.displayWidth = game.config.width * 0.1;
+        boss.displayWidth = game.config.width * 0.15;
         boss.scaleY = boss.scaleX;
         boss.body.setGravityY(300);
 
@@ -44,7 +43,7 @@ class Scene1 extends Phaser.Scene{
         player = this.physics.add.sprite(100, 475, 'hero');
         player.setBounce(0.25);
         player.setCollideWorldBounds(true);
-        player.displayWidth = game.config.width * 0.05;
+        player.displayWidth = game.config.width * 0.075;
         player.scaleY = player.scaleX;
         player.body.setGravityY(300);
 
@@ -67,9 +66,13 @@ class Scene1 extends Phaser.Scene{
             repeat: -1
         });
 
+        // Add Input Sources
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        W = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         A = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        S = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         D = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        cursors = this.input.keyboard.createCursorKeys();
         
         // Add Colliders
         this.physics.add.collider(player, obstacles);
@@ -78,6 +81,7 @@ class Scene1 extends Phaser.Scene{
     }
 
     update() {
+        // Player Movement
         if (A.isDown)
         {
             player.setVelocityX(-160);
@@ -94,7 +98,8 @@ class Scene1 extends Phaser.Scene{
             player.anims.play('turn');
         }
 
-        if (spaceBar.isDown && player.body.touching.down)
+        // Jumping
+        if ((spaceBar.isDown || W.isDown) && player.body.touching.down)
         {
             player.setVelocityY(-250);
         }
