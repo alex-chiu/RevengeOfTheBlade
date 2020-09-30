@@ -6,6 +6,7 @@ var spaceBar;
 var W, A, S, D;
 var life = 100;
 var lifeText;
+var bossLife = 500;
 
 class Scene1 extends Phaser.Scene{
     constructor() {
@@ -14,7 +15,7 @@ class Scene1 extends Phaser.Scene{
 
     preload() {
         this.load.image('obstacle', 'assets/sprites/obstacle.png');
-        this.load.image('robotBoss', 'assets/sprites/RobotBoss1.jpg');
+        this.load.spritesheet('robotBoss', 'assets/sprites/robot-boss-sprite.png', { frameWidth: 320, frameHeight: 500 });
         this.load.spritesheet('hero', 'assets/sprites/hero-walk-sprite.png', { frameWidth: 150, frameHeight: 230 });
         this.load.spritesheet('hero_attack', 'assets/sprites/hero-attack-sprite.png', { frameWidth: 255, frameHeight: 230 });
         this.load.spritesheet('hero_pre_attack', 'assets/sprites/hero-preattack-sprite.png', { frameWidth: 130, frameHeight: 230 });
@@ -116,11 +117,11 @@ class Scene1 extends Phaser.Scene{
         
         // Add Colliders
         this.physics.add.collider(player, obstacles);
-        this.physics.add.collider(player, boss);
+        this.physics.add.overlap(player, boss);
         this.physics.add.collider(player_pre_atk, obstacles);
-        this.physics.add.collider(player_pre_atk, boss);
+        this.physics.add.overlap(player_pre_atk, boss);
         this.physics.add.collider(player_atk, obstacles);
-        this.physics.add.collider(player_atk, boss);
+        this.physics.add.overlap(player_atk, boss, this.bossHit, null, this);
         this.physics.add.collider(boss, obstacles);
     }
 
@@ -191,6 +192,17 @@ class Scene1 extends Phaser.Scene{
                     })
                 }
             })
+        }
+        
+
+    }
+    
+    bossHit(player, boss){
+        if (bossLife == 0){
+            boss.disableBody(true, true);
+        }
+        else{
+            bossLife-=1;
         }
     }
 }
