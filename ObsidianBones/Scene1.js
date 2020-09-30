@@ -1,12 +1,15 @@
 var obstacles;
-var player, player_atk, player_pre_atk;
+var player, player_atk;
 var boss;
 var cursors;
 var spaceBar;
 var W, A, S, D;
-var life = 100;
-var lifeText;
-var bossLife = 500;
+var life = 100, bossLife = 500;
+var lifeText, bossLifeText;
+var attack_anim_playing = false;
+
+var debug = true;
+var player_attack_left_hitbox, player_attack_right_hitbox, boss_body_hitbox, boss_arm_hitbox;
 
 class Scene1 extends Phaser.Scene{
     constructor() {
@@ -16,14 +19,14 @@ class Scene1 extends Phaser.Scene{
     preload() {
         this.load.image('obstacle', 'assets/sprites/obstacle.png');
         this.load.spritesheet('robotBoss', 'assets/sprites/robot-boss-sprite.png', { frameWidth: 320, frameHeight: 500 });
-        this.load.spritesheet('hero', 'assets/sprites/hero-walk-sprite.png', { frameWidth: 150, frameHeight: 230 });
+        this.load.spritesheet('hero', 'assets/sprites/hero-walk-preattack-sprite.png', { frameWidth: 150, frameHeight: 230 });
         this.load.spritesheet('hero_attack', 'assets/sprites/hero-attack-sprite.png', { frameWidth: 255, frameHeight: 230 });
-        this.load.spritesheet('hero_pre_attack', 'assets/sprites/hero-preattack-sprite.png', { frameWidth: 130, frameHeight: 230 });
     }
 
     create() {
         this.cameras.main.setBackgroundColor('#828b99')
-        lifeText = this.add.text(16, 16, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
+        lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
+        bossLifeText = this.add.text(580, 15, 'Boss Life: 500', { fontSize: '25px', fill: '#ffffff' });
 
         // Create Obstacles
         obstacles = this.physics.add.staticGroup();
@@ -33,7 +36,7 @@ class Scene1 extends Phaser.Scene{
         obstacles.create(600, 600, 'obstacle');
         
         // Create Boss
-        boss = this.physics.add.image(650, 400, 'robotBoss')
+        boss = this.physics.add.sprite(650, 400, 'robotBoss')
         boss.setBounce(0);
         boss.setCollideWorldBounds(true);
         boss.displayWidth = game.config.width * 0.15;
@@ -47,14 +50,7 @@ class Scene1 extends Phaser.Scene{
         player.displayWidth = game.config.width * 0.075;
         player.scaleY = player.scaleX;
         player.body.setGravityY(300);
-
-        player_pre_atk = this.physics.add.sprite(100, 475, 'hero_pre_attack');
-        player_pre_atk.setBounce(0.25);
-        player_pre_atk.setCollideWorldBounds(true);
-        player_pre_atk.displayWidth = game.config.width * 0.064;
-        player_pre_atk.scaleY = player_pre_atk.scaleX;
-        player_pre_atk.body.setGravityY(300);
-        player_pre_atk.visible = false;
+        player.setInteractive();
 
         player_atk = this.physics.add.sprite(100, 475, 'hero_attack');
         player_atk.setBounce(0.25);
@@ -67,45 +63,54 @@ class Scene1 extends Phaser.Scene{
         // Create Player Animations
         this.anims.create({
             key: 'left',
-            frames: this.anims.generateFrameNumbers('hero', { start: 0, end: 5 }),
+            frames: this.anims.generateFrameNumbers('hero', { start: 8, end: 13 }),
             frameRate: 10,
             repeat: -1
         });
         this.anims.create({
             key: 'turn',
-            frames: [ { key: 'hero', frame: 6 } ],
+            frames: [ { key: 'hero', frame: 14 } ],
             frameRate: 10
         });
         this.anims.create({
             key: 'right',
-            frames: this.anims.generateFrameNumbers('hero', { start: 7, end: 12 }),
+            frames: this.anims.generateFrameNumbers('hero', { start: 15, end: 20 }),
             frameRate: 10,
             repeat: -1
         });
         this.anims.create({
-            key: 'left_pre_atk',
-            frames: this.anims.generateFrameNumbers('hero_pre_attack', { start: 9, end: 16 }),
+            key: 'pre_atk_l',
+            frames: this.anims.generateFrameNumbers('hero', { start: 0, end: 7 }),
             frameRate: 32,
             repeat: 0
         });
         this.anims.create({
-            key: 'right_pre_atk',
-            frames: this.anims.generateFrameNumbers('hero_pre_attack', { start: 0, end: 7 }),
+            key: 'pre_atk_r',
+            frames: this.anims.generateFrameNumbers('hero', { start: 21, end: 28 }),
             frameRate: 32,
             repeat: 0
         });
         this.anims.create({
-            key: 'left_atk',
+            key: 'atk_l',
             frames: this.anims.generateFrameNumbers('hero_attack', { start: 0, end: 5 }),
             frameRate: 15,
             repeat: 0
         });
         this.anims.create({
-            key: 'right_atk',
+            key: 'atk_r',
             frames: this.anims.generateFrameNumbers('hero_attack', { start: 6, end: 11 }),
             frameRate: 15,
             repeat: 0
         });
+
+        player_attack_right_hitbox = this.add.rectangle(player.body.position.x, player.body.position.y, 35, 90);
+        player_attack_right_hitbox.setStrokeStyle(4, 0xefc53f);
+        player_attack_left_hitbox = this.add.rectangle(player.body.position.x, player.body.position.y, 35, 90);
+        player_attack_left_hitbox.setStrokeStyle(4, 0xefc53f);
+        boss_body_hitbox = this.add.rectangle(boss.body.position.x, boss.body.position.y, 45, 185);
+        boss_body_hitbox.setStrokeStyle(5, 0xefc53f);
+        boss_arm_hitbox = this.add.rectangle(boss.body.position.x, boss.body.position.y, 75, 40);
+        boss_arm_hitbox.setStrokeStyle(5, 0xefc53f);
 
         // Add Input Sources
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -118,30 +123,32 @@ class Scene1 extends Phaser.Scene{
         // Add Colliders
         this.physics.add.collider(player, obstacles);
         this.physics.add.overlap(player, boss);
-        this.physics.add.collider(player_pre_atk, obstacles);
-        this.physics.add.overlap(player_pre_atk, boss);
         this.physics.add.collider(player_atk, obstacles);
-        this.physics.add.overlap(player_atk, boss, this.bossHit, null, this);
+        this.physics.add.overlap(player_atk, boss);
         this.physics.add.collider(boss, obstacles);
     }
 
     update() {
+        if (debug == true) {
+            player_attack_right_hitbox.setPosition(player.body.position.x + 75, player.body.position.y + 50);
+            player_attack_left_hitbox.setPosition(player.body.position.x - 15, player.body.position.y + 50)
+            boss_body_hitbox.setPosition(boss.body.position.x + 100, boss.body.position.y + 95);
+            boss_arm_hitbox.setPosition(boss.body.position.x + 40, boss.body.position.y + 75);
+        }
+
         // Player Movement
         if (A.isDown) {
             player.setVelocityX(-160);
-            player_pre_atk.setVelocityX(-160);
             player_atk.setVelocityX(-160);
             player.anims.play('left', true);
         }
         else if (D.isDown) {
             player.setVelocityX(160);
-            player_pre_atk.setVelocityX(160);
             player_atk.setVelocityX(160);
             player.anims.play('right', true);
         }
         else {
             player.setVelocityX(0);
-            player_pre_atk.setVelocityX(0);
             player_atk.setVelocityX(0);
             player.anims.play('turn');
         }
@@ -149,60 +156,67 @@ class Scene1 extends Phaser.Scene{
         // Jumping
         if ((spaceBar.isDown || W.isDown) && player.body.touching.down) {
             player.setVelocityY(-250);
-            player_pre_atk.setVelocityY(-250);
             player_atk.setVelocityY(-250);
         }
 
-        if (cursors.right.isDown) {
-            player.visible = false;
-            player_pre_atk.visible = true;
-            player_pre_atk.anims.play('right_pre_atk');
-            this.time.addEvent({
-                delay: 250,
-                callback: () => {
-                    player_pre_atk.visible = false;
-                    player_atk.visible = true;
-                    player_atk.anims.play('right_atk');
-                    this.time.addEvent({
-                        delay: 400,
-                        callback: () => {
-                            player_atk.visible = false;
-                            player.visible = true;
-                        }
-                    })
-                }
-            })
+        // Attack Animations
+        if (attack_anim_playing == false) {
+            if (cursors.right.isDown) {
+                attack_anim_playing = true;
+                player.anims.play('pre_atk_r');
+                this.time.addEvent({
+                    delay: 250,
+                    callback: () => {
+                        player.visible = false;
+                        player_atk.visible = true;
+                        player_atk.anims.play('atk_r');
+                        this.time.addEvent({
+                            delay: 400,
+                            callback: () => {
+                                player_atk.visible = false;
+                                player.visible = true;
+                                this.checkHit('R');
+                                attack_anim_playing = false;
+                            }
+                        })
+                    }
+                })
+            }
+            else if (cursors.left.isDown) {
+                attack_anim_playing = true;
+                player.anims.play('pre_atk_l');
+                this.time.addEvent({
+                    delay: 250,
+                    callback: () => {
+                        player.visible = false;
+                        player_atk.visible = true;
+                        player_atk.anims.play('atk_l');
+                        this.time.addEvent({
+                            delay: 400,
+                            callback: () => {
+                                player_atk.visible = false;
+                                player.visible = true;
+                                this.checkHit('L');
+                                attack_anim_playing = false;
+                            }
+                        })
+                    }
+                })
+            }
         }
-        else if (cursors.left.isDown) {
-            player.visible = false;
-            player_pre_atk.visible = true;
-            player_pre_atk.anims.play('left_pre_atk');
-            this.time.addEvent({
-                delay: 250,
-                callback: () => {
-                    player_pre_atk.visible = false;
-                    player_atk.visible = true;
-                    player_atk.anims.play('left_atk');
-                    this.time.addEvent({
-                        delay: 400,
-                        callback: () => {
-                            player_atk.visible = false;
-                            player.visible = true;
-                        }
-                    })
-                }
-            })
-        }
-        
-
     }
     
-    bossHit(player, boss){
-        if (bossLife == 0){
-            boss.disableBody(true, true);
+    checkHit(direction) {
+        console.log("CHECKING HIT");
+        if (direction == "R") {
+            
         }
-        else{
-            bossLife-=1;
+        else if (direction == "L") {
         }
+    }
+
+    updateLifeText() {
+        lifeText.setText('Life: ' + life);
+        bossLifeText.setText('Boss Life: ' + bossLife);
     }
 }
