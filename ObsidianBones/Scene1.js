@@ -8,9 +8,10 @@ var W, A, S, D;
 var life = 100, bossLife = 500;
 var lifeText, bossLifeText;
 var attack_anim_playing = false;
-
-var debug = false;
 var player_attack_left_hitbox, player_attack_right_hitbox, boss_body_hitbox, boss_arm_hitbox;
+
+// DEBUG PARAMETERS
+var debug = false;
 
 // Scene1 Class
 class Scene1 extends Phaser.Scene{
