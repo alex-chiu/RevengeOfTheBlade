@@ -9,6 +9,7 @@ var life = 100, bossLife = 500;
 var lifeText, bossLifeText;
 var attack_anim_playing = false;
 var player_attack_left_hitbox, player_attack_right_hitbox, boss_body_hitbox, boss_arm_hitbox;
+var hello
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -39,7 +40,7 @@ class Scene1 extends Phaser.Scene{
         obstacles.create(200, 565, 'obstacle');
         obstacles.create(200, 600, 'obstacle');
         obstacles.create(600, 600, 'obstacle');
-        
+
         // Create Boss
         boss = this.physics.add.sprite(650, 400, 'robotBoss')
         boss.setBounce(0);
@@ -132,7 +133,7 @@ class Scene1 extends Phaser.Scene{
         S = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         D = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         cursors = this.input.keyboard.createCursorKeys();
-        
+
         // Add Colliders
         this.physics.add.collider(player, obstacles);
         this.physics.add.collider(player_atk, obstacles);
@@ -217,7 +218,7 @@ class Scene1 extends Phaser.Scene{
 
         this.updateLifeText();
     }
-    
+
     // Checks if Player Attack Hits
     checkPlayerAttack(direction) {
         if (debug) { console.log("CHECKING HIT") };
