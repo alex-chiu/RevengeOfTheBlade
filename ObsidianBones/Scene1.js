@@ -14,10 +14,10 @@ var far;
 var back;
 var mid;
 var front;
-var ground;
+var ground, platforms;
 
 // DEBUG PARAMETERS
-var debug = false;
+var debug = true;
 
 // Scene1 Class
 class Scene1 extends Phaser.Scene{
@@ -45,14 +45,7 @@ class Scene1 extends Phaser.Scene{
     create() {
         this.cameras.main.setBackgroundColor('#828b99')
 
-        // Create Obstacles
-        ground = this.physics.add.staticGroup();
-        ground.create(300, 580, 'ground');
-        ground.create(200, 565, 'ground');
-        ground.create(200, 600, 'ground');
-        ground.create(600, 600, 'ground');
-
-        // background elements
+        // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky0');
         clouds = this.add.tileSprite(400, 300, 800, 600, 'clouds1');
         far = this.add.tileSprite(400, 300, 800, 600, 'far2');
@@ -60,11 +53,21 @@ class Scene1 extends Phaser.Scene{
         mid = this.add.tileSprite(400, 300, 800, 600, 'mid4');
         front = this.add.tileSprite(400, 300, 800, 600, 'front5');
         ground = this.add.tileSprite(400, 300, 800, 600, 'ground');
-        //this.physics.add.existing(ground);
+        this.add.existing(ground);
         sky.fixedToCamera = true;
 
+        // Text
         lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
         bossLifeText = this.add.text(580, 15, 'Boss Life: 500', { fontSize: '25px', fill: '#ffffff' });
+
+        // Platforms
+        platforms = this.physics.add.staticGroup();
+        for (var i = 15; i <= 800; i += 30 ) {
+            platforms.create(i, 565);
+        }
+        if (!debug) {
+            platforms.children.visible = false;
+        }
 
         // Create Boss
         boss = this.physics.add.sprite(650, 400, 'robotBoss')
@@ -160,18 +163,18 @@ class Scene1 extends Phaser.Scene{
         cursors = this.input.keyboard.createCursorKeys();
 
         // Add Colliders
-        this.physics.add.collider(player, ground);
-        this.physics.add.collider(player_atk, ground);
-        this.physics.add.collider(boss, ground);
+        this.physics.add.collider(player, platforms);
+        this.physics.add.collider(player_atk, platforms);
+        this.physics.add.collider(boss, platforms);
     }
 
     // Constantly Updating Game Loop
     update() {
-        // implement paralllax: define scrolling speed of each background element
-        clouds.tilePositionX -= 1.2;
-        far.tilePositionX += 1.8;
-        back.tilePositionX -= 2.3;
-        mid.tilePositionX += 2.7;
+        // Implement Parallax Background
+        clouds.tilePositionX -= 0.2;
+        far.tilePositionX += 0.5;
+        back.tilePositionX -= 0.7;
+        mid.tilePositionX += 1.0;
 
         player_attack_right_hitbox.setPosition(player.body.position.x + 75, player.body.position.y + 50);
         player_attack_left_hitbox.setPosition(player.body.position.x - 15, player.body.position.y + 50)
