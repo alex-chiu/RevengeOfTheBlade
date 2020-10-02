@@ -10,6 +10,7 @@ var lifeText, bossLifeText;
 var attack_anim_playing = false;
 var player_attack_left_hitbox, player_attack_right_hitbox, boss_body_hitbox, boss_arm_hitbox;
 var hello
+var test2
 
 // DEBUG PARAMETERS
 var debug = false;
