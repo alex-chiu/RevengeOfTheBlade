@@ -1,5 +1,4 @@
 // Global Variables
-var obstacles;
 var player, player_atk;
 var boss;
 var cursors;
@@ -9,8 +8,13 @@ var life = 100, bossLife = 500;
 var lifeText, bossLifeText;
 var attack_anim_playing = false;
 var player_attack_left_hitbox, player_attack_right_hitbox, boss_body_hitbox, boss_arm_hitbox;
-var hello
-var test2
+var sky;
+var clouds;
+var far;
+var back;
+var mid;
+var front;
+var ground;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -23,24 +27,44 @@ class Scene1 extends Phaser.Scene{
 
     // Preload Images and Sprites
     preload() {
-        this.load.image('obstacle', 'assets/sprites/obstacle.png');
         this.load.spritesheet('robotBoss', 'assets/sprites/robot-boss-sprite.png', { frameWidth: 320, frameHeight: 500 });
         this.load.spritesheet('hero', 'assets/sprites/hero-walk-preattack-sprite.png', { frameWidth: 150, frameHeight: 230 });
         this.load.spritesheet('hero_attack', 'assets/sprites/hero-attack-sprite.png', { frameWidth: 255, frameHeight: 230 });
+
+        // Background images
+        this.load.image('sky0', 'assets/backgrounds/stage5/0sky.png');
+        this.load.image('clouds1', 'assets/backgrounds/stage5/1clouds.png');
+        this.load.image('far2', 'assets/backgrounds/stage5/2far.png');
+        this.load.image('back3', 'assets/backgrounds/stage5/3back.png');
+        this.load.image('mid4', 'assets/backgrounds/stage5/4mid.png');
+        this.load.image('front5', 'assets/backgrounds/stage5/5front.png');
+        this.load.image('ground', 'assets/backgrounds/stage5/6platform.png');
     }
 
     // Create all the Sprites/Images/Platforms
     create() {
         this.cameras.main.setBackgroundColor('#828b99')
-        lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
-        bossLifeText = this.add.text(580, 15, 'Boss Life: 500', { fontSize: '25px', fill: '#ffffff' });
 
         // Create Obstacles
-        obstacles = this.physics.add.staticGroup();
-        obstacles.create(300, 580, 'obstacle');
-        obstacles.create(200, 565, 'obstacle');
-        obstacles.create(200, 600, 'obstacle');
-        obstacles.create(600, 600, 'obstacle');
+        ground = this.physics.add.staticGroup();
+        ground.create(300, 580, 'ground');
+        ground.create(200, 565, 'ground');
+        ground.create(200, 600, 'ground');
+        ground.create(600, 600, 'ground');
+
+        // background elements
+        sky = this.add.tileSprite(400, 300, 800, 600, 'sky0');
+        clouds = this.add.tileSprite(400, 300, 800, 600, 'clouds1');
+        far = this.add.tileSprite(400, 300, 800, 600, 'far2');
+        back = this.add.tileSprite(400, 300, 800, 600, 'back3');
+        mid = this.add.tileSprite(400, 300, 800, 600, 'mid4');
+        front = this.add.tileSprite(400, 300, 800, 600, 'front5');
+        ground = this.add.tileSprite(400, 300, 800, 600, 'ground');
+        //this.physics.add.existing(ground);
+        sky.fixedToCamera = true;
+
+        lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
+        bossLifeText = this.add.text(580, 15, 'Boss Life: 500', { fontSize: '25px', fill: '#ffffff' });
 
         // Create Boss
         boss = this.physics.add.sprite(650, 400, 'robotBoss')
@@ -136,13 +160,19 @@ class Scene1 extends Phaser.Scene{
         cursors = this.input.keyboard.createCursorKeys();
 
         // Add Colliders
-        this.physics.add.collider(player, obstacles);
-        this.physics.add.collider(player_atk, obstacles);
-        this.physics.add.collider(boss, obstacles);
+        this.physics.add.collider(player, ground);
+        this.physics.add.collider(player_atk, ground);
+        this.physics.add.collider(boss, ground);
     }
 
     // Constantly Updating Game Loop
     update() {
+        // implement paralllax: define scrolling speed of each background element
+        clouds.tilePositionX -= 1.2;
+        far.tilePositionX += 1.8;
+        back.tilePositionX -= 2.3;
+        mid.tilePositionX += 2.7;
+
         player_attack_right_hitbox.setPosition(player.body.position.x + 75, player.body.position.y + 50);
         player_attack_left_hitbox.setPosition(player.body.position.x - 15, player.body.position.y + 50)
         boss_body_hitbox.setPosition(boss.body.position.x + 100, boss.body.position.y + 95);
@@ -153,11 +183,17 @@ class Scene1 extends Phaser.Scene{
             player.setVelocityX(-160);
             player_atk.setVelocityX(-160);
             player.anims.play('left', true);
+
+            front.tilePositionX -= 3;
+            ground.tilePositionX -= 2.7;
         }
         else if (D.isDown) {
             player.setVelocityX(160);
             player_atk.setVelocityX(160);
             player.anims.play('right', true);
+
+            front.tilePositionX += 3;
+            ground.tilePositionX += 2.7;
         }
         else {
             player.setVelocityX(0);
