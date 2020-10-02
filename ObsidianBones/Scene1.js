@@ -1,3 +1,4 @@
+// Global Variables
 var obstacles;
 var player, player_atk;
 var boss;
@@ -8,14 +9,16 @@ var life = 100, bossLife = 500;
 var lifeText, bossLifeText;
 var attack_anim_playing = false;
 
-var debug = true;
+var debug = false;
 var player_attack_left_hitbox, player_attack_right_hitbox, boss_body_hitbox, boss_arm_hitbox;
 
+// Scene1 Class
 class Scene1 extends Phaser.Scene{
     constructor() {
         super({key:'Scene1'});
     }
 
+    // Preload Images and Sprites
     preload() {
         this.load.image('obstacle', 'assets/sprites/obstacle.png');
         this.load.spritesheet('robotBoss', 'assets/sprites/robot-boss-sprite.png', { frameWidth: 320, frameHeight: 500 });
@@ -23,6 +26,7 @@ class Scene1 extends Phaser.Scene{
         this.load.spritesheet('hero_attack', 'assets/sprites/hero-attack-sprite.png', { frameWidth: 255, frameHeight: 230 });
     }
 
+    // Create all the Sprites/Images/Platforms
     create() {
         this.cameras.main.setBackgroundColor('#828b99')
         lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
@@ -103,6 +107,7 @@ class Scene1 extends Phaser.Scene{
             repeat: 0
         });
 
+        // Player and Boss Hitboxes
         player_attack_right_hitbox = this.add.rectangle(player.body.position.x, player.body.position.y, 35, 90);
         player_attack_right_hitbox.setStrokeStyle(4, 0xefc53f);
         player_attack_left_hitbox = this.add.rectangle(player.body.position.x, player.body.position.y, 35, 90);
@@ -111,6 +116,13 @@ class Scene1 extends Phaser.Scene{
         boss_body_hitbox.setStrokeStyle(5, 0xefc53f);
         boss_arm_hitbox = this.add.rectangle(boss.body.position.x, boss.body.position.y, 75, 40);
         boss_arm_hitbox.setStrokeStyle(5, 0xefc53f);
+
+        if (!debug) {
+            player_attack_right_hitbox.visible = false;
+            player_attack_left_hitbox.visible = false;
+            boss_arm_hitbox.visible = false;
+            boss_body_hitbox.visible = false;
+        }
 
         // Add Input Sources
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -122,19 +134,16 @@ class Scene1 extends Phaser.Scene{
         
         // Add Colliders
         this.physics.add.collider(player, obstacles);
-        this.physics.add.overlap(player, boss);
         this.physics.add.collider(player_atk, obstacles);
-        this.physics.add.overlap(player_atk, boss);
         this.physics.add.collider(boss, obstacles);
     }
 
+    // Constantly Updating Game Loop
     update() {
-        if (debug == true) {
-            player_attack_right_hitbox.setPosition(player.body.position.x + 75, player.body.position.y + 50);
-            player_attack_left_hitbox.setPosition(player.body.position.x - 15, player.body.position.y + 50)
-            boss_body_hitbox.setPosition(boss.body.position.x + 100, boss.body.position.y + 95);
-            boss_arm_hitbox.setPosition(boss.body.position.x + 40, boss.body.position.y + 75);
-        }
+        player_attack_right_hitbox.setPosition(player.body.position.x + 75, player.body.position.y + 50);
+        player_attack_left_hitbox.setPosition(player.body.position.x - 15, player.body.position.y + 50)
+        boss_body_hitbox.setPosition(boss.body.position.x + 100, boss.body.position.y + 95);
+        boss_arm_hitbox.setPosition(boss.body.position.x + 40, boss.body.position.y + 75);
 
         // Player Movement
         if (A.isDown) {
@@ -175,8 +184,8 @@ class Scene1 extends Phaser.Scene{
                             callback: () => {
                                 player_atk.visible = false;
                                 player.visible = true;
-                                this.checkHit('R');
                                 attack_anim_playing = false;
+                                this.checkPlayerAttack('R');
                             }
                         })
                     }
@@ -196,25 +205,36 @@ class Scene1 extends Phaser.Scene{
                             callback: () => {
                                 player_atk.visible = false;
                                 player.visible = true;
-                                this.checkHit('L');
                                 attack_anim_playing = false;
+                                this.checkPlayerAttack('L');
                             }
                         })
                     }
                 })
             }
         }
+
+        this.updateLifeText();
     }
     
-    checkHit(direction) {
-        console.log("CHECKING HIT");
-        if (direction == "R") {
-            
+    // Checks if Player Attack Hits
+    checkPlayerAttack(direction) {
+        if (debug) { console.log("CHECKING HIT") };
+        if (direction == 'L') {
+            if (Phaser.Geom.Intersects.RectangleToRectangle(player_attack_left_hitbox, boss_body_hitbox) || Phaser.Geom.Intersects.RectangleToRectangle(player_attack_left_hitbox, boss_arm_hitbox)) {
+                if (debug) { console.log("LEFT HIT") };
+                bossLife -= 1;
+            }
         }
-        else if (direction == "L") {
+        else if (direction == 'R') {
+            if (Phaser.Geom.Intersects.RectangleToRectangle(player_attack_right_hitbox, boss_body_hitbox) || Phaser.Geom.Intersects.RectangleToRectangle(player_attack_right_hitbox, boss_arm_hitbox)) {
+                if (debug) { console.log("RIGHT HIT") };
+                bossLife -= 1;
+            }
         }
     }
 
+    // Updates Life Text
     updateLifeText() {
         lifeText.setText('Life: ' + life);
         bossLifeText.setText('Boss Life: ' + bossLife);
