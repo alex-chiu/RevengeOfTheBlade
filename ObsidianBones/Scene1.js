@@ -4,10 +4,9 @@ var boss;
 var cursors;
 var spaceBar;
 var W, A, S, D;
-var life = 100, bossLife = 500;
+var life = 100, bossLife = 100;
 var lifeText, bossLifeText;
 var attack_anim_playing = false;
-var player_attack_left_hitbox, player_attack_right_hitbox, boss_body_hitbox, boss_arm_hitbox;
 var sky;
 var clouds;
 var far;
@@ -58,7 +57,7 @@ class Scene1 extends Phaser.Scene{
 
         // Text
         lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
-        bossLifeText = this.add.text(580, 15, 'Boss Life: 500', { fontSize: '25px', fill: '#ffffff' });
+        bossLifeText = this.add.text(580, 15, 'Boss Life: 100', { fontSize: '25px', fill: '#ffffff' });
 
         // Platforms
         platforms = this.physics.add.staticGroup();
@@ -137,23 +136,6 @@ class Scene1 extends Phaser.Scene{
             repeat: 0
         });
 
-        // Player and Boss Hitboxes
-        player_attack_right_hitbox = this.add.rectangle(player.body.position.x, player.body.position.y, 35, 90);
-        player_attack_right_hitbox.setStrokeStyle(4, 0xefc53f);
-        player_attack_left_hitbox = this.add.rectangle(player.body.position.x, player.body.position.y, 35, 90);
-        player_attack_left_hitbox.setStrokeStyle(4, 0xefc53f);
-        boss_body_hitbox = this.add.rectangle(boss.body.position.x, boss.body.position.y, 45, 185);
-        boss_body_hitbox.setStrokeStyle(5, 0xefc53f);
-        boss_arm_hitbox = this.add.rectangle(boss.body.position.x, boss.body.position.y, 75, 40);
-        boss_arm_hitbox.setStrokeStyle(5, 0xefc53f);
-
-        if (!debug) {
-            player_attack_right_hitbox.visible = false;
-            player_attack_left_hitbox.visible = false;
-            boss_arm_hitbox.visible = false;
-            boss_body_hitbox.visible = false;
-        }
-
         // Add Input Sources
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         W = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
@@ -166,6 +148,8 @@ class Scene1 extends Phaser.Scene{
         this.physics.add.collider(player, platforms);
         this.physics.add.collider(player_atk, platforms);
         this.physics.add.collider(boss, platforms);
+
+
     }
 
     // Constantly Updating Game Loop
@@ -176,10 +160,6 @@ class Scene1 extends Phaser.Scene{
         back.tilePositionX -= 0.7;
         mid.tilePositionX += 1.0;
 
-        player_attack_right_hitbox.setPosition(player.body.position.x + 75, player.body.position.y + 50);
-        player_attack_left_hitbox.setPosition(player.body.position.x - 15, player.body.position.y + 50)
-        boss_body_hitbox.setPosition(boss.body.position.x + 100, boss.body.position.y + 95);
-        boss_arm_hitbox.setPosition(boss.body.position.x + 40, boss.body.position.y + 75);
 
         // Player Movement
         if (A.isDown) {
@@ -210,7 +190,7 @@ class Scene1 extends Phaser.Scene{
             player_atk.setVelocityY(-250);
         }
 
-        // Attack Animations
+                // Attack Animations
         if (attack_anim_playing == false) {
             if (cursors.right.isDown) {
                 attack_anim_playing = true;
@@ -221,18 +201,20 @@ class Scene1 extends Phaser.Scene{
                         player.visible = false;
                         player_atk.visible = true;
                         player_atk.anims.play('atk_r');
+                        this.updateLifeText(player_atk, boss);
                         this.time.addEvent({
                             delay: 400,
                             callback: () => {
                                 player_atk.visible = false;
                                 player.visible = true;
                                 attack_anim_playing = false;
-                                this.checkPlayerAttack('R');
+
                             }
                         })
                     }
                 })
             }
+
             else if (cursors.left.isDown) {
                 attack_anim_playing = true;
                 player.anims.play('pre_atk_l');
@@ -242,43 +224,36 @@ class Scene1 extends Phaser.Scene{
                         player.visible = false;
                         player_atk.visible = true;
                         player_atk.anims.play('atk_l');
+                        this.updateLifeText(player_atk, boss);
                         this.time.addEvent({
                             delay: 400,
                             callback: () => {
                                 player_atk.visible = false;
                                 player.visible = true;
                                 attack_anim_playing = false;
-                                this.checkPlayerAttack('L');
+
                             }
                         })
                     }
                 })
             }
         }
-
-        this.updateLifeText();
     }
 
-    // Checks if Player Attack Hits
-    checkPlayerAttack(direction) {
-        if (debug) { console.log("CHECKING HIT") };
-        if (direction == 'L') {
-            if (Phaser.Geom.Intersects.RectangleToRectangle(player_attack_left_hitbox, boss_body_hitbox) || Phaser.Geom.Intersects.RectangleToRectangle(player_attack_left_hitbox, boss_arm_hitbox)) {
-                if (debug) { console.log("LEFT HIT") };
-                bossLife -= 1;
-            }
-        }
-        else if (direction == 'R') {
-            if (Phaser.Geom.Intersects.RectangleToRectangle(player_attack_right_hitbox, boss_body_hitbox) || Phaser.Geom.Intersects.RectangleToRectangle(player_attack_right_hitbox, boss_arm_hitbox)) {
-                if (debug) { console.log("RIGHT HIT") };
-                bossLife -= 1;
-            }
-        }
-    }
 
     // Updates Life Text
-    updateLifeText() {
-        lifeText.setText('Life: ' + life);
-        bossLifeText.setText('Boss Life: ' + bossLife);
+    updateLifeText(player_atk, boss){
+        var boundsA = player_atk.getBounds();
+        var boundsB = boss.getBounds();
+
+        if (Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB) == true){
+            bossLife-=10
+            bossLifeText.setText('Boss Life: ' + bossLife);
+            }
+        if (bossLife == 0){
+            boss.disableBody(true, true);
+        }
+
+
     }
 }
