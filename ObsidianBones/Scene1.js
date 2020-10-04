@@ -1,6 +1,7 @@
 // Global Variables
 var player, player_atk;
 var boss;
+var boss_alive = true;
 var cursors;
 var spaceBar;
 var W, A, S, D;
@@ -30,7 +31,7 @@ class Scene1 extends Phaser.Scene{
         this.load.spritesheet('hero', 'assets/sprites/hero-walk-preattack-sprite.png', { frameWidth: 150, frameHeight: 230 });
         this.load.spritesheet('hero_attack', 'assets/sprites/hero-attack-sprite.png', { frameWidth: 255, frameHeight: 230 });
 
-        // Background images
+        // Background Images
         this.load.image('sky0', 'assets/backgrounds/stage5/0sky.png');
         this.load.image('clouds1', 'assets/backgrounds/stage5/1clouds.png');
         this.load.image('far2', 'assets/backgrounds/stage5/2far.png');
@@ -231,7 +232,6 @@ class Scene1 extends Phaser.Scene{
                                 player_atk.visible = false;
                                 player.visible = true;
                                 attack_anim_playing = false;
-
                             }
                         })
                     }
@@ -240,20 +240,18 @@ class Scene1 extends Phaser.Scene{
         }
     }
 
-
     // Updates Life Text
     updateLifeText(player_atk, boss){
         var boundsA = player_atk.getBounds();
         var boundsB = boss.getBounds();
 
-        if (Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB) == true){
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB) == true) && boss_alive){
             bossLife-=10
             bossLifeText.setText('Boss Life: ' + bossLife);
             }
         if (bossLife == 0){
             boss.disableBody(true, true);
+            boss_alive = false;
         }
-
-
     }
 }
