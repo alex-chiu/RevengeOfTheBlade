@@ -275,7 +275,10 @@ class Scene1 extends Phaser.Scene{
                 }
                 else {
                     boss.setVelocityX(0);
-                    this.shootLaser('L');
+                    if (bossAlive){
+                      this.shootLaser('L');
+                    }
+
                 }
             }
             else if (player.body.position.x > boss.body.position.x) {
@@ -288,7 +291,10 @@ class Scene1 extends Phaser.Scene{
                 }
                 else {
                     boss.setVelocityX(0);
-                    this.shootLaser('R');
+                    if (bossAlive){
+                      this.shootLaser('R');
+                    }
+
                 }
             }
         }
@@ -343,7 +349,7 @@ class LaserGroup extends Phaser.Physics.Arcade.Group {
 
         this.createMultiple({
             classType: Laser,
-            frameQuantity: 1, 
+            frameQuantity: 1,
             active: false,
             visible: false,
             key: 'laser'
