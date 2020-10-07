@@ -18,10 +18,10 @@ var ground, platforms;
 // DEBUG PARAMETERS
 var debug = false;
 
-// Scene1 Class
-class Scene1 extends Phaser.Scene{
+// Robot Boss Fight Class
+class RobotBossFight extends Phaser.Scene{
     constructor() {
-        super({key:'Scene1'});
+        super({key:'RobotBossFight'});
     }
 
     // Preload Images and Sprites

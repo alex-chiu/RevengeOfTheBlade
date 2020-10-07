@@ -2,7 +2,7 @@ var config = {
     type: Phaser.AUTO,
     width: 800,
     height: 600,
-    scene: [Scene1],
+    scene: [RobotBossFight],
     
     scale:{
         autoCenter: Phaser.Scale.CENTER_HORIZONALLY,
@@ -19,4 +19,4 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
-game.scene.start('Scene1');
+game.scene.start('RobotBossFight');
