@@ -1,7 +1,8 @@
 // Global Variables
+var graphics;
 var player, playerAtk;
 var playerAlive = true;
-var delX;
+var delX, atkDir, callAttack;
 var W, A, S, D, cursors, spaceBar, mouseX, mouseY;
 var life = 100;
 var lifeText;
@@ -12,6 +13,7 @@ var ground, platforms;
 
 // DEBUG PARAMETERS
 var debug = false;
+var testLine;
 
 // Robot Boss Fight Class
 class Tutorial extends Phaser.Scene{
@@ -78,47 +80,7 @@ class Tutorial extends Phaser.Scene{
         playerAtk.visible = false;
 
         // Create Player Animations
-        this.anims.create({
-            key: 'left',
-            frames: this.anims.generateFrameNumbers('hero', { start: 8, end: 13 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'turn',
-            frames: [ { key: 'hero', frame: 14 } ],
-            frameRate: 10
-        });
-        this.anims.create({
-            key: 'right',
-            frames: this.anims.generateFrameNumbers('hero', { start: 15, end: 20 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'preAtkL',
-            frames: this.anims.generateFrameNumbers('hero', { start: 0, end: 7 }),
-            frameRate: 32,
-            repeat: 0
-        });
-        this.anims.create({
-            key: 'preAtkR',
-            frames: this.anims.generateFrameNumbers('hero', { start: 21, end: 28 }),
-            frameRate: 32,
-            repeat: 0
-        });
-        this.anims.create({
-            key: 'playerAtkL',
-            frames: this.anims.generateFrameNumbers('hero_attack', { start: 0, end: 5 }),
-            frameRate: 15,
-            repeat: 0
-        });
-        this.anims.create({
-            key: 'playerAtkR',
-            frames: this.anims.generateFrameNumbers('hero_attack', { start: 6, end: 11 }),
-            frameRate: 15,
-            repeat: 0
-        });
+        this.createPlayerAnims();
 
         // Add Input Sources
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -132,7 +94,20 @@ class Tutorial extends Phaser.Scene{
             mouseX = pointer.x;
             mouseY = pointer.y;
             console.log('Mouse Location: ' + mouseX + ', ' + mouseY);
+            if (mouseX >= player.body.x + 27) {
+                atkDir = 'R';
+            }
+            else if (mouseX < player.body.x + 27) {
+                atkDir = 'L';
+            }
+            callAttack = true;
         })
+
+        graphics = this.add.graphics();
+        if (debug) {
+            graphics.lineStyle(5, 0xFF0000, 1)
+            testLine = new Phaser.Geom.Line(this, player.body.x, player.body.y - 50, player.body.x, player.body.y + 50);
+        }
 
         // Add Colliders
         this.physics.add.collider(player, platforms);
@@ -176,9 +151,66 @@ class Tutorial extends Phaser.Scene{
             playerAtk.setVelocityY(-250);
         }
 
-        // Attack Animations
+        if (callAttack) {
+            this.playerAttackCall();
+        }
+
+        if (debug) {
+            testLine.setTo(player.body.x + 27, player.body.y - 50, player.body.x + 27, player.body.y + 50);
+            graphics.strokeLineShape(testLine);
+        }
+    }
+
+    // Creates player animations
+    createPlayerAnims() {
+        this.anims.create({
+            key: 'left',
+            frames: this.anims.generateFrameNumbers('hero', { start: 8, end: 13 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'turn',
+            frames: [ { key: 'hero', frame: 14 } ],
+            frameRate: 10
+        });
+        this.anims.create({
+            key: 'right',
+            frames: this.anims.generateFrameNumbers('hero', { start: 15, end: 20 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'preAtkL',
+            frames: this.anims.generateFrameNumbers('hero', { start: 0, end: 7 }),
+            frameRate: 32,
+            repeat: 0
+        });
+        this.anims.create({
+            key: 'preAtkR',
+            frames: this.anims.generateFrameNumbers('hero', { start: 21, end: 28 }),
+            frameRate: 32,
+            repeat: 0
+        });
+        this.anims.create({
+            key: 'playerAtkL',
+            frames: this.anims.generateFrameNumbers('hero_attack', { start: 0, end: 5 }),
+            frameRate: 15,
+            repeat: 0
+        });
+        this.anims.create({
+            key: 'playerAtkR',
+            frames: this.anims.generateFrameNumbers('hero_attack', { start: 6, end: 11 }),
+            frameRate: 15,
+            repeat: 0
+        });
+    }
+
+    // Called when player attacks
+    playerAttackCall() {
+        console.log('ATTACKING');
         if (attackAnimPlaying == false) {
-            if (cursors.right.isDown) {
+            if (atkDir == 'R') {
                 attackAnimPlaying = true;
                 player.anims.play('preAtkR');
                 this.time.addEvent({
@@ -193,13 +225,13 @@ class Tutorial extends Phaser.Scene{
                                 playerAtk.visible = false;
                                 player.visible = true;
                                 attackAnimPlaying = false;
+                                callAttack = false;
                             }
                         })
                     }
                 })
             }
-
-            else if (cursors.left.isDown) {
+            else if (atkDir == 'L') {
                 attackAnimPlaying = true;
                 player.anims.play('preAtkL');
                 this.time.addEvent({
@@ -214,6 +246,7 @@ class Tutorial extends Phaser.Scene{
                                 playerAtk.visible = false;
                                 player.visible = true;
                                 attackAnimPlaying = false;
+                                callAttack = false;
                             }
                         })
                     }
@@ -221,7 +254,8 @@ class Tutorial extends Phaser.Scene{
             }
         }
     }
-    // Function that Updates the Player's Life Text
+
+    // Function that updates the player's life text
     updatePlayerLifeText() {
         lifeText.setText('Life: ' + life);
     }
