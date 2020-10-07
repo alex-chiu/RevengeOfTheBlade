@@ -2,9 +2,8 @@
 var player, playerAtk;
 var playerAlive = true;
 var delX;
-var cursors, spaceBar;
-var W, A, S, D;
-var life = 100, bossLife = 100;
+var W, A, S, D, cursors, spaceBar, mouseX, mouseY;
+var life = 100;
 var lifeText;
 var attackAnimPlaying = false;
 var sky, clouds;
@@ -128,6 +127,12 @@ class Tutorial extends Phaser.Scene{
         S = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         D = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         cursors = this.input.keyboard.createCursorKeys();
+
+        this.input.on('pointerdown', function (pointer) {
+            mouseX = pointer.x;
+            mouseY = pointer.y;
+            console.log('Mouse Location: ' + mouseX + ', ' + mouseY);
+        })
 
         // Add Colliders
         this.physics.add.collider(player, platforms);
