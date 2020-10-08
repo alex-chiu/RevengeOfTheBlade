@@ -8,7 +8,7 @@ class Menu extends Phaser.Scene{
 
       const tutorialButton = this.add.text(350, 250, 'TUTORIAL', { fontSize: '20px', fill: '#0f0' });
       tutorialButton.setInteractive();
-      tutorialButton.on('pointerdown', () => { this.scene.start('Tutorial'); });
+      tutorialButton.on('pointerdown', () => { this.scene.start('Tutorial1'); });
 
       const playButton = this.add.text(310, 350, 'PLAY', { fontSize: '75px', fill: '#0f0' });
       playButton.setInteractive();
