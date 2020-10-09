@@ -325,11 +325,21 @@ class RobotBossFight extends Phaser.Scene{
             boss.disableBody(true, true);
             bossAlive = false;
         }
+        boss.setTint('0xff0000')
+        this.time.addEvent({
+            delay: 400,
+            callback: () => {
+                boss.clearTint();
+            }
+        })
+        //boss.setAlpha(0.5);
+
     }
 
     // Function that Updates the Player's Life Text
     updatePlayerLifeText() {
         lifeText.setText('Life: ' + life);
+
     }
 
     shootLaser(direction) {
