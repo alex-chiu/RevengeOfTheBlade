@@ -14,17 +14,23 @@ class Tutorial1 extends Phaser.Scene{
       this.add.text(50,400,'   - daggers attack', { fontSize: '40px', fill: '#ffffff' });
 
       this.load.image('hero', 'assets/sprites/hero.png');
-
-      const practiceButton = this.add.text(630, 550, 'practice', { fontSize: '30px', fill: '#1dd613' });
-      practiceButton.setInteractive();
-      practiceButton.on('pointerdown', () => { this.scene.start('RobotBossFight'); });
-
+      this.load.image('arrowR', 'assets/arrowR.png');
+      this.load.image('arrowL', 'assets/arrowL.png');
 
     }
 
     create(){
       hero = this.physics.add.staticGroup();
         hero.create(660, 280, 'hero');
+
+      const playButton = this.add.image(750, 550, 'arrowR');
+      playButton.setInteractive();
+      playButton.on('pointerdown', () => { this.scene.start('RobotBossFight'); });
+
+      const backButton = this.add.image(50, 550, 'arrowL');
+      backButton.setInteractive();
+      backButton.on('pointerdown', () => { this.scene.start('Menu'); });
+
 
     }
 
