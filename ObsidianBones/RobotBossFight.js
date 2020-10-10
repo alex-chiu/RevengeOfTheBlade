@@ -8,7 +8,7 @@ var delX;
 var laserGroup;
 var cursors, spaceBar;
 var W, A, S, D;
-var life = 100, bossLife = 100;
+var life = 10, bossLife = 100;
 var lifeText, bossLifeText;
 var attackAnimPlaying = false;
 var sky, clouds;
@@ -177,6 +177,15 @@ class RobotBossFight extends Phaser.Scene{
 
     // Constantly Updating Game Loop
     update() {
+        if (playerAlive == false){
+          //this.scene.pause('RobotBossFight')
+          this.scene.launch('gameOverScreen');
+
+          /*let panel = this.scene.get('gameOverScreen');
+          panel.events.on('clickMenu', this.handleGoMenu, this);
+          panel.events.on('clickTryAgain', this.handleTryAgain, this);*/
+        }
+
         // Implement Parallax Background
         clouds.tilePositionX -= 0.5;
         far.tilePositionX += 0.3;
@@ -320,18 +329,19 @@ class RobotBossFight extends Phaser.Scene{
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && bossAlive) {
             bossLife -= 10
             bossLifeText.setText('Boss Life: ' + bossLife);
+            boss.setTint('0xff0000')
+            this.time.addEvent({
+                delay: 400,
+                callback: () => {
+                    boss.clearTint();
+                }
+            })
         }
         if (bossLife == 0) {
             boss.disableBody(true, true);
             bossAlive = false;
         }
-        boss.setTint('0xff0000')
-        this.time.addEvent({
-            delay: 400,
-            callback: () => {
-                boss.clearTint();
-            }
-        })
+
         //boss.setAlpha(0.5);
 
     }
@@ -389,8 +399,18 @@ class Laser extends Phaser.Physics.Arcade.Sprite {
         }
         else if (Phaser.Geom.Rectangle.Overlaps(this.getBounds(), player.getBounds()) && playerAlive) {
             life -= 5;
+
+            /*player.setTint('0xff0000')
+            this.time.addEvent({
+                delay: 400,
+                callback: () => {
+                    player.clearTint();
+                }
+            })*/
+
             this.setActive(false);
             this.setVisible(false);
+
         }
         if (life == 0) {
             player.disableBody(true, true);
@@ -399,6 +419,7 @@ class Laser extends Phaser.Physics.Arcade.Sprite {
             playerAlive = false;
         }
     }
+
 
     fire (x, y, direction) {
         this.body.reset(x, y);
