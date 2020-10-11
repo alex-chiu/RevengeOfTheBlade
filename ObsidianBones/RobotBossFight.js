@@ -19,7 +19,7 @@ var ground, platforms;
 var debug = false;
 
 // Robot Boss Fight Class
-class RobotBossFight extends Phaser.Scene{
+class RobotBossFight extends Phaser.Scene {
     constructor() {
         super({ key: 'RobotBossFight' });
     }

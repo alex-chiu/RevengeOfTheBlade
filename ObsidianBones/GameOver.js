@@ -1,13 +1,13 @@
-class gameOverScreen extends Phaser.Scene{
+class GameOver extends Phaser.Scene{
     constructor() {
-        super({ key: 'gameOverScreen' });
+        super({ key: 'GameOver' });
     }
 
-    preload(){
+    preload() {
 
     }
 
-    create(){
+    create() {
       this.background = this.add.graphics()
       this.background.fillRoundedRect(150, 175, 500, 250, 25)
       this.background.fillStyle('#9ba3a0')
@@ -21,22 +21,19 @@ class gameOverScreen extends Phaser.Scene{
       const menuButton = this.add.text(350, 290, 'MENU', { fontSize: '40px', fill: '#8db9d9' });
       menuButton.setInteractive();
       menuButton.on('pointerdown', () => { this.scene.start('Menu'); });
-
     }
 
-    tryAgain(){
+    tryAgain() {
       //this.scene.setVisible(false);
-
       this.scene.start('RobotBossFight');
       this.scene.stop();
     }
 
-    restart(){
+    restart() {
       this.scene.start('RobotBossFight');
     }
 
-    update(){
+    update() {
 
     }
-
 }
