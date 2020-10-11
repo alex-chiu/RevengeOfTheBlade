@@ -1,3 +1,9 @@
+/*  MENU SCENE
+    
+    Initial load screen for game.
+    Has options for entering the tutorial or starting the game.
+*/
+
 var playButton;
 var tutorialButton;
 
@@ -7,10 +13,8 @@ class Menu extends Phaser.Scene {
     }
 
     preload() {
-
       this.load.image('sky0', 'assets/backgrounds/stage5/0sky.png');
       this.load.image('clouds1', 'assets/backgrounds/stage5/1clouds.png');
-
     }
 
     create() {

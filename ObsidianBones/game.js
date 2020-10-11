@@ -1,3 +1,9 @@
+/*  MAIN JAVASCRIPT FILE FOR GAME 
+    
+    Sets config settings and physics.
+    Starts the game from the menu scene.
+*/
+
 var config = {
     type: Phaser.AUTO,
     width: 800,
