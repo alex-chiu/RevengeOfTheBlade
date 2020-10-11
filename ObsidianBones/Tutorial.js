@@ -16,9 +16,9 @@ var debug = false;
 var testLine;
 
 // Robot Boss Fight Class
-class Tutorial2 extends Phaser.Scene{
+class Tutorial extends Phaser.Scene{
     constructor() {
-        super({ key: 'Tutorial2' });
+        super({ key: 'Tutorial' });
     }
 
     // Preload Images and Sprites

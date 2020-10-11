@@ -25,7 +25,7 @@ class Menu extends Phaser.Scene {
 
       tutorialButton = this.add.text(350, 300, 'TUTORIAL', { fontSize: '20px', fill: '#b5dbf7' });
       tutorialButton.setInteractive();
-      tutorialButton.on('pointerdown', () => { this.scene.start('Tutorial1'); });
+      tutorialButton.on('pointerdown', () => { this.scene.start('Instructions'); });
       tutorialButton.on('pointerover', () => { this.buttonOver(tutorialButton); });
       tutorialButton.on('pointerout', () => { this.buttonNotOver(tutorialButton); });
 
