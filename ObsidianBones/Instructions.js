@@ -3,7 +3,7 @@
     Provides basic instructions to player regarding the controls of the game.
 */
 
-var hero;
+var hero_static;
 var playButton;
 var backButton;
 var practiceTxt;
@@ -23,7 +23,7 @@ class Instructions extends Phaser.Scene{
       this.add.text(50,350,'<> - Melee Attack', { fontSize: '40px', fill: '#d2c4f5' });
       this.add.text(50,400,'MB1 - Ranged Attack', { fontSize: '40px', fill: '#d2c4f5' });
 
-      this.load.image('hero', 'assets/sprites/hero.png');
+      this.load.image('hero_static', 'assets/sprites/hero_static.png');
       this.load.image('arrowR', 'assets/arrowR.png');
       this.load.image('arrowL', 'assets/arrowL.png');
       menuTxt = this.add.text(100, 541,'MENU', { fontSize: '20px', fill: '#ffffff' });
@@ -31,8 +31,8 @@ class Instructions extends Phaser.Scene{
     }
 
     create(){
-      hero = this.physics.add.staticGroup();
-      hero.create(660, 280, 'hero');
+      hero_static = this.physics.add.staticGroup();
+      hero_static.create(660, 280, 'hero_static');
 
       playButton = this.add.image(750, 550, 'arrowR');
       playButton.setInteractive();

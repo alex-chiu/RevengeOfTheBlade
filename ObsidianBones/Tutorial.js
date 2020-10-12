@@ -40,7 +40,6 @@ class Tutorial extends Phaser.Scene{
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
         this.load.image('platformH', 'assets/platforms/platformH.png');
-
     }
 
     // Create all the Sprites/Images/Platforms
@@ -107,7 +106,7 @@ class Tutorial extends Phaser.Scene{
         this.input.on('pointerdown', function (pointer) {
             mouseX = pointer.x;
             mouseY = pointer.y;
-            console.log('Mouse Location: ' + mouseX + ', ' + mouseY);
+            // console.log('Mouse Location: ' + mouseX + ', ' + mouseY);
             if (mouseX >= player.body.x + 27) {
                 atkDir = 'R';
             }
