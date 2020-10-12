@@ -29,13 +29,13 @@ class Tutorial extends Phaser.Scene{
         this.load.spritesheet('pterodactyl', 'assets/sprites/pterodactyl-sprite.png', { frameWidth: 312, frameHeight: 250 });
 
         // Background Images
-        this.load.image('sky0', 'assets/backgrounds/stage5/0sky.png');
-        this.load.image('clouds1', 'assets/backgrounds/stage5/1clouds.png');
-        this.load.image('far2', 'assets/backgrounds/stage5/2far.png');
-        this.load.image('back3', 'assets/backgrounds/stage5/3back.png');
-        this.load.image('mid4', 'assets/backgrounds/stage5/4mid.png');
-        this.load.image('front5', 'assets/backgrounds/stage5/5front.png');
-        this.load.image('ground', 'assets/backgrounds/stage5/6platform.png');
+        this.load.image('sky0', 'assets/backgrounds/stage1/0sky.png');
+        this.load.image('clouds1', 'assets/backgrounds/stage1/1clouds.png');
+        this.load.image('far2', 'assets/backgrounds/stage1/2far.png');
+        this.load.image('back3', 'assets/backgrounds/stage1/3back.png');
+        this.load.image('mid4', 'assets/backgrounds/stage1/4mid.png');
+        this.load.image('front5', 'assets/backgrounds/stage1/5front.png');
+        this.load.image('ground', 'assets/backgrounds/stage1/6platform.png');
 
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');

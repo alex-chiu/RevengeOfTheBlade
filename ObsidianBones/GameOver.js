@@ -1,5 +1,5 @@
 /*  GAME OVER SCENE
-    
+
     Scene that appears when the player dies.
     Has options for returning to the menu or trying the stage again.
 */
@@ -22,17 +22,17 @@ class GameOver extends Phaser.Scene{
 
       const tryAgainButton = this.add.text(290, 360, 'TRY AGAIN', { fontSize: '40px', fill: '#b5dbf7' });
       tryAgainButton.setInteractive();
-      tryAgainButton.on('pointerdown', () => { 
+      tryAgainButton.on('pointerdown', () => {
         this.scene.restart('RobotBossFight');
         this.scene.start('RobotBossFight');
       });
 
       const menuButton = this.add.text(350, 290, 'MENU', { fontSize: '40px', fill: '#8db9d9' });
       menuButton.setInteractive();
-      menuButton.on('pointerdown', () => { 
+      menuButton.on('pointerdown', () => {
         this.scene.restart('RobotBossFight');
         this.scene.stop('RobotBossFight');
-        this.scene.start('Menu'); 
+        this.scene.start('Menu');
       });
     }
 
