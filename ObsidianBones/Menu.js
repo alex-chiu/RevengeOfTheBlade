@@ -6,6 +6,7 @@
 
 var playButton;
 var tutorialButton;
+var soundtrack;
 
 class Menu extends Phaser.Scene {
     constructor() {
@@ -13,11 +14,18 @@ class Menu extends Phaser.Scene {
     }
 
     preload() {
+      // Soundtrack
+      this.load.audio('menuMusic', ['assets/audio/soundtrack/intro.wav'])
+
       this.load.image('sky0', 'assets/backgrounds/stage5/0sky.png');
       this.load.image('clouds1', 'assets/backgrounds/stage5/1clouds.png');
     }
 
     create() {
+      soundtrack = this.add.audio('menuMusic');
+      soundtrack.play();
+      soundtrack.setVolume(3);
+
       this.add.tileSprite(400, 300, 800, 600, 'sky0');
       this.add.tileSprite(400, 300, 800, 600, 'clouds1');
 
@@ -25,7 +33,11 @@ class Menu extends Phaser.Scene {
 
       tutorialButton = this.add.text(350, 300, 'TUTORIAL', { fontSize: '20px', fill: '#b5dbf7' });
       tutorialButton.setInteractive();
-      tutorialButton.on('pointerdown', () => { this.scene.start('Instructions'); });
+      tutorialButton.on('pointerdown', () => {
+        soundtrack.stop();
+        this.scene,stop('Menu');
+        this.scene.start('Instructions');
+      });
       tutorialButton.on('pointerover', () => { this.buttonOver(tutorialButton); });
       tutorialButton.on('pointerout', () => { this.buttonNotOver(tutorialButton); });
 
