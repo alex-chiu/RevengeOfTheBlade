@@ -1,6 +1,6 @@
-class gameOverScreen extends Phaser.Scene{
+class GameOverScreen extends Phaser.Scene{
     constructor() {
-        super({ key: 'gameOverScreen' });
+        super({ key: 'GameOverScreen' });
     }
 
     preload(){
@@ -20,19 +20,22 @@ class gameOverScreen extends Phaser.Scene{
 
       const menuButton = this.add.text(350, 290, 'MENU', { fontSize: '40px', fill: '#8db9d9' });
       menuButton.setInteractive();
-      menuButton.on('pointerdown', () => { this.scene.start('Menu'); });
+      menuButton.on('pointerdown', () => { this.menu(); });
 
     }
 
     tryAgain(){
       //this.scene.setVisible(false);
-
+      this.scene.stop('GameOverScreen');
+      this.scene.stop('RobotBossFight');
       this.scene.start('RobotBossFight');
-      this.scene.stop();
     }
 
-    restart(){
-      this.scene.start('RobotBossFight');
+    menu(){
+      //this.scene.stop();
+      this.scene.stop('GameOverScreen');
+      this.scene.stop('RobotBossFight');
+      this.scene.start('Menu');
     }
 
     update(){

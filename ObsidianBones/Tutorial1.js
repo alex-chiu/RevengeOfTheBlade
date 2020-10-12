@@ -32,7 +32,7 @@ class Tutorial1 extends Phaser.Scene{
 
       playButton = this.add.image(750, 550, 'arrowR');
       playButton.setInteractive();
-      playButton.on('pointerdown', () => { this.scene.start('RobotBossFight'); });
+      playButton.on('pointerdown', () => { this.scene.start('Turorial2'); });
       playButton.on('pointerover', () => { this.buttonOver(playButton); });
       playButton.on('pointerout', () => { this.buttonNotOver(playButton); });
 

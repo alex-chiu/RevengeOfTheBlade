@@ -178,8 +178,8 @@ class RobotBossFight extends Phaser.Scene{
     // Constantly Updating Game Loop
     update() {
         if (playerAlive == false){
-          //this.scene.pause('RobotBossFight')
-          this.scene.launch('gameOverScreen');
+          this.scene.pause('RobotBossFight')
+          this.scene.launch('GameOverScreen');
 
           /*let panel = this.scene.get('gameOverScreen');
           panel.events.on('clickMenu', this.handleGoMenu, this);

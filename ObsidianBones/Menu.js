@@ -27,9 +27,16 @@ class Menu extends Phaser.Scene{
 
       playButton = this.add.text(310, 375, 'PLAY', { fontSize: '75px', fill: '#8db9d9' });
       playButton.setInteractive();
-      playButton.on('pointerdown', () => { this.scene.start('RobotBossFight'); });
+      playButton.on('pointerdown', () => { this.play(); });
       playButton.on('pointerover', () => { this.buttonOver(playButton); });
       playButton.on('pointerout', () => { this.buttonNotOver(playButton); });
+    }
+
+    play(){
+      //this.scene.setVisible(false);
+      this.scene.stop('GameOverScreen');
+      this.scene.start('RobotBossFight');
+
     }
 
     buttonOver(button){
