@@ -21,7 +21,7 @@ class Menu extends Phaser.Scene {
     }
 
     create() {
-      this.soundtrack = this.sound.add('menuMusic', {volume: 3, loop: true});
+      this.soundtrack = this.sound.add('menuMusic', {volume: 0.5, loop: true});
       this.soundtrack.play();
 
       this.add.tileSprite(400, 300, 800, 600, 'sky0');

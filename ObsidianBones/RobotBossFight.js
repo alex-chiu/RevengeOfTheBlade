@@ -57,7 +57,7 @@ class RobotBossFight extends Phaser.Scene {
     create() {
         this.cameras.main.setBackgroundColor('#828b99')
 
-        soundtrack5 = this.sound.add('stage5Music', {volume: 3, loop: true});
+        soundtrack5 = this.sound.add('stage5Music', {volume: 0.5, loop: true});
         soundtrack5.play();
 
         // Reset Values
