@@ -1,0 +1,10 @@
+enemies sound effects
+
+- move  [M]
+- attack [A]
+- take damage [T] 
+- die [D]
+
+
+enemies
+- pterodactyl
