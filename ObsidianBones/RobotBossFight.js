@@ -230,8 +230,8 @@ class RobotBossFight extends Phaser.Scene {
 
         // Jumping
         if ((spaceBar.isDown || W.isDown) && player.body.touching.down) {
-            player.setVelocityY(-250);
-            playerAtk.setVelocityY(-250);
+            player.setVelocityY(-270);
+            playerAtk.setVelocityY(-270);
         }
 
         // Attack Animations

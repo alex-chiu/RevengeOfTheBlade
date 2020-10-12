@@ -10,6 +10,7 @@ var attackAnimPlaying = false;
 var sky, clouds;
 var far, back, mid, front;
 var ground, platforms;
+var obstacles;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -35,6 +36,11 @@ class Tutorial extends Phaser.Scene{
         this.load.image('mid4', 'assets/backgrounds/stage5/4mid.png');
         this.load.image('front5', 'assets/backgrounds/stage5/5front.png');
         this.load.image('ground', 'assets/backgrounds/stage5/6platform.png');
+
+        // Platforms
+        this.load.image('platformV', 'assets/platforms/platformV1.png');
+        this.load.image('platformH', 'assets/platforms/platformH.png');
+
     }
 
     // Create all the Sprites/Images/Platforms
@@ -52,6 +58,13 @@ class Tutorial extends Phaser.Scene{
         this.add.existing(ground);
         sky.fixedToCamera = true;
 
+        // Platforms
+        obstacles = this.physics.add.staticGroup();
+        obstacles.create(250, 610, 'platformV');
+        obstacles.create(0, 500, 'platformH');
+        obstacles.create(250, 450, 'platformH');
+        obstacles.create(320, 500, 'platformH');
+
         // Text
         lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
 
@@ -65,7 +78,7 @@ class Tutorial extends Phaser.Scene{
         }
 
         // Create Player
-        player = this.physics.add.sprite(100, 475, 'hero');
+        player = this.physics.add.sprite(130, 475, 'hero');
         player.setBounce(0.25);
         player.setCollideWorldBounds(true);
         player.displayWidth = game.config.width * 0.075;
@@ -113,6 +126,7 @@ class Tutorial extends Phaser.Scene{
         // Add Colliders
         this.physics.add.collider(player, platforms);
         this.physics.add.collider(playerAtk, platforms);
+        this.physics.add.collider(player, obstacles);
     }
 
     // Constantly Updating Game Loop
@@ -148,8 +162,8 @@ class Tutorial extends Phaser.Scene{
 
         // Jumping
         if ((spaceBar.isDown || W.isDown) && player.body.touching.down) {
-            player.setVelocityY(-250);
-            playerAtk.setVelocityY(-250);
+            player.setVelocityY(-270);
+            playerAtk.setVelocityY(-270);
         }
 
         if (callAttack) {
