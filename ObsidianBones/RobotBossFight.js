@@ -10,7 +10,7 @@ var boss;
 var bossAlive = true;
 var playerAlive = true;
 var playerDetected = false;
-var delX;
+var delX, atkDir, callAttack;
 var laserGroup;
 var cursors, spaceBar;
 var W, A, S, D;
@@ -132,47 +132,7 @@ class RobotBossFight extends Phaser.Scene {
         playerAtk.visible = false;
 
         // Create Player Animations
-        this.anims.create({
-            key: 'left',
-            frames: this.anims.generateFrameNumbers('hero', { start: 8, end: 13 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'turn',
-            frames: [ { key: 'hero', frame: 14 } ],
-            frameRate: 10
-        });
-        this.anims.create({
-            key: 'right',
-            frames: this.anims.generateFrameNumbers('hero', { start: 15, end: 20 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'preAtkL',
-            frames: this.anims.generateFrameNumbers('hero', { start: 0, end: 7 }),
-            frameRate: 32,
-            repeat: 0
-        });
-        this.anims.create({
-            key: 'preAtkR',
-            frames: this.anims.generateFrameNumbers('hero', { start: 21, end: 28 }),
-            frameRate: 32,
-            repeat: 0
-        });
-        this.anims.create({
-            key: 'playerAtkL',
-            frames: this.anims.generateFrameNumbers('hero_attack', { start: 0, end: 5 }),
-            frameRate: 15,
-            repeat: 0
-        });
-        this.anims.create({
-            key: 'playerAtkR',
-            frames: this.anims.generateFrameNumbers('hero_attack', { start: 6, end: 11 }),
-            frameRate: 15,
-            repeat: 0
-        });
+        this.createPlayerAnimations();
 
         // Add Input Sources
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -181,6 +141,19 @@ class RobotBossFight extends Phaser.Scene {
         S = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         D = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         cursors = this.input.keyboard.createCursorKeys();
+
+        this.input.on('pointerdown', function (pointer) {
+            mouseX = pointer.x;
+            mouseY = pointer.y;
+            if (debug) { console.log('Mouse Location: ' + mouseX + ', ' + mouseY) };
+            if (mouseX >= player.body.x + 27) {
+                atkDir = 'R';
+            }
+            else if (mouseX < player.body.x + 27) {
+                atkDir = 'L';
+            }
+            callAttack = true;
+        })
 
         // Add Colliders
         this.physics.add.collider(player, platforms);
@@ -194,9 +167,9 @@ class RobotBossFight extends Phaser.Scene {
           this.scene.pause('RobotBossFight')
           this.scene.launch('GameOver');
 
-          /*let panel = this.scene.get('gameOverScreen');
+          /* let panel = this.scene.get('gameOverScreen');
           panel.events.on('clickMenu', this.handleGoMenu, this);
-          panel.events.on('clickTryAgain', this.handleTryAgain, this);*/
+          panel.events.on('clickTryAgain', this.handleTryAgain, this); */
         }
 
         // Implement Parallax Background
@@ -234,51 +207,8 @@ class RobotBossFight extends Phaser.Scene {
             playerAtk.setVelocityY(-270);
         }
 
-        // Attack Animations
-        if (attackAnimPlaying == false) {
-            if (cursors.right.isDown) {
-                attackAnimPlaying = true;
-                player.anims.play('preAtkR');
-                this.time.addEvent({
-                    delay: 250,
-                    callback: () => {
-                        player.visible = false;
-                        playerAtk.visible = true;
-                        playerAtk.anims.play('playerAtkR');
-                        this.updateBossLifeText(playerAtk, boss);
-                        this.time.addEvent({
-                            delay: 400,
-                            callback: () => {
-                                playerAtk.visible = false;
-                                player.visible = true;
-                                attackAnimPlaying = false;
-                            }
-                        })
-                    }
-                })
-            }
-
-            else if (cursors.left.isDown) {
-                attackAnimPlaying = true;
-                player.anims.play('preAtkL');
-                this.time.addEvent({
-                    delay: 250,
-                    callback: () => {
-                        player.visible = false;
-                        playerAtk.visible = true;
-                        playerAtk.anims.play('playerAtkL');
-                        this.updateBossLifeText(playerAtk, boss);
-                        this.time.addEvent({
-                            delay: 400,
-                            callback: () => {
-                                playerAtk.visible = false;
-                                player.visible = true;
-                                attackAnimPlaying = false;
-                            }
-                        })
-                    }
-                })
-            }
+        if (callAttack) {
+            this.playerAttackCall();
         }
 
         // Boss AI/Movement
@@ -355,16 +285,17 @@ class RobotBossFight extends Phaser.Scene {
             bossAlive = false;
         }
 
-        //boss.setAlpha(0.5);
+        // boss.setAlpha(0.5);
 
     }
 
-    // Function that Updates the Player's Life Text
+    // Updates player's life text
     updatePlayerLifeText() {
         lifeText.setText('Life: ' + life);
 
     }
 
+    // Function that fires laser from boss
     shootLaser(direction) {
         if (direction == 'L') {
             laserGroup.fireLaser(boss.body.position.x, boss.body.position.y + 82, direction);
@@ -372,6 +303,100 @@ class RobotBossFight extends Phaser.Scene {
         else {
             laserGroup.fireLaser(boss.body.position.x + 100, boss.body.position.y + 110, direction);
         }
+    }
+
+    // Called when player attacks
+    playerAttackCall() {
+        if (debug) { console.log('ATTACKING') };
+        if (attackAnimPlaying == false) {
+            if (atkDir == 'R') {
+                attackAnimPlaying = true;
+                player.anims.play('preAtkR');
+                this.time.addEvent({
+                    delay: 250,
+                    callback: () => {
+                        player.visible = false;
+                        playerAtk.visible = true;
+                        playerAtk.anims.play('playerAtkR');
+                        this.time.addEvent({
+                            delay: 400,
+                            callback: () => {
+                                playerAtk.visible = false;
+                                player.visible = true;
+                                attackAnimPlaying = false;
+                                callAttack = false;
+                            }
+                        })
+                    }
+                })
+            }
+            else if (atkDir == 'L') {
+                attackAnimPlaying = true;
+                player.anims.play('preAtkL');
+                this.time.addEvent({
+                    delay: 250,
+                    callback: () => {
+                        player.visible = false;
+                        playerAtk.visible = true;
+                        playerAtk.anims.play('playerAtkL');
+                        this.time.addEvent({
+                            delay: 400,
+                            callback: () => {
+                                playerAtk.visible = false;
+                                player.visible = true;
+                                attackAnimPlaying = false;
+                                callAttack = false;
+                            }
+                        })
+                    }
+                })
+            }
+        }
+    }
+
+    // Creates all the player animations
+    createPlayerAnimations() {
+        this.anims.create({
+            key: 'left',
+            frames: this.anims.generateFrameNumbers('hero', { start: 8, end: 13 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'turn',
+            frames: [ { key: 'hero', frame: 14 } ],
+            frameRate: 10
+        });
+        this.anims.create({
+            key: 'right',
+            frames: this.anims.generateFrameNumbers('hero', { start: 15, end: 20 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'preAtkL',
+            frames: this.anims.generateFrameNumbers('hero', { start: 0, end: 7 }),
+            frameRate: 32,
+            repeat: 0
+        });
+        this.anims.create({
+            key: 'preAtkR',
+            frames: this.anims.generateFrameNumbers('hero', { start: 21, end: 28 }),
+            frameRate: 32,
+            repeat: 0
+        });
+        this.anims.create({
+            key: 'playerAtkL',
+            frames: this.anims.generateFrameNumbers('hero_attack', { start: 0, end: 5 }),
+            frameRate: 15,
+            repeat: 0
+        });
+        this.anims.create({
+            key: 'playerAtkR',
+            frames: this.anims.generateFrameNumbers('hero_attack', { start: 6, end: 11 }),
+            frameRate: 15,
+            repeat: 0
+        });
     }
 }
 
