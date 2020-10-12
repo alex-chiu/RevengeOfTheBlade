@@ -6,7 +6,6 @@
 
 var playButton;
 var tutorialButton;
-var soundtrack;
 
 class Menu extends Phaser.Scene {
     constructor() {
@@ -22,9 +21,8 @@ class Menu extends Phaser.Scene {
     }
 
     create() {
-      soundtrack = this.add.audio('menuMusic');
-      soundtrack.play();
-      soundtrack.setVolume(3);
+      this.soundtrack = this.sound.add('menuMusic', {volume: 3, loop: true});
+      this.soundtrack.play();
 
       this.add.tileSprite(400, 300, 800, 600, 'sky0');
       this.add.tileSprite(400, 300, 800, 600, 'clouds1');
@@ -34,7 +32,7 @@ class Menu extends Phaser.Scene {
       tutorialButton = this.add.text(350, 300, 'TUTORIAL', { fontSize: '20px', fill: '#b5dbf7' });
       tutorialButton.setInteractive();
       tutorialButton.on('pointerdown', () => {
-        soundtrack.stop();
+        this.soundtrack.stop();
         this.scene,stop('Menu');
         this.scene.start('Instructions');
       });
@@ -44,6 +42,7 @@ class Menu extends Phaser.Scene {
       playButton = this.add.text(310, 375, 'PLAY', { fontSize: '75px', fill: '#8db9d9' });
       playButton.setInteractive();
       playButton.on('pointerdown', () => {
+        this.soundtrack.stop();
         this.scene.stop('Menu');
         this.scene.start('RobotBossFight');
     });

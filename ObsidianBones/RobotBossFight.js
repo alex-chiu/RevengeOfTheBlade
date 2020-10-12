@@ -20,6 +20,7 @@ var attackAnimPlaying = false;
 var sky, clouds;
 var far, back, mid, front;
 var ground, platforms;
+var soundtrack5;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -32,6 +33,9 @@ class RobotBossFight extends Phaser.Scene {
 
     // Preload Images and Sprites
     preload() {
+        // Soundtrack
+        this.load.audio('stage5Music', ['assets/audio/soundtrack/stage1.wav'])
+
         this.load.spritesheet('robotBoss', 'assets/sprites/robot-boss-sprite.png', { frameWidth: 390, frameHeight: 500 });
         this.load.spritesheet('hero', 'assets/sprites/hero-walk-preattack-sprite.png', { frameWidth: 150, frameHeight: 230 });
         this.load.spritesheet('hero_attack', 'assets/sprites/hero-attack-sprite.png', { frameWidth: 255, frameHeight: 230 });
@@ -52,6 +56,9 @@ class RobotBossFight extends Phaser.Scene {
     // Create all the Sprites/Images/Platforms
     create() {
         this.cameras.main.setBackgroundColor('#828b99')
+
+        soundtrack5 = this.sound.add('stage5Music', {volume: 3, loop: true});
+        soundtrack5.play();
 
         // Reset Values
         life = 10;
@@ -455,6 +462,7 @@ class Laser extends Phaser.Physics.Arcade.Sprite {
             player.setActive(false);
             player.setVisible(false);
             playerAlive = false;
+            soundtrack5.stop();
         }
     }
 
