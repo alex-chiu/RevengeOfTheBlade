@@ -31,12 +31,13 @@ class Menu extends Phaser.Scene {
 
       playButton = this.add.text(310, 375, 'PLAY', { fontSize: '75px', fill: '#8db9d9' });
       playButton.setInteractive();
-      playButton.on('pointerdown', () => { this.play(); });
+      playButton.on('pointerdown', () => { this.scene.start('RobotBossFight'); });
       playButton.on('pointerover', () => { this.buttonOver(playButton); });
       playButton.on('pointerout', () => { this.buttonNotOver(playButton); });
     }
 
-    buttonOver(button) {
+
+    buttonOver(button){
       if (button == playButton) {
         playButton.setStyle({fill:'#fffb00'});
       }
@@ -45,7 +46,7 @@ class Menu extends Phaser.Scene {
       }
     }
 
-    buttonNotOver(button) {
+    buttonNotOver(button){
       if (button == playButton) {
         playButton.setStyle({fill:'#8db9d9'})
       }
@@ -54,7 +55,7 @@ class Menu extends Phaser.Scene {
       }
     }
 
-    update() {
+    update(){
 
     }
 }
