@@ -6,6 +6,8 @@
 
 var playButton;
 var tutorialButton;
+var audioButton;
+var soundState = 'off';
 
 class Menu extends Phaser.Scene {
     constructor() {
@@ -48,15 +50,35 @@ class Menu extends Phaser.Scene {
     });
       playButton.on('pointerover', () => { this.buttonOver(playButton); });
       playButton.on('pointerout', () => { this.buttonNotOver(playButton); });
+
+      audioButton = this.add.text(5, 570, 'audio', { fontSize: '30px', fill: '#8db9d9' });
+      audioButton.setInteractive();
+      audioButton.on('pointerdown', () => {this.switchSound();});
+      audioButton.on('pointerover', () => { this.buttonOver(audioButton); });
+      audioButton.on('pointerout', () => { this.buttonNotOver(audioButton); });
+
     }
 
+    switchSound(){
+      if (soundState == 'off'){
+        this.soundtrack.play();
+        soundState = 'on'
+      }
+      else{
+        this.soundtrack.stop();
+        soundState = 'off'
+      }
+    }
 
     buttonOver(button){
       if (button == playButton) {
         playButton.setStyle({fill:'#fffb00'});
       }
-      else {
+      if (button == tutorialButton) {
         tutorialButton.setStyle({fill:'#fffb00'});
+      }
+      if (button == audioButton) {
+        audioButton.setStyle({fill:'#fffb00'});
       }
     }
 
@@ -64,8 +86,11 @@ class Menu extends Phaser.Scene {
       if (button == playButton) {
         playButton.setStyle({fill:'#8db9d9'})
       }
-      else {
+      if (button == tutorialButton) {
         tutorialButton.setStyle({fill:'#8db9d9'});
+      }
+      if (button == audioButton) {
+        audioButton.setStyle({fill:'#8db9d9'});
       }
     }
 
