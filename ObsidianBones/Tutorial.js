@@ -29,17 +29,18 @@ class Tutorial extends Phaser.Scene{
         this.load.spritesheet('pterodactyl', 'assets/sprites/pterodactyl-sprite.png', { frameWidth: 312, frameHeight: 250 });
 
         // Background Images
-        this.load.image('sky0', 'assets/backgrounds/stage1/0sky.png');
-        this.load.image('clouds1', 'assets/backgrounds/stage1/1clouds.png');
-        this.load.image('far2', 'assets/backgrounds/stage1/2far.png');
-        this.load.image('back3', 'assets/backgrounds/stage1/3back.png');
-        this.load.image('mid4', 'assets/backgrounds/stage1/4mid.png');
-        this.load.image('front5', 'assets/backgrounds/stage1/5front.png');
-        this.load.image('ground', 'assets/backgrounds/stage1/6platform.png');
+        this.load.image('sky01', 'assets/backgrounds/stage1/0sky1.png');
+        this.load.image('clouds11', 'assets/backgrounds/stage1/1clouds1.png');
+        this.load.image('far21', 'assets/backgrounds/stage1/2far1.png');
+        this.load.image('back31', 'assets/backgrounds/stage1/3back1.png');
+        this.load.image('mid41', 'assets/backgrounds/stage1/4mid1.png');
+        this.load.image('front51', 'assets/backgrounds/stage1/5front1.png');
+        this.load.image('ground11', 'assets/backgrounds/stage1/6platform1.png');
 
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
         this.load.image('platformH', 'assets/platforms/platformH.png');
+
     }
 
     // Create all the Sprites/Images/Platforms
@@ -47,13 +48,13 @@ class Tutorial extends Phaser.Scene{
         this.cameras.main.setBackgroundColor('#828b99')
 
         // Background
-        sky = this.add.tileSprite(400, 300, 800, 600, 'sky0');
-        clouds = this.add.tileSprite(400, 300, 800, 600, 'clouds1');
-        far = this.add.tileSprite(400, 300, 800, 600, 'far2');
-        back = this.add.tileSprite(400, 300, 800, 600, 'back3');
-        mid = this.add.tileSprite(400, 300, 800, 600, 'mid4');
-        front = this.add.tileSprite(400, 300, 800, 600, 'front5');
-        ground = this.add.tileSprite(400, 300, 800, 600, 'ground');
+        sky = this.add.tileSprite(400, 300, 800, 600, 'sky01');
+        clouds = this.add.tileSprite(400, 300, 800, 600, 'clouds11');
+        far = this.add.tileSprite(400, 300, 800, 600, 'far21');
+        back = this.add.tileSprite(400, 300, 800, 600, 'back31');
+        mid = this.add.tileSprite(400, 300, 800, 600, 'mid41');
+        front = this.add.tileSprite(400, 300, 800, 600, 'front51');
+        ground = this.add.tileSprite(400, 300, 800, 600, 'ground11');
         this.add.existing(ground);
         sky.fixedToCamera = true;
 
@@ -106,7 +107,7 @@ class Tutorial extends Phaser.Scene{
         this.input.on('pointerdown', function (pointer) {
             mouseX = pointer.x;
             mouseY = pointer.y;
-            // console.log('Mouse Location: ' + mouseX + ', ' + mouseY);
+            console.log('Mouse Location: ' + mouseX + ', ' + mouseY);
             if (mouseX >= player.body.x + 27) {
                 atkDir = 'R';
             }
