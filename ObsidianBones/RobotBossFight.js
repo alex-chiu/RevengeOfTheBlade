@@ -1,3 +1,9 @@
+/*  ROBOT BOSS FIGHT SCENE
+
+    Scene for boss fight with the robot boss.
+    Final stage for game.
+*/
+
 // Global Variables
 var player, playerAtk;
 var boss;
@@ -19,7 +25,7 @@ var ground, platforms;
 var debug = false;
 
 // Robot Boss Fight Class
-class RobotBossFight extends Phaser.Scene{
+class RobotBossFight extends Phaser.Scene {
     constructor() {
         super({ key: 'RobotBossFight' });
     }
@@ -46,6 +52,13 @@ class RobotBossFight extends Phaser.Scene{
     // Create all the Sprites/Images/Platforms
     create() {
         this.cameras.main.setBackgroundColor('#828b99')
+
+        // Reset Values
+        life = 10;
+        bossLife = 100;
+        playerAlive = true;
+        bossAlive = true;
+        playerDetected = false;
 
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky0');
@@ -177,9 +190,9 @@ class RobotBossFight extends Phaser.Scene{
 
     // Constantly Updating Game Loop
     update() {
-        if (playerAlive == false){
+        if (playerAlive == false) {
           this.scene.pause('RobotBossFight')
-          this.scene.launch('GameOverScreen');
+          this.scene.launch('GameOver');
 
           /*let panel = this.scene.get('gameOverScreen');
           panel.events.on('clickMenu', this.handleGoMenu, this);

@@ -1,19 +1,23 @@
+/*  MENU SCENE
+
+    Initial load screen for game.
+    Has options for entering the tutorial or starting the game.
+*/
+
 var playButton;
 var tutorialButton;
 
-class Menu extends Phaser.Scene{
+class Menu extends Phaser.Scene {
     constructor() {
         super({ key: 'Menu' });
     }
 
-    preload(){
-
+    preload() {
       this.load.image('sky0', 'assets/backgrounds/stage5/0sky.png');
       this.load.image('clouds1', 'assets/backgrounds/stage5/1clouds.png');
-
     }
 
-    create(){
+    create() {
       this.add.tileSprite(400, 300, 800, 600, 'sky0');
       this.add.tileSprite(400, 300, 800, 600, 'clouds1');
 
@@ -21,7 +25,7 @@ class Menu extends Phaser.Scene{
 
       tutorialButton = this.add.text(350, 300, 'TUTORIAL', { fontSize: '20px', fill: '#b5dbf7' });
       tutorialButton.setInteractive();
-      tutorialButton.on('pointerdown', () => { this.scene.start('Tutorial1'); });
+      tutorialButton.on('pointerdown', () => { this.scene.start('Instructions'); });
       tutorialButton.on('pointerover', () => { this.buttonOver(tutorialButton); });
       tutorialButton.on('pointerout', () => { this.buttonNotOver(tutorialButton); });
 
@@ -32,32 +36,25 @@ class Menu extends Phaser.Scene{
       playButton.on('pointerout', () => { this.buttonNotOver(playButton); });
     }
 
-    play(){
-      //this.scene.setVisible(false);
-      this.scene.stop('GameOverScreen');
-      this.scene.start('RobotBossFight');
-
-    }
-
-    buttonOver(button){
-      if (button == playButton){
+    buttonOver(button) {
+      if (button == playButton) {
         playButton.setStyle({fill:'#fffb00'});
       }
-      else{
+      else {
         tutorialButton.setStyle({fill:'#fffb00'});
       }
     }
 
-    buttonNotOver(button){
-      if (button == playButton){
+    buttonNotOver(button) {
+      if (button == playButton) {
         playButton.setStyle({fill:'#8db9d9'})
       }
-      else{
+      else {
         tutorialButton.setStyle({fill:'#8db9d9'});
       }
     }
 
-    update(){
+    update() {
 
     }
 }
