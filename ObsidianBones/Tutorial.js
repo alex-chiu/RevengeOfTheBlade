@@ -19,7 +19,7 @@ var target1Alive = true;
 var target2Alive = true;
 
 // DEBUG PARAMETERS
-var debug = false;
+var debug = true;
 var testLine;
 
 // Robot Boss Fight Class
@@ -32,7 +32,8 @@ class Tutorial extends Phaser.Scene{
     preload() {
         this.load.spritesheet('hero', 'assets/sprites/hero-walk-preattack-sprite.png', { frameWidth: 150, frameHeight: 230 });
         this.load.spritesheet('hero_attack', 'assets/sprites/hero-attack-sprite.png', { frameWidth: 255, frameHeight: 230 });
-        this.load.spritesheet('pterodactyl', 'assets/sprites/pterodactyl-sprite.png', { frameWidth: 312, frameHeight: 250 });
+        this.load.spritesheet('hero_attack2', 'assets/sprites/hero-attack2-arm-sprite.png', { frameWidth: 255, frameHeight: 230 });
+        this.load.spritesheet('hero_attack_arm', 'assets/sprites/attack2-throw.png', { frameWidth: 255, frameHeight: 230 });
 
         this.load.image('target', 'assets/target.png')
 
@@ -48,7 +49,6 @@ class Tutorial extends Phaser.Scene{
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
         this.load.image('platformH', 'assets/platforms/platformH.png');
-
     }
 
     // Create all the Sprites/Images/Platforms
@@ -67,17 +67,17 @@ class Tutorial extends Phaser.Scene{
         sky.fixedToCamera = true;
 
         // Targets
-        //target1 = this.physics.add.staticGroup();
         target1 = this.add.image(750, 515, 'target');
-        //target2 = this.physics.add.staticGroup();
         target2 = this.add.image(600, 100, 'target');
 
         // Platforms
         obstacles = this.physics.add.staticGroup();
-        obstacles.create(250, 610, 'platformV');
-        obstacles.create(0, 500, 'platformH');
-        obstacles.create(250, 450, 'platformH');
-        obstacles.create(320, 500, 'platformH');
+        obstacles.create(250, 650, 'platformV');
+        obstacles.create(0, 525, 'platformH');
+        obstacles.create(250, 475, 'platformH');
+        obstacles.create(285, 500, 'platformH');
+        obstacles.create(320, 525, 'platformH');
+        obstacles.create(320, 550, 'platformH');
 
         // Text
         lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
@@ -85,7 +85,7 @@ class Tutorial extends Phaser.Scene{
         // Platforms
         platforms = this.physics.add.staticGroup();
         for (var i = 15; i <= 800; i += 30 ) {
-            platforms.create(i, 565);
+            platforms.create(i, 575);
         }
         if (debug == false) {
             platforms.setVisible(false);
