@@ -11,6 +11,12 @@ var sky, clouds;
 var far, back, mid, front;
 var ground, platforms;
 var obstacles;
+var target1;
+var target2;
+var target1life = 5;
+var target2life = 5;
+var target1Alive = true;
+var target2Alive = true;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -27,6 +33,8 @@ class Tutorial extends Phaser.Scene{
         this.load.spritesheet('hero', 'assets/sprites/hero-walk-preattack-sprite.png', { frameWidth: 150, frameHeight: 230 });
         this.load.spritesheet('hero_attack', 'assets/sprites/hero-attack-sprite.png', { frameWidth: 255, frameHeight: 230 });
         this.load.spritesheet('pterodactyl', 'assets/sprites/pterodactyl-sprite.png', { frameWidth: 312, frameHeight: 250 });
+
+        this.load.image('target', 'assets/target.png')
 
         // Background Images
         this.load.image('sky01', 'assets/backgrounds/stage1/0sky1.png');
@@ -57,6 +65,12 @@ class Tutorial extends Phaser.Scene{
         ground = this.add.tileSprite(400, 300, 800, 600, 'ground11');
         this.add.existing(ground);
         sky.fixedToCamera = true;
+
+        // Targets
+        //target1 = this.physics.add.staticGroup();
+        target1 = this.add.image(750, 515, 'target');
+        //target2 = this.physics.add.staticGroup();
+        target2 = this.add.image(600, 100, 'target');
 
         // Platforms
         obstacles = this.physics.add.staticGroup();
@@ -127,6 +141,11 @@ class Tutorial extends Phaser.Scene{
         this.physics.add.collider(player, platforms);
         this.physics.add.collider(playerAtk, platforms);
         this.physics.add.collider(player, obstacles);
+        this.physics.add.collider(playerAtk, obstacles);
+        this.physics.add.overlap(player, target1);
+        this.physics.add.overlap(playerAtk, target1);
+        this.physics.add.overlap(player, target2);
+        this.physics.add.overlap(playerAtk, target2);
     }
 
     // Constantly Updating Game Loop
@@ -174,7 +193,47 @@ class Tutorial extends Phaser.Scene{
             testLine.setTo(player.body.x + 27, player.body.y - 50, player.body.x + 27, player.body.y + 50);
             graphics.strokeLineShape(testLine);
         }
+}
+    // when target1 is attacked
+    updateTarget1Life(playerAtk, target1){
+        var boundsA = playerAtk.getBounds();
+        var boundsB = target1.getBounds();
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && target1Alive) {
+            target1life -= 1
+            target1.setTint('0xff0000')
+            this.time.addEvent({
+                delay: 400,
+                callback: () => {
+                    target1.clearTint();
+                }
+            })
+        }
+        if (target1life == 0) {
+            target1.disableBody(true, true);
+            target1Alive = false;
+        }
     }
+    // when target2 is attacked
+    updateTarget2Life(playerAtk, target2){
+        var boundsA2 = playerAtk.getBounds();
+        var boundsB2 = target2.getBounds();
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA2, boundsB2)) && target2Alive) {
+            target2life -= 1
+            target2.setTint('0xff0000')
+            this.time.addEvent({
+                delay: 400,
+                callback: () => {
+                    target2.clearTint();
+                }
+            })
+        }
+        if (target2life == 0) {
+            target2.disableBody(true, true);
+            target2Alive = false;
+        }
+    }
+
+
 
     // Creates player animations
     createPlayerAnims() {
