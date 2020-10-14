@@ -19,7 +19,7 @@ var target1Alive = true;
 var target2Alive = true;
 
 // DEBUG PARAMETERS
-var debug = true;
+var debug = false;
 var testLine;
 
 // Robot Boss Fight Class
