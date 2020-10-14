@@ -8,7 +8,7 @@ var config = {
     type: Phaser.AUTO,
     width: 800,
     height: 600,
-    scene: [Menu, Instructions, Tutorial, RobotBossFight, GameOver],
+    scene: [Menu, Instructions, Tutorial, RobotBossFight, GameOver, TutorialCompleted],
 
     scale:{
         autoCenter: Phaser.Scale.CENTER_HORIZONALLY,

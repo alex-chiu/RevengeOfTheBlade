@@ -151,6 +151,10 @@ class Tutorial extends Phaser.Scene{
 
     // Constantly Updating Game Loop
     update() {
+        if (target1Alive == false && target2Alive == false) {
+          this.scene.pause('Tutorial')
+          this.scene.launch('TutorialCompleted');
+        }
         // Implement Parallax Background
         clouds.tilePositionX -= 0.5;
         far.tilePositionX += 0.3;
