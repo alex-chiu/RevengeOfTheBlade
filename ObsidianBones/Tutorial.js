@@ -32,7 +32,8 @@ class Tutorial extends Phaser.Scene{
     preload() {
         this.load.spritesheet('hero', 'assets/sprites/hero-walk-preattack-sprite.png', { frameWidth: 150, frameHeight: 230 });
         this.load.spritesheet('hero_attack', 'assets/sprites/hero-attack-sprite.png', { frameWidth: 255, frameHeight: 230 });
-        this.load.spritesheet('pterodactyl', 'assets/sprites/pterodactyl-sprite.png', { frameWidth: 312, frameHeight: 250 });
+        this.load.spritesheet('hero_attack2', 'assets/sprites/hero-attack2-arm-sprite.png', { frameWidth: 255, frameHeight: 230 });
+        this.load.spritesheet('hero_attack_arm', 'assets/sprites/attack2-throw.png', { frameWidth: 255, frameHeight: 230 });
 
         this.load.image('target', 'assets/target.png')
 
