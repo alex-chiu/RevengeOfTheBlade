@@ -4,7 +4,7 @@
     Has options for returning to the menu or trying the tutorial again.
 */
 
-class TutorialCompleted extends Phaser.Scene{
+class TutorialCompleted extends Phaser.Scene {
     constructor() {
         super({ key: 'TutorialCompleted' });
     }

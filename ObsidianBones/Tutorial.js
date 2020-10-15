@@ -1,3 +1,9 @@
+/*  TUTORIAL SCENE
+
+    Scene that appears when the player wishes to enter the tutorial.
+    Has basic platforms to jump around on and targets to attack.
+*/
+
 // Global Variables
 var graphics;
 var player, playerAtk;
