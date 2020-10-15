@@ -171,7 +171,7 @@ class Stage5 extends Phaser.Scene {
         bossSceneButton = this.add.text(350, 300, 'BOSS', { fontSize: '80px', fill: '#b5dbf7' });
         bossSceneButton.setInteractive();
         bossSceneButton.on('pointerdown', () => {
-          //this.soundtrack.stop();
+          soundtrack5.stop();
           this.scene,stop('Stage5');
           this.scene.start('RobotBossFight');
         })

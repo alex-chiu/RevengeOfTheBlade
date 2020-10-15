@@ -21,6 +21,7 @@ var sky, clouds;
 var far, back, mid, front;
 var ground, platforms;
 var soundtrack5;
+var bombs;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -51,6 +52,7 @@ class RobotBossFight extends Phaser.Scene {
 
         // Laser
         this.load.image('laser', 'assets/laser.png')
+        this.load.image('bomb', 'assets/bomb.png')
     }
 
     // Create all the Sprites/Images/Platforms
@@ -162,6 +164,10 @@ class RobotBossFight extends Phaser.Scene {
             callAttack = true;
         })
 
+        bombs = this.physics.add.group();
+        this.physics.add.collider(bombs, platforms);
+        this.physics.add.collider(player, bombs, this.bombAttack, null, this);
+
         // Add Colliders
         this.physics.add.collider(player, platforms);
         this.physics.add.collider(playerAtk, platforms);
@@ -271,6 +277,18 @@ class RobotBossFight extends Phaser.Scene {
         this.updatePlayerLifeText();
     }
 
+    bombAttack(bomb, player){
+      life -= 5
+      lifeText.setText('Life: ' + life);
+      player.setTint('0xff0000')
+      this.time.addEvent({
+          delay: 400,
+          callback: () => {
+              player.clearTint();
+          }
+      })
+    }
+
     // Function that Updates the Boss' Life Text
     updateBossLifeText(playerAtk, boss) {
         var boundsA = playerAtk.getBounds();
@@ -286,6 +304,12 @@ class RobotBossFight extends Phaser.Scene {
                     boss.clearTint();
                 }
             })
+            var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+            var bomb = bombs.create(x, 16, 'bomb');
+            bomb.setBounce(1);
+            bomb.setCollideWorldBounds(true);
+            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+            //bomb.allowGravity = false;
         }
         if (bossLife == 0) {
             boss.disableBody(true, true);
