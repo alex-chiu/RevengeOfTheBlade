@@ -6,7 +6,7 @@
 
 // Global Variables
 var graphics;
-var player, playerAtk;
+var player, playerAtk, playerWalkNA, playerArm, playerArmFinal;
 var playerAlive = true;
 var delX, atkDir, callAttack;
 var W, A, S, D, cursors, spaceBar, mouseX, mouseY;
@@ -36,13 +36,12 @@ class Tutorial extends Phaser.Scene{
 
     // Preload Images and Sprites
     preload() {
+        // Hero Spritesheets
         this.load.spritesheet('hero', 'assets/sprites/hero-walk-preattack-sprite.png', { frameWidth: 150, frameHeight: 230 });
         this.load.spritesheet('hero_attack', 'assets/sprites/hero-attack-sprite.png', { frameWidth: 255, frameHeight: 230 });
-        this.load.spritesheet('hero_ranged_attack_arm', 'assets/sprites/ranged-attack/hero-attack2-arm-sprite.png', { frameWidth: 255, frameHeight: 230 });
-        this.load.spritesheet('hero_walk_no_arm', 'assets/sprites/ranged-attack/hero-walk-sprite-noarm.png', { frameWidth: 255, frameHeight: 230 });
-        this.load.spritesheet('hero_ranged_attack_arm_final', 'assets/sprites/ranged-attack/attack2-throw.png', { frameWidth: 255, frameHeight: 230 });
-
-        this.load.image('target', 'assets/target.png')
+        this.load.spritesheet('hero_ranged_attack_arm', 'assets/sprites/ranged-attack/hero-attack2-arm-sprite.png', { frameWidth: 150, frameHeight: 230 });
+        this.load.spritesheet('hero_walk_no_arm', 'assets/sprites/ranged-attack/hero-walk-sprite-noarm.png', { frameWidth: 150, frameHeight: 230 });
+        this.load.spritesheet('hero_ranged_attack_arm_final', 'assets/sprites/ranged-attack/attack2-throw.png', { frameWidth: 220, frameHeight: 230 });
 
         // Background Images
         this.load.image('sky01', 'assets/backgrounds/stage1/0sky1.png');
@@ -56,6 +55,9 @@ class Tutorial extends Phaser.Scene{
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
         this.load.image('platformH', 'assets/platforms/platformH.png');
+
+        // Targets
+        this.load.image('target', 'assets/target.png')
     }
 
     // Create all the Sprites/Images/Platforms
@@ -113,6 +115,14 @@ class Tutorial extends Phaser.Scene{
         playerAtk.scaleY = playerAtk.scaleX;
         playerAtk.body.setGravityY(300);
         playerAtk.visible = false;
+
+        playerWalkNA = this.physics.add.sprite(100, 475, 'hero_walk_no_arm');
+        playerWalkNA.setBounce(0.25);
+        playerWalkNA.setCollideWorldBounds(true);
+        playerWalkNA.displayWidth = game.config.width * 0.128;
+        playerWalkNA.scaleY = playerAtk.scaleX;
+        playerWalkNA.body.setGravityY(300);
+        playerWalkNA.visible = false;
 
         // Create Player Animations
         this.createPlayerAnims();
