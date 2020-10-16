@@ -163,34 +163,30 @@ class Tutorial extends Phaser.Scene{
         mid.tilePositionX += 0.1;
 
         // Player Movement
-        if (A.isDown) {
-            player.setVelocityX(-160);
-            player.anims.play('left', true);
-            playerWalkNA.anims.play('leftNoArm', true);
-            front.tilePositionX -= 3;
-            ground.tilePositionX -= 2.7;
-        }
-        else if (D.isDown) {
-            player.setVelocityX(160);
-            player.anims.play('right', true);
-            playerWalkNA.anims.play('rightNoArm', true);
-            front.tilePositionX += 3;
-            ground.tilePositionX += 2.7;
-        }
-        else {
-            player.setVelocityX(0);
-            player.anims.play('turn');
-            // playerWalkNA.anims.play('turnNoArm', true);
+        if (!attackAnimPlaying) {
+            if (A.isDown) {
+                player.setVelocityX(-160);
+                player.anims.play('left', true);
+                playerWalkNA.anims.play('leftNoArm', true);
+                front.tilePositionX -= 3;
+                ground.tilePositionX -= 2.7;
+            }
+            else if (D.isDown) {
+                player.setVelocityX(160);
+                player.anims.play('right', true);
+                playerWalkNA.anims.play('rightNoArm', true);
+                front.tilePositionX += 3;
+                ground.tilePositionX += 2.7;
+            }
+            else {
+                player.setVelocityX(0);
+                player.anims.play('turn');
+            }
         }
 
         // Jumping
         if (W.isDown && player.body.touching.down) {
             player.setVelocityY(-270);
-        }
-
-        if (attackAnimPlaying) {
-            player.setVelocityX(0);
-            // player.setVelocityY(0);
         }
 
         if (spaceBar.isDown) {
@@ -209,6 +205,7 @@ class Tutorial extends Phaser.Scene{
 
         // Updates each individual sprite's position each loop
         this.updatePlayerPos();
+        this.updateArmVel();
 
         // Draws test line for determining center of player sprite
         if (debug) {
@@ -225,6 +222,14 @@ class Tutorial extends Phaser.Scene{
         playerWalkNA.body.y = player.body.y;
         playerArm.body.y = player.body.y;
         playerArmFinal.body.y = player.body.y;
+    }
+
+    // Updates arm velocity
+    updateArmVel() {
+        playerArm.setVelocityX(player.body.velocity.x);
+        playerArmFinal.setVelocityX(player.body.velocity.x);
+        playerArm.setVelocityY(player.body.velocity.y);
+        playerArmFinal.setVelocityY(player.body.velocity.y);
     }
 
     // Creates player sprites
@@ -331,12 +336,6 @@ class Tutorial extends Phaser.Scene{
             repeat: -1
         });
         this.anims.create({
-            key: 'staticLeftNoArm',
-            frames: [ { key: 'hero_walk_no_arm', frame: 3 } ],
-            frameRate: 1,
-            repeat: -1
-        });
-        this.anims.create({
             key: 'turnNoArm',
             frames: [ { key: 'hero_walk_no_arm', frame: 6 } ],
             frameRate: 10
@@ -345,12 +344,6 @@ class Tutorial extends Phaser.Scene{
             key: 'rightNoArm',
             frames: this.anims.generateFrameNumbers('hero_walk_no_arm', { start: 7, end: 12 }),
             frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'staticRightNoArm',
-            frames: [ { key: 'hero_walk_no_arm', frame: 9 } ],
-            frameRate: 1,
             repeat: -1
         });
 
@@ -453,7 +446,7 @@ class Tutorial extends Phaser.Scene{
                 player.visible = false;
                 playerWalkNA.visible = true;
                 playerArm.visible = true;
-                playerWalkNA.anims.play('staticRightNoArm', true)
+                playerWalkNA.anims.play('rightNoArm', true)
                 playerArm.anims.play('preRangedAtk')
                 this.time.addEvent({
                     delay: 280,
@@ -487,7 +480,7 @@ class Tutorial extends Phaser.Scene{
                 player.visible = false;
                 playerWalkNA.visible = true;
                 playerArm.visible = true;
-                playerWalkNA.anims.play('staticLeftNoArm', true)
+                playerWalkNA.anims.play('leftNoArm', true)
                 playerArm.anims.play('preRangedAtk')
                 this.time.addEvent({
                     delay: 280,
