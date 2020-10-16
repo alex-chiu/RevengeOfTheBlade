@@ -22,6 +22,7 @@ var far, back, mid, front;
 var ground, platforms;
 var soundtrack5;
 var bossSceneButton;
+var healthLoots;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -51,6 +52,7 @@ class Stage5 extends Phaser.Scene {
 
         // Laser
         this.load.image('laser', 'assets/laser.png')
+        this.load.image('healthLoot', 'assets/healthLoot.png')
     }
 
     // Create all the Sprites/Images/Platforms
@@ -161,6 +163,11 @@ class Stage5 extends Phaser.Scene {
             }
             callAttack = true;
         })
+
+        // Loot
+        healthLoots = this.physics.add.staticGroup();
+        this.physics.add.overlap(player, healthLoots, this.pickupLoot, null, this);
+        this.physics.add.overlap(playerAtk, healthLoots, this.pickupLoot, null, this);
 
         // Add Colliders
         this.physics.add.collider(player, platforms);
@@ -317,6 +324,17 @@ class Stage5 extends Phaser.Scene {
     updatePlayerLifeText() {
         lifeText.setText('Life: ' + life);
 
+    }
+
+    pickupLoot(healthLoots){
+        healthLoots.disableBody(true, true);
+        if (life < 95){
+          life += 5;
+        }
+        else{
+          life = 100
+        }
+        updatePlayerLifeText()
     }
 
     // Function that fires laser from boss
