@@ -6,19 +6,16 @@
 
 // Global Variables
 var graphics;
-var player, playerAtk, playerWalkNA, playerArm, playerArmFinal;
+var player, playerMeleeAtk, playerWalkNA, playerArm, playerArmFinal;
 var playerAlive = true;
-var delX, atkDir, callAttack;
+var delX, meleeAtkDir, rangedAtkDir, callRangedAttack;
 var W, A, S, D, cursors, spaceBar, mouseX, mouseY;
 var life = 100;
 var lifeText;
-var attackAnimPlaying = false;
-var sky, clouds;
-var far, back, mid, front;
-var ground, platforms;
-var obstacles;
-var target1;
-var target2;
+var meleeAnimPlaying = false;
+var sky, clouds, far, back, mid, front;
+var ground, platforms, obstacles;
+var target1, target2;
 var target1life = 5;
 var target2life = 5;
 var target1Alive = true;
@@ -39,7 +36,7 @@ class Tutorial extends Phaser.Scene{
         // Hero Spritesheets
         this.load.spritesheet('hero', 'assets/sprites/hero-walk-preattack-sprite.png', { frameWidth: 150, frameHeight: 230 });
         this.load.spritesheet('hero_attack', 'assets/sprites/hero-attack-sprite.png', { frameWidth: 255, frameHeight: 230 });
-        this.load.spritesheet('hero_ranged_attack_arm', 'assets/sprites/ranged-attack/hero-attack2-arm-sprite.png', { frameWidth: 150, frameHeight: 230 });
+        this.load.spritesheet('hero_ranged_attack_arm', 'assets/sprites/ranged-attack/hero-attack2-arm-sprite.png', { frameWidth: 145, frameHeight: 230 });
         this.load.spritesheet('hero_walk_no_arm', 'assets/sprites/ranged-attack/hero-walk-sprite-noarm.png', { frameWidth: 150, frameHeight: 230 });
         this.load.spritesheet('hero_ranged_attack_arm_final', 'assets/sprites/ranged-attack/attack2-throw.png', { frameWidth: 220, frameHeight: 230 });
 
@@ -101,28 +98,7 @@ class Tutorial extends Phaser.Scene{
         }
 
         // Create Player
-        player = this.physics.add.sprite(130, 475, 'hero');
-        player.setBounce(0.25);
-        player.setCollideWorldBounds(true);
-        player.displayWidth = game.config.width * 0.075;
-        player.scaleY = player.scaleX;
-        player.body.setGravityY(300);
-
-        playerAtk = this.physics.add.sprite(100, 475, 'hero_attack');
-        playerAtk.setBounce(0.25);
-        playerAtk.setCollideWorldBounds(true);
-        playerAtk.displayWidth = game.config.width * 0.128;
-        playerAtk.scaleY = playerAtk.scaleX;
-        playerAtk.body.setGravityY(300);
-        playerAtk.visible = false;
-
-        playerWalkNA = this.physics.add.sprite(100, 475, 'hero_walk_no_arm');
-        playerWalkNA.setBounce(0.25);
-        playerWalkNA.setCollideWorldBounds(true);
-        playerWalkNA.displayWidth = game.config.width * 0.128;
-        playerWalkNA.scaleY = playerAtk.scaleX;
-        playerWalkNA.body.setGravityY(300);
-        playerWalkNA.visible = false;
+        this.createPlayerSprites();
 
         // Create Player Animations
         this.createPlayerAnims();
@@ -135,19 +111,21 @@ class Tutorial extends Phaser.Scene{
         D = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         cursors = this.input.keyboard.createCursorKeys();
 
+        // Ranged Attack Call when MB1 Clicked
         this.input.on('pointerdown', function (pointer) {
             mouseX = pointer.x;
             mouseY = pointer.y;
-            console.log('Mouse Location: ' + mouseX + ', ' + mouseY);
+            if (debug) { console.log('Mouse Location: ' + mouseX + ', ' + mouseY) };
             if (mouseX >= player.body.x + 27) {
-                atkDir = 'R';
+                meleeAtkDir = 'R';
             }
             else if (mouseX < player.body.x + 27) {
-                atkDir = 'L';
+                meleeAtkDir = 'L';
             }
-            callAttack = true;
+            callRangedAttack = true;
         })
 
+        // Graphics for drawing debug line
         graphics = this.add.graphics();
         if (debug) {
             graphics.lineStyle(5, 0xFF0000, 1)
@@ -156,13 +134,19 @@ class Tutorial extends Phaser.Scene{
 
         // Add Colliders
         this.physics.add.collider(player, platforms);
-        this.physics.add.collider(playerAtk, platforms);
+        this.physics.add.collider(playerMeleeAtk, platforms);
+        this.physics.add.collider(playerWalkNA, platforms);
+        this.physics.add.collider(playerArm, platforms);
+        this.physics.add.collider(playerArmFinal, platforms);
         this.physics.add.collider(player, obstacles);
-        this.physics.add.collider(playerAtk, obstacles);
+        this.physics.add.collider(playerMeleeAtk, obstacles);
+        this.physics.add.collider(playerWalkNA, obstacles);
+        this.physics.add.collider(playerArm, obstacles);
+        this.physics.add.collider(playerArmFinal, obstacles);
         this.physics.add.overlap(player, target1);
-        this.physics.add.overlap(playerAtk, target1);
+        this.physics.add.overlap(playerMeleeAtk, target1);
         this.physics.add.overlap(player, target2);
-        this.physics.add.overlap(playerAtk, target2);
+        this.physics.add.overlap(playerMeleeAtk, target2);
     }
 
     // Constantly Updating Game Loop
@@ -171,6 +155,7 @@ class Tutorial extends Phaser.Scene{
           this.scene.pause('Tutorial')
           this.scene.launch('TutorialCompleted');
         }
+
         // Implement Parallax Background
         clouds.tilePositionX -= 0.5;
         far.tilePositionX += 0.3;
@@ -180,84 +165,118 @@ class Tutorial extends Phaser.Scene{
         // Player Movement
         if (A.isDown) {
             player.setVelocityX(-160);
-            playerAtk.setVelocityX(-160);
             player.anims.play('left', true);
-
+            playerWalkNA.anims.play('leftNoArm', true);
             front.tilePositionX -= 3;
             ground.tilePositionX -= 2.7;
         }
         else if (D.isDown) {
             player.setVelocityX(160);
-            playerAtk.setVelocityX(160);
             player.anims.play('right', true);
-
+            playerWalkNA.anims.play('rightNoArm', true);
             front.tilePositionX += 3;
             ground.tilePositionX += 2.7;
         }
         else {
             player.setVelocityX(0);
-            playerAtk.setVelocityX(0);
             player.anims.play('turn');
+            // playerWalkNA.anims.play('turnNoArm', true);
         }
 
         // Jumping
-        if ((spaceBar.isDown || W.isDown) && player.body.touching.down) {
+        if (W.isDown && player.body.touching.down) {
             player.setVelocityY(-270);
-            playerAtk.setVelocityY(-270);
         }
 
-        if (callAttack) {
-            this.playerAttackCall();
+        if (attackAnimPlaying) {
+            player.setVelocityX(0);
+            // player.setVelocityY(0);
         }
 
+        if (spaceBar.isDown) {
+            if (player.body.velocity.x >= 0) {
+                meleeAtkDir = 'R';
+            }
+            else {
+                meleeAtkDir = 'L';
+            }
+            this.playerMeleeAttack();
+        }
+
+        if (callRangedAttack) {
+            this.playerRangedAttack(mouseX, mouseY);
+        }
+
+        // Updates each individual sprite's position each loop
+        this.updatePlayerPos();
+
+        // Draws test line for determining center of player sprite
         if (debug) {
             testLine.setTo(player.body.x + 27, player.body.y - 50, player.body.x + 27, player.body.y + 50);
             graphics.strokeLineShape(testLine);
         }
-}
-    // when target1 is attacked
-    updateTarget1Life(playerAtk, target1){
-        var boundsA = playerAtk.getBounds();
-        var boundsB = target1.getBounds();
-        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && target1Alive) {
-            target1life -= 1
-            target1.setTint('0xff0000')
-            this.time.addEvent({
-                delay: 400,
-                callback: () => {
-                    target1.clearTint();
-                }
-            })
-        }
-        if (target1life == 0) {
-            target1.disableBody(true, true);
-            target1Alive = false;
-        }
-    }
-    // when target2 is attacked
-    updateTarget2Life(playerAtk, target2){
-        var boundsA2 = playerAtk.getBounds();
-        var boundsB2 = target2.getBounds();
-        if ((Phaser.Geom.Rectangle.Overlaps(boundsA2, boundsB2)) && target2Alive) {
-            target2life -= 1
-            target2.setTint('0xff0000')
-            this.time.addEvent({
-                delay: 400,
-                callback: () => {
-                    target2.clearTint();
-                }
-            })
-        }
-        if (target2life == 0) {
-            target2.disableBody(true, true);
-            target2Alive = false;
-        }
     }
 
+    // Makes sure each sprite is in the same position.
+    updatePlayerPos() {
+        playerMeleeAtk.body.x = player.body.x - 25;
+        playerWalkNA.body.x = player.body.x;
+        playerMeleeAtk.body.y = player.body.y;
+        playerWalkNA.body.y = player.body.y;
+        playerArm.body.y = player.body.y;
+        playerArmFinal.body.y = player.body.y;
+    }
 
+    // Creates player sprites
+    createPlayerSprites() {
+        // Base player sprite
+        player = this.physics.add.sprite(130, 475, 'hero');
+        player.setBounce(0.25);
+        player.setCollideWorldBounds(true);
+        player.displayWidth = game.config.width * 0.075;
+        player.scaleY = player.scaleX;
+        player.body.setGravityY(300);
+
+        // Melee attack sprite
+        playerMeleeAtk = this.physics.add.sprite(130, 475, 'hero_attack');
+        playerMeleeAtk.setBounce(0.25);
+        playerMeleeAtk.setCollideWorldBounds(true);
+        playerMeleeAtk.displayWidth = game.config.width * 0.128;
+        playerMeleeAtk.scaleY = playerMeleeAtk.scaleX;
+        playerMeleeAtk.body.setGravityY(300);
+        playerMeleeAtk.visible = false;
+
+        // Player walking sprite with no arm (plays when casting ranged attack)
+        playerWalkNA = this.physics.add.sprite(130, 475, 'hero_walk_no_arm');
+        playerWalkNA.setBounce(0.25);
+        playerWalkNA.setCollideWorldBounds(true);
+        playerWalkNA.displayWidth = game.config.width * 0.075;
+        playerWalkNA.scaleY = playerWalkNA.scaleX;
+        playerWalkNA.body.setGravityY(300);
+        playerWalkNA.visible = false;
+
+        // Player arm sprite
+        playerArm = this.physics.add.sprite(130, 475, 'hero_ranged_attack_arm');
+        playerArm.setBounce(0.25);
+        playerArm.setCollideWorldBounds(true);
+        playerArm.displayWidth = game.config.width * 0.075;
+        playerArm.scaleY = playerArm.scaleX;
+        playerArm.body.setGravityY(300);
+        playerArm.visible = false;
+
+        // Final frame of player arm sprite (rotated based on projectile direction)
+        playerArmFinal = this.physics.add.sprite(130, 475, 'hero_ranged_attack_arm_final');
+        playerArmFinal.setBounce(0.25);
+        playerArmFinal.setCollideWorldBounds(true);
+        playerArmFinal.displayWidth = game.config.width * 0.110;
+        playerArmFinal.scaleY = playerArmFinal.scaleX;
+        playerArmFinal.body.setGravityY(300);
+        playerArmFinal.visible = false;
+    }
 
     // Creates player animations
     createPlayerAnims() {
+        // Player default movement
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('hero', { start: 8, end: 13 }),
@@ -275,49 +294,106 @@ class Tutorial extends Phaser.Scene{
             frameRate: 10,
             repeat: -1
         });
+
+        // Player pre-melee attack
         this.anims.create({
-            key: 'preAtkL',
+            key: 'preMeleeAtkL',
             frames: this.anims.generateFrameNumbers('hero', { start: 0, end: 7 }),
             frameRate: 32,
             repeat: 0
         });
         this.anims.create({
-            key: 'preAtkR',
+            key: 'preMeleeAtkR',
             frames: this.anims.generateFrameNumbers('hero', { start: 21, end: 28 }),
             frameRate: 32,
             repeat: 0
         });
+
+        // Player melee attack
         this.anims.create({
-            key: 'playerAtkL',
+            key: 'playerMeleeAtkL',
             frames: this.anims.generateFrameNumbers('hero_attack', { start: 0, end: 5 }),
             frameRate: 15,
             repeat: 0
         });
         this.anims.create({
-            key: 'playerAtkR',
+            key: 'playerMeleeAtkR',
             frames: this.anims.generateFrameNumbers('hero_attack', { start: 6, end: 11 }),
             frameRate: 15,
             repeat: 0
         });
+
+        // Player no arm movement
+        this.anims.create({
+            key: 'leftNoArm',
+            frames: this.anims.generateFrameNumbers('hero_walk_no_arm', { start: 0, end: 5 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'staticLeftNoArm',
+            frames: [ { key: 'hero_walk_no_arm', frame: 3 } ],
+            frameRate: 1,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'turnNoArm',
+            frames: [ { key: 'hero_walk_no_arm', frame: 6 } ],
+            frameRate: 10
+        });
+        this.anims.create({
+            key: 'rightNoArm',
+            frames: this.anims.generateFrameNumbers('hero_walk_no_arm', { start: 7, end: 12 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'staticRightNoArm',
+            frames: [ { key: 'hero_walk_no_arm', frame: 9 } ],
+            frameRate: 1,
+            repeat: -1
+        });
+
+        // Arm pre-ranged attack
+        this.anims.create({
+            key: 'preRangedAtk',
+            frames: this.anims.generateFrameNumbers('hero_ranged_attack_arm', { start: 0, end: 13 }),
+            frameRate: 50,
+            repeat: 0
+        });
+
+        // Arm final ranged attack frame
+        this.anims.create({
+           key: 'playerRangedAtkL',
+           frames: [ { key: 'hero_ranged_attack_arm_final', frame: 0 } ],
+           frameRate: 5,
+           repeat: -1
+        });
+        this.anims.create({
+            key: 'playerRangedAtkR',
+            frames: [ { key: 'hero_ranged_attack_arm_final', frame: 1 } ],
+            frameRate: 5,
+            repeat: -1
+         });
     }
 
-    // Called when player attacks
-    playerAttackCall() {
-        console.log('ATTACKING');
+    // Called when player starts melee attack.
+    playerMeleeAttack() {
+        if (debug) { console.log('MELEE ATTACK') };
         if (attackAnimPlaying == false) {
-            if (atkDir == 'R') {
+            if (meleeAtkDir == 'R') {
                 attackAnimPlaying = true;
-                player.anims.play('preAtkR');
+                player.anims.play('preMeleeAtkR');
                 this.time.addEvent({
                     delay: 250,
                     callback: () => {
                         player.visible = false;
-                        playerAtk.visible = true;
-                        playerAtk.anims.play('playerAtkR');
+                        playerMeleeAtk.visible = true;
+                        playerMeleeAtk.anims.play('playerMeleeAtkR');
                         this.time.addEvent({
                             delay: 400,
                             callback: () => {
-                                playerAtk.visible = false;
+                                playerMeleeAtk.visible = false;
                                 player.visible = true;
                                 attackAnimPlaying = false;
                                 callAttack = false;
@@ -326,22 +402,107 @@ class Tutorial extends Phaser.Scene{
                     }
                 })
             }
-            else if (atkDir == 'L') {
+            else if (meleeAtkDir == 'L') {
                 attackAnimPlaying = true;
-                player.anims.play('preAtkL');
+                player.anims.play('preMeleeAtkL');
                 this.time.addEvent({
                     delay: 250,
                     callback: () => {
                         player.visible = false;
-                        playerAtk.visible = true;
-                        playerAtk.anims.play('playerAtkL');
+                        playerMeleeAtk.visible = true;
+                        playerMeleeAtk.anims.play('playerMeleeAtkL');
                         this.time.addEvent({
                             delay: 400,
                             callback: () => {
-                                playerAtk.visible = false;
+                                playerMeleeAtk.visible = false;
                                 player.visible = true;
                                 attackAnimPlaying = false;
                                 callAttack = false;
+                            }
+                        })
+                    }
+                })
+            }
+        }
+    }
+
+    // Called when player casts ranged attack
+    playerRangedAttack(x, y) {
+        if (debug) { console.log('RANGED ATTACK') };
+
+        // Determines direction to fire projectile
+        if (x >= player.body.x) {
+            rangedAtkDir = 'R';
+        }
+        else {
+            rangedAtkDir = 'L';
+        }
+
+        // Actual attack animation
+        if (attackAnimPlaying == false) {
+            if (rangedAtkDir == 'R') {
+                if (playerArm.scaleX > 0) {
+                    playerArm.scaleX *= -1;
+                    playerArm.body.x = player.body.x + 10;
+                }
+                else {
+                    playerArm.body.x = player.body.x + 70;
+                }
+                playerArmFinal.body.x = player.body.x - 5;
+                attackAnimPlaying = true;
+                player.visible = false;
+                playerWalkNA.visible = true;
+                playerArm.visible = true;
+                playerWalkNA.anims.play('staticRightNoArm', true)
+                playerArm.anims.play('preRangedAtk')
+                this.time.addEvent({
+                    delay: 280,
+                    callback: () => {
+                        playerArm.visible = false;
+                        playerArmFinal.visible = true;
+                        playerArmFinal.anims.play('playerRangedAtkR', true);
+                        this.time.addEvent({
+                            delay: 200,
+                            callback: () => {
+                                playerArmFinal.visible = false;
+                                playerWalkNA.visible = false;
+                                player.visible = true;
+                                attackAnimPlaying = false;
+                                callRangedAttack = false;
+                            }
+                        })
+                    }
+                })
+            }
+            else if (rangedAtkDir == 'L') {
+                if (playerArm.scaleX < 0) {
+                    playerArm.scaleX *= -1;
+                    playerArm.body.x = player.body.x + 50;
+                }
+                else {
+                    playerArm.body.x = player.body.x - 10;
+                }
+                playerArmFinal.body.x = player.body.x - 25;
+                attackAnimPlaying = true;
+                player.visible = false;
+                playerWalkNA.visible = true;
+                playerArm.visible = true;
+                playerWalkNA.anims.play('staticLeftNoArm', true)
+                playerArm.anims.play('preRangedAtk')
+                this.time.addEvent({
+                    delay: 280,
+                    callback: () => {
+                        playerArm.visible = false;
+                        playerArmFinal.visible = true;
+                        playerArmFinal.anims.play('playerRangedAtkL');
+                        this.time.addEvent({
+                            delay: 200,
+                            callback: () => {
+                                playerArmFinal.visible = false;
+                                playerWalkNA.visible = false;
+                                player.visible = true;
+                                attackAnimPlaying = false;
+                                callRangedAttack = false;
                             }
                         })
                     }
@@ -354,4 +515,45 @@ class Tutorial extends Phaser.Scene{
     updatePlayerLifeText() {
         lifeText.setText('Life: ' + life);
     }
+
+    // Updates Target 1's Life
+    updateTarget1Life (playerMeleeAtk, target1) {
+        var boundsA = playerMeleeAtk.getBounds();
+        var boundsB = target1.getBounds();
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && target1Alive) {
+            target1life -= 1
+            target1.setTint('0xff0000')
+            this.time.addEvent({
+                delay: 400,
+                callback: () => {
+                    target1.clearTint();
+                }
+            })
+        }
+        if (target1life == 0) {
+            target1.disableBody(true, true);
+            target1Alive = false;
+        }
+    }
+
+    // Updates Target 2's Life
+    updateTarget2Life (playerMeleeAtk, target2) {
+        var boundsA2 = playerMeleeAtk.getBounds();
+        var boundsB2 = target2.getBounds();
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA2, boundsB2)) && target2Alive) {
+            target2life -= 1
+            target2.setTint('0xff0000')
+            this.time.addEvent({
+                delay: 400,
+                callback: () => {
+                    target2.clearTint();
+                }
+            })
+        }
+        if (target2life == 0) {
+            target2.disableBody(true, true);
+            target2Alive = false;
+        }
+    }
+
 }
