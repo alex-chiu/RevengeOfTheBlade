@@ -315,9 +315,6 @@ class RobotBossFight extends Phaser.Scene {
             boss.disableBody(true, true);
             bossAlive = false;
         }
-
-        // boss.setAlpha(0.5);
-
     }
 
     // Updates player's life text

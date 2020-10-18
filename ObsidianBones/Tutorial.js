@@ -10,16 +10,19 @@ var player, playerMeleeAtk, playerWalkNA, playerArm, playerArmFinal;
 var playerAlive = true;
 var delX, meleeAtkDir, rangedAtkDir, callRangedAttack;
 var W, A, S, D, cursors, spaceBar, mouseX, mouseY;
-var life = 100;
+var playerLife = 100;
 var lifeText;
 var meleeAnimPlaying = false;
 var sky, clouds, far, back, mid, front;
 var ground, platforms, obstacles;
 var target1, target2;
-var target1life = 5;
-var target2life = 5;
+var target1life = 50;
+var target2life = 50;
 var target1Alive = true;
 var target2Alive = true;
+var target1LifeText = 50, target2LifeText = 50;
+
+var daggerGroup;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -54,7 +57,10 @@ class Tutorial extends Phaser.Scene{
         this.load.image('platformH', 'assets/platforms/platformH.png');
 
         // Targets
-        this.load.image('target', 'assets/target.png')
+        this.load.image('target', 'assets/target.png');
+
+        // Daggers
+        this.load.image('dagger', 'assets/dagger.png');
     }
 
     // Create all the Sprites/Images/Platforms
@@ -87,6 +93,8 @@ class Tutorial extends Phaser.Scene{
 
         // Text
         lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
+        target1LifeText = this.add.text(650, 45, 'Life: 50', { fontSize: '25px', fill: '#ffffff' });
+        target2LifeText = this.add.text(650, 15, 'Life: 50', { fontSize: '25px', fill: '#ffffff' });
 
         // Platforms
         platforms = this.physics.add.staticGroup();
@@ -96,6 +104,9 @@ class Tutorial extends Phaser.Scene{
         if (debug == false) {
             platforms.setVisible(false);
         }
+
+        // Create Dagger Group
+        daggerGroup = new DaggerGroup(this);
 
         // Create Player
         this.createPlayerSprites();
@@ -163,25 +174,27 @@ class Tutorial extends Phaser.Scene{
         mid.tilePositionX += 0.1;
 
         // Player Movement
-        if (!attackAnimPlaying) {
-            if (A.isDown) {
-                player.setVelocityX(-160);
-                player.anims.play('left', true);
+        if (A.isDown) {
+            player.setVelocityX(-160);
+            if (!attackAnimPlaying) { 
+                player.anims.play('left', true); 
                 playerWalkNA.anims.play('leftNoArm', true);
-                front.tilePositionX -= 3;
-                ground.tilePositionX -= 2.7;
             }
-            else if (D.isDown) {
-                player.setVelocityX(160);
+            front.tilePositionX -= 3;
+            ground.tilePositionX -= 2.7;
+        }
+        else if (D.isDown) {
+            player.setVelocityX(160);
+            if (!attackAnimPlaying) { 
                 player.anims.play('right', true);
-                playerWalkNA.anims.play('rightNoArm', true);
-                front.tilePositionX += 3;
-                ground.tilePositionX += 2.7;
+                playerWalkNA.anims.play('rightNoArm', true); 
             }
-            else {
-                player.setVelocityX(0);
-                player.anims.play('turn');
-            }
+            front.tilePositionX += 3;
+            ground.tilePositionX += 2.7;
+        }
+        else {
+            player.setVelocityX(0);
+            player.anims.play('turn');
         }
 
         // Jumping
@@ -205,13 +218,17 @@ class Tutorial extends Phaser.Scene{
 
         // Updates each individual sprite's position each loop
         this.updatePlayerPos();
-        this.updateArmVel();
+        this.updateVel();
 
         // Draws test line for determining center of player sprite
         if (debug) {
             testLine.setTo(player.body.x + 27, player.body.y - 50, player.body.x + 27, player.body.y + 50);
             graphics.strokeLineShape(testLine);
         }
+
+        // Update Life Text
+        this.updatePlayerLifeText();
+        this.updateTargetLifeText();
     }
 
     // Makes sure each sprite is in the same position.
@@ -224,8 +241,8 @@ class Tutorial extends Phaser.Scene{
         playerArmFinal.body.y = player.body.y;
     }
 
-    // Updates arm velocity
-    updateArmVel() {
+    // Updates velocity
+    updateVel() {
         playerArm.setVelocityX(player.body.velocity.x);
         playerArmFinal.setVelocityX(player.body.velocity.x);
         playerArm.setVelocityY(player.body.velocity.y);
@@ -336,6 +353,11 @@ class Tutorial extends Phaser.Scene{
             repeat: -1
         });
         this.anims.create({
+            key: 'leftStatic',
+            frames: [ { key: 'hero_walk_no_arm', frame: 3 } ],
+            freamRate: 10
+        })
+        this.anims.create({
             key: 'turnNoArm',
             frames: [ { key: 'hero_walk_no_arm', frame: 6 } ],
             frameRate: 10
@@ -346,6 +368,11 @@ class Tutorial extends Phaser.Scene{
             frameRate: 10,
             repeat: -1
         });
+        this.anims.create({
+            key: 'rightStatic',
+            frames: [ { key: 'hero_walk_no_arm', frame: 9 } ],
+            freamRate: 10
+        })
 
         // Arm pre-ranged attack
         this.anims.create({
@@ -382,6 +409,8 @@ class Tutorial extends Phaser.Scene{
                     callback: () => {
                         player.visible = false;
                         playerMeleeAtk.visible = true;
+                        this.updateTarget1Life();
+                        this.updateTarget2Life();
                         playerMeleeAtk.anims.play('playerMeleeAtkR');
                         this.time.addEvent({
                             delay: 400,
@@ -403,6 +432,8 @@ class Tutorial extends Phaser.Scene{
                     callback: () => {
                         player.visible = false;
                         playerMeleeAtk.visible = true;
+                        this.updateTarget1Life();
+                        this.updateTarget2Life();
                         playerMeleeAtk.anims.play('playerMeleeAtkL');
                         this.time.addEvent({
                             delay: 400,
@@ -446,11 +477,17 @@ class Tutorial extends Phaser.Scene{
                 player.visible = false;
                 playerWalkNA.visible = true;
                 playerArm.visible = true;
-                playerWalkNA.anims.play('rightNoArm', true)
+                if (Math.abs(player.body.velocity.x) > 0) {
+                    playerWalkNA.anims.play('rightNoArm', true)
+                }
+                else {
+                    playerWalkNA.anims.play('rightStatic', true)
+                }
                 playerArm.anims.play('preRangedAtk')
                 this.time.addEvent({
                     delay: 280,
                     callback: () => {
+                        this.launchDagger(x, y);
                         playerArm.visible = false;
                         playerArmFinal.visible = true;
                         playerArmFinal.anims.play('playerRangedAtkR', true);
@@ -480,11 +517,17 @@ class Tutorial extends Phaser.Scene{
                 player.visible = false;
                 playerWalkNA.visible = true;
                 playerArm.visible = true;
-                playerWalkNA.anims.play('leftNoArm', true)
+                if (Math.abs(player.body.velocity.x) > 0) {
+                    playerWalkNA.anims.play('leftNoArm', true)
+                }
+                else {
+                    playerWalkNA.anims.play('leftStatic', true)
+                }
                 playerArm.anims.play('preRangedAtk')
                 this.time.addEvent({
                     delay: 280,
                     callback: () => {
+                        this.launchDagger(x, y);
                         playerArm.visible = false;
                         playerArmFinal.visible = true;
                         playerArmFinal.anims.play('playerRangedAtkL');
@@ -506,15 +549,15 @@ class Tutorial extends Phaser.Scene{
 
     // Function that updates the player's life text
     updatePlayerLifeText() {
-        lifeText.setText('Life: ' + life);
+        lifeText.setText('Life: ' + playerLife);
     }
 
     // Updates Target 1's Life
-    updateTarget1Life (playerMeleeAtk, target1) {
+    updateTarget1Life () {
         var boundsA = playerMeleeAtk.getBounds();
         var boundsB = target1.getBounds();
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && target1Alive) {
-            target1life -= 1
+            target1life -= 10
             target1.setTint('0xff0000')
             this.time.addEvent({
                 delay: 400,
@@ -524,17 +567,17 @@ class Tutorial extends Phaser.Scene{
             })
         }
         if (target1life == 0) {
-            target1.disableBody(true, true);
+            target1.destroy();
             target1Alive = false;
         }
     }
 
     // Updates Target 2's Life
-    updateTarget2Life (playerMeleeAtk, target2) {
+    updateTarget2Life () {
         var boundsA2 = playerMeleeAtk.getBounds();
         var boundsB2 = target2.getBounds();
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA2, boundsB2)) && target2Alive) {
-            target2life -= 1
+            target2life -= 10
             target2.setTint('0xff0000')
             this.time.addEvent({
                 delay: 400,
@@ -544,9 +587,93 @@ class Tutorial extends Phaser.Scene{
             })
         }
         if (target2life == 0) {
-            target2.disableBody(true, true);
+            target2.destroy();
             target2Alive = false;
         }
     }
 
+    updateTargetLifeText() {
+        target1LifeText.setText('Life: ' + target1life)
+        target2LifeText.setText('Life: ' + target2life)
+    }
+
+    // Throws Dagger
+    launchDagger(aimX, aimY) {
+        daggerGroup.throwDagger(player.body.x, player.body.y, aimX, aimY)
+    }
+
+}
+
+// Dagger Group Class
+class DaggerGroup extends Phaser.Physics.Arcade.Group {
+    constructor(scene) {
+        super(scene.physics.world, scene);
+
+        this.createMultiple({
+            classType: Dagger,
+            frameQuantity: 1,
+            active: false,
+            visible: false,
+            key: 'dagger'
+        })
+    }
+
+    throwDagger (x, y, aimX, aimY) {
+        const dagger = this.getFirstDead(false);
+        if (dagger) {
+            dagger.displayWidth = game.config.width * 0.04;
+            dagger.scaleY = dagger.scaleX;
+            dagger.throw(x, y, aimX, aimY);
+        }
+    }
+}
+
+// Dagger Class
+class Dagger extends Phaser.Physics.Arcade.Sprite {
+    constructor(scene, x, y) {
+        super(scene, x, y, 'dagger');
+    }
+
+    preUpdate(time, delta) {
+        super.preUpdate(time, delta);
+
+        // Checks if dagger leaves screen
+        if (this.y >= 540 || this. y <= 0 || this.x >= game.config.width || this.x <= 0) {
+            this.setActive(false);
+            this.setVisible(false);
+        }
+        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), target1.getBounds())) && target1Alive) {
+            this.setActive(false);
+            this.setVisible(false);
+            target1life -= 5;
+        }
+        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), target2.getBounds())) && target2Alive) {
+            this.setActive(false);
+            this.setVisible(false);
+            target2life -= 5;
+        }
+
+        if (target1life == 0) {
+            target1.destroy();
+            target1Alive = false;
+        }
+        if (target2life == 0) {
+            target2.destroy();
+            target2Alive = false;
+        }
+    }
+
+    throw (x, y, aimX, aimY) {
+        this.body.reset(x + 25, y + 25);
+        this.setActive(true);
+        this.setVisible(true);
+        this.body.setGravityY(100);
+
+        // Finds angle between player and cursor aim location
+        var angle = Math.atan2((aimY - y), (aimX - x));
+        this.rotation = angle + Math.PI/4;
+
+        this.setVelocityX(Math.cos(angle) * 1000);
+        this.setVelocityY(Math.sin(angle) * 1000)
+    }
 }
