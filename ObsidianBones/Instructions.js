@@ -36,13 +36,19 @@ class Instructions extends Phaser.Scene{
 
       playButton = this.add.image(750, 550, 'arrowR');
       playButton.setInteractive();
-      playButton.on('pointerdown', () => { this.scene.start('Tutorial'); });
+      playButton.on('pointerdown', () => { 
+        this.scene.stop('Instructions');
+        this.scene.start('Tutorial'); 
+      });
       playButton.on('pointerover', () => { this.buttonOver(playButton); });
       playButton.on('pointerout', () => { this.buttonNotOver(playButton); });
 
       backButton = this.add.image(50, 550, 'arrowL');
       backButton.setInteractive();
-      backButton.on('pointerdown', () => { this.scene.start('Menu'); });
+      backButton.on('pointerdown', () => { 
+        this.scene.stop('Instructions');
+        this.scene.start('Menu'); 
+      });
       backButton.on('pointerover', () => { this.buttonOver(backButton); });
       backButton.on('pointerout', () => { this.buttonNotOver(backButton); });
     }

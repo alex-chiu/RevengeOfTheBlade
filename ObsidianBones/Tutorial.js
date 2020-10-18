@@ -7,7 +7,7 @@
 // GLOBAL VARIABLES IN EACH SCENE
 var player, playerMeleeAtk, playerWalkNA, playerArm, playerArmFinal;
 var playerAlive = true;
-var meleeAtkDir, rangedAtkDir, callRangedAttack;
+var meleeAtkDir, rangedAtkDir, callRangedAttack, attackAnimPlaying = false;
 var W, A, S, D, cursors, spaceBar, mouseX, mouseY;
 var playerLife = 100;
 var lifeText;
@@ -141,6 +141,7 @@ class Tutorial extends Phaser.Scene {
         target2Alive = true;
         target1LifeText = 50;
         target2LifeText = 50;
+        attackAnimPlaying = false;
 
         // Targets
         target1 = this.add.image(750, 515, 'target');

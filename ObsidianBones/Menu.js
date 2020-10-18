@@ -35,7 +35,7 @@ class Menu extends Phaser.Scene {
       tutorialButton.setInteractive();
       tutorialButton.on('pointerdown', () => {
         this.soundtrack.stop();
-        this.scene,stop('Menu');
+        this.scene.stop('Menu');
         this.scene.start('Instructions');
       });
       tutorialButton.on('pointerover', () => { this.buttonOver(tutorialButton); });
