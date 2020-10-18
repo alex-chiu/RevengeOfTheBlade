@@ -176,8 +176,8 @@ class Tutorial extends Phaser.Scene{
         // Player Movement
         if (A.isDown) {
             player.setVelocityX(-160);
-            if (!attackAnimPlaying) { 
-                player.anims.play('left', true); 
+            if (!attackAnimPlaying) {
+                player.anims.play('left', true);
                 playerWalkNA.anims.play('leftNoArm', true);
             }
             front.tilePositionX -= 3;
@@ -185,9 +185,9 @@ class Tutorial extends Phaser.Scene{
         }
         else if (D.isDown) {
             player.setVelocityX(160);
-            if (!attackAnimPlaying) { 
+            if (!attackAnimPlaying) {
                 player.anims.play('right', true);
-                playerWalkNA.anims.play('rightNoArm', true); 
+                playerWalkNA.anims.play('rightNoArm', true);
             }
             front.tilePositionX += 3;
             ground.tilePositionX += 2.7;
@@ -558,6 +558,9 @@ class Tutorial extends Phaser.Scene{
         var boundsB = target1.getBounds();
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && target1Alive) {
             target1life -= 10
+            if (target1life < 0){
+              target1life = 0
+            }
             target1.setTint('0xff0000')
             this.time.addEvent({
                 delay: 400,
@@ -566,7 +569,7 @@ class Tutorial extends Phaser.Scene{
                 }
             })
         }
-        if (target1life == 0) {
+        if (target1life <= 0) {
             target1.destroy();
             target1Alive = false;
         }
@@ -578,6 +581,9 @@ class Tutorial extends Phaser.Scene{
         var boundsB2 = target2.getBounds();
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA2, boundsB2)) && target2Alive) {
             target2life -= 10
+            if (target2life < 0){
+              target2life = 0
+            }
             target2.setTint('0xff0000')
             this.time.addEvent({
                 delay: 400,
@@ -586,7 +592,7 @@ class Tutorial extends Phaser.Scene{
                 }
             })
         }
-        if (target2life == 0) {
+        if (target2life <= 0) {
             target2.destroy();
             target2Alive = false;
         }
@@ -662,6 +668,7 @@ class Dagger extends Phaser.Physics.Arcade.Sprite {
             target2Alive = false;
         }
     }
+
 
     throw (x, y, aimX, aimY) {
         this.body.reset(x + 25, y + 25);
