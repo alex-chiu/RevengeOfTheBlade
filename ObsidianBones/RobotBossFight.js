@@ -5,7 +5,9 @@
 */
 
 // Global Variables
-var player, playerAtk;
+var player, playerMeleeAtk, playerWalkNA, playerArm, playerArmFinal;
+var meleeAtkDir, rangedAtkDir, callRangedAttack, attackAnimPlaying = false;
+var daggerGroup;
 var boss;
 var bossAlive = true;
 var playerAlive = true;
@@ -14,7 +16,7 @@ var delX, atkDir, callAttack;
 var laserGroup;
 var cursors, spaceBar;
 var W, A, S, D;
-var life = 10, bossLife = 100;
+var life = 30, bossLife = 100;
 var lifeText, bossLifeText;
 var attackAnimPlaying = false;
 var sky, clouds;
@@ -25,6 +27,7 @@ var bombs;
 
 // DEBUG PARAMETERS
 var debug = false;
+var graphics, testLine;
 
 // Robot Boss Fight Class
 class RobotBossFight extends Phaser.Scene {
@@ -40,6 +43,9 @@ class RobotBossFight extends Phaser.Scene {
         this.load.spritesheet('robotBoss', 'assets/sprites/robot-boss-sprite.png', { frameWidth: 390, frameHeight: 500 });
         this.load.spritesheet('hero', 'assets/sprites/hero-walk-preattack-sprite.png', { frameWidth: 150, frameHeight: 230 });
         this.load.spritesheet('hero_attack', 'assets/sprites/hero-attack-sprite.png', { frameWidth: 255, frameHeight: 230 });
+        this.load.spritesheet('hero_ranged_attack_arm', 'assets/sprites/ranged-attack/hero-attack2-arm-sprite.png', { frameWidth: 145, frameHeight: 230 });
+        this.load.spritesheet('hero_walk_no_arm', 'assets/sprites/ranged-attack/hero-walk-sprite-noarm.png', { frameWidth: 150, frameHeight: 230 });
+        this.load.spritesheet('hero_ranged_attack_arm_final', 'assets/sprites/ranged-attack/attack2-throw.png', { frameWidth: 220, frameHeight: 230 });
 
         // Background Images
         this.load.image('sky0', 'assets/backgrounds/stage5/0sky.png');
@@ -50,9 +56,12 @@ class RobotBossFight extends Phaser.Scene {
         this.load.image('front5', 'assets/backgrounds/stage5/5front.png');
         this.load.image('ground', 'assets/backgrounds/stage5/6platform.png');
 
-        // Laser
+        // Laser and Bomb
         this.load.image('laser', 'assets/laser.png')
         this.load.image('bomb', 'assets/bomb.png')
+
+        // Dagger
+        this.load.image('dagger', 'assets/dagger.png');
     }
 
     // Create all the Sprites/Images/Platforms
@@ -63,7 +72,7 @@ class RobotBossFight extends Phaser.Scene {
         soundtrack5.play();
 
         // Reset Values
-        life = 10;
+        life = 30;
         bossLife = 100;
         playerAlive = true;
         bossAlive = true;
@@ -92,6 +101,8 @@ class RobotBossFight extends Phaser.Scene {
         if (debug == false) {
             platforms.setVisible(false);
         }
+        // Create Dagger Group
+        daggerGroup = new DaggerGroup1(this);
 
         // Create Boss
         boss = this.physics.add.sprite(650, 400, 'robotBoss')
@@ -125,23 +136,9 @@ class RobotBossFight extends Phaser.Scene {
         });
 
         // Create Player
-        player = this.physics.add.sprite(100, 475, 'hero');
-        player.setBounce(0.25);
-        player.setCollideWorldBounds(true);
-        player.displayWidth = game.config.width * 0.075;
-        player.scaleY = player.scaleX;
-        player.body.setGravityY(300);
-
-        playerAtk = this.physics.add.sprite(100, 475, 'hero_attack');
-        playerAtk.setBounce(0.25);
-        playerAtk.setCollideWorldBounds(true);
-        playerAtk.displayWidth = game.config.width * 0.128;
-        playerAtk.scaleY = playerAtk.scaleX;
-        playerAtk.body.setGravityY(300);
-        playerAtk.visible = false;
-
+        this.createPlayerSprites();
         // Create Player Animations
-        this.createPlayerAnimations();
+        this.createPlayerAnims();
 
         // Add Input Sources
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -151,26 +148,41 @@ class RobotBossFight extends Phaser.Scene {
         D = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         cursors = this.input.keyboard.createCursorKeys();
 
+        // Ranged Attack Call when MB1 Clicked
         this.input.on('pointerdown', function (pointer) {
             mouseX = pointer.x;
             mouseY = pointer.y;
             if (debug) { console.log('Mouse Location: ' + mouseX + ', ' + mouseY) };
             if (mouseX >= player.body.x + 27) {
-                atkDir = 'R';
+                meleeAtkDir = 'R';
             }
             else if (mouseX < player.body.x + 27) {
-                atkDir = 'L';
+                meleeAtkDir = 'L';
             }
-            callAttack = true;
+            callRangedAttack = true;
         })
+
+        // Graphics for drawing debug line
+        graphics = this.add.graphics();
+        if (debug) {
+            graphics.lineStyle(5, 0xFF0000, 1)
+            testLine = new Phaser.Geom.Line(this, player.body.x, player.body.y - 50, player.body.x, player.body.y + 50);
+        }
 
         bombs = this.physics.add.group();
         this.physics.add.collider(bombs, platforms);
         this.physics.add.collider(player, bombs, this.bombAttack, null, this);
 
-        // Add Colliders
+        // Add Platform Colliders
         this.physics.add.collider(player, platforms);
-        this.physics.add.collider(playerAtk, platforms);
+        this.physics.add.collider(playerMeleeAtk, platforms);
+        this.physics.add.collider(playerWalkNA, platforms);
+        this.physics.add.collider(playerArm, platforms);
+        this.physics.add.collider(playerArmFinal, platforms);
+
+        // Add Colliders
+        this.physics.add.overlap(player, boss);
+        this.physics.add.overlap(playerMeleeAtk, boss);
         this.physics.add.collider(boss, platforms);
     }
 
@@ -194,34 +206,56 @@ class RobotBossFight extends Phaser.Scene {
         // Player Movement
         if (A.isDown) {
             player.setVelocityX(-160);
-            playerAtk.setVelocityX(-160);
-            player.anims.play('left', true);
-
+            if (!attackAnimPlaying) {
+                player.anims.play('left', true);
+                playerWalkNA.anims.play('leftNoArm', true);
+            }
             front.tilePositionX -= 3;
             ground.tilePositionX -= 2.7;
         }
         else if (D.isDown) {
             player.setVelocityX(160);
-            playerAtk.setVelocityX(160);
-            player.anims.play('right', true);
-
+            if (!attackAnimPlaying) {
+                player.anims.play('right', true);
+                playerWalkNA.anims.play('rightNoArm', true);
+            }
             front.tilePositionX += 3;
             ground.tilePositionX += 2.7;
         }
         else {
             player.setVelocityX(0);
-            playerAtk.setVelocityX(0);
             player.anims.play('turn');
         }
 
         // Jumping
-        if ((spaceBar.isDown || W.isDown) && player.body.touching.down) {
+        if (W.isDown && player.body.touching.down) {
             player.setVelocityY(-270);
-            playerAtk.setVelocityY(-270);
         }
 
-        if (callAttack) {
-            this.playerAttackCall();
+        // Melee Attack
+        if (spaceBar.isDown) {
+            if (player.body.velocity.x >= 0) {
+                meleeAtkDir = 'R';
+            }
+            else {
+                meleeAtkDir = 'L';
+            }
+            this.playerMeleeAttack();
+        }
+
+        // Ranged Attack
+        if (callRangedAttack) {
+            this.playerRangedAttack(mouseX, mouseY);
+        }
+
+        // Updates each individual sprite's position/velocity each loop
+        this.updatePlayerPos();
+        this.updateVel();
+
+        // Draws test line for determining center of player sprite
+        if (debug) {
+            testLine.setTo(player.body.x + 27, player.body.y - 50, player.body.x + 27, player.body.y + 50);
+            graphics.strokeLineShape(testLine);
         }
 
         // Boss AI/Movement
@@ -277,6 +311,71 @@ class RobotBossFight extends Phaser.Scene {
         this.updatePlayerLifeText();
     }
 
+    // Makes sure each sprite is in the same position.
+    updatePlayerPos() {
+        playerMeleeAtk.body.x = player.body.x - 25;
+        playerWalkNA.body.x = player.body.x;
+        playerMeleeAtk.body.y = player.body.y;
+        playerWalkNA.body.y = player.body.y;
+        playerArm.body.y = player.body.y;
+        playerArmFinal.body.y = player.body.y;
+    }
+
+    // Updates velocity
+    updateVel() {
+        playerArm.setVelocityX(player.body.velocity.x);
+        playerArmFinal.setVelocityX(player.body.velocity.x);
+        playerArm.setVelocityY(player.body.velocity.y);
+        playerArmFinal.setVelocityY(player.body.velocity.y);
+    }
+
+    // Creates player sprites
+    createPlayerSprites() {
+        // Base player sprite
+        player = this.physics.add.sprite(130, 475, 'hero');
+        player.setBounce(0.25);
+        player.setCollideWorldBounds(true);
+        player.displayWidth = game.config.width * 0.075;
+        player.scaleY = player.scaleX;
+        player.body.setGravityY(300);
+
+        // Melee attack sprite
+        playerMeleeAtk = this.physics.add.sprite(130, 475, 'hero_attack');
+        playerMeleeAtk.setBounce(0.25);
+        playerMeleeAtk.setCollideWorldBounds(true);
+        playerMeleeAtk.displayWidth = game.config.width * 0.128;
+        playerMeleeAtk.scaleY = playerMeleeAtk.scaleX;
+        playerMeleeAtk.body.setGravityY(300);
+        playerMeleeAtk.visible = false;
+
+        // Player walking sprite with no arm (plays when casting ranged attack)
+        playerWalkNA = this.physics.add.sprite(130, 475, 'hero_walk_no_arm');
+        playerWalkNA.setBounce(0.25);
+        playerWalkNA.setCollideWorldBounds(true);
+        playerWalkNA.displayWidth = game.config.width * 0.075;
+        playerWalkNA.scaleY = playerWalkNA.scaleX;
+        playerWalkNA.body.setGravityY(300);
+        playerWalkNA.visible = false;
+
+        // Player arm sprite
+        playerArm = this.physics.add.sprite(130, 475, 'hero_ranged_attack_arm');
+        playerArm.setBounce(0.25);
+        playerArm.setCollideWorldBounds(true);
+        playerArm.displayWidth = game.config.width * 0.075;
+        playerArm.scaleY = playerArm.scaleX;
+        playerArm.body.setGravityY(300);
+        playerArm.visible = false;
+
+        // Final frame of player arm sprite (rotated based on projectile direction)
+        playerArmFinal = this.physics.add.sprite(130, 475, 'hero_ranged_attack_arm_final');
+        playerArmFinal.setBounce(0.25);
+        playerArmFinal.setCollideWorldBounds(true);
+        playerArmFinal.displayWidth = game.config.width * 0.110;
+        playerArmFinal.scaleY = playerArmFinal.scaleX;
+        playerArmFinal.body.setGravityY(300);
+        playerArmFinal.visible = false;
+    }
+
     bombAttack(bomb, player){
       life -= 5
       lifeText.setText('Life: ' + life);
@@ -287,11 +386,18 @@ class RobotBossFight extends Phaser.Scene {
               player.clearTint();
           }
       })
+      if (life == 0) {
+          player.disableBody(true, true);
+          player.setActive(false);
+          player.setVisible(false);
+          playerAlive = false;
+          soundtrack5.stop();
+      }
     }
 
     // Function that Updates the Boss' Life Text
-    updateBossLifeText(playerAtk, boss) {
-        var boundsA = playerAtk.getBounds();
+    updateBossLifeText() {
+        var boundsA = playerMeleeAtk.getBounds();
         var boundsB = boss.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && bossAlive) {
@@ -315,6 +421,9 @@ class RobotBossFight extends Phaser.Scene {
             boss.disableBody(true, true);
             bossAlive = false;
         }
+
+        // boss.setAlpha(0.5);
+
     }
 
     // Updates player's life text
@@ -333,23 +442,24 @@ class RobotBossFight extends Phaser.Scene {
         }
     }
 
-    // Called when player attacks
-    playerAttackCall() {
-        if (debug) { console.log('ATTACKING') };
+    // Called when player starts melee attack.
+    playerMeleeAttack() {
+        if (debug) { console.log('MELEE ATTACK') };
         if (attackAnimPlaying == false) {
-            if (atkDir == 'R') {
+            if (meleeAtkDir == 'R') {
                 attackAnimPlaying = true;
-                player.anims.play('preAtkR');
+                player.anims.play('preMeleeAtkR');
                 this.time.addEvent({
                     delay: 250,
                     callback: () => {
                         player.visible = false;
-                        playerAtk.visible = true;
-                        playerAtk.anims.play('playerAtkR');
+                        playerMeleeAtk.visible = true;
+                        this.updateBossLifeText();
+                        playerMeleeAtk.anims.play('playerMeleeAtkR');
                         this.time.addEvent({
                             delay: 400,
                             callback: () => {
-                                playerAtk.visible = false;
+                                playerMeleeAtk.visible = false;
                                 player.visible = true;
                                 attackAnimPlaying = false;
                                 callAttack = false;
@@ -358,19 +468,20 @@ class RobotBossFight extends Phaser.Scene {
                     }
                 })
             }
-            else if (atkDir == 'L') {
+            else if (meleeAtkDir == 'L') {
                 attackAnimPlaying = true;
-                player.anims.play('preAtkL');
+                player.anims.play('preMeleeAtkL');
                 this.time.addEvent({
                     delay: 250,
                     callback: () => {
                         player.visible = false;
-                        playerAtk.visible = true;
-                        playerAtk.anims.play('playerAtkL');
+                        playerMeleeAtk.visible = true;
+                        this.updateBossLifeText();
+                        playerMeleeAtk.anims.play('playerMeleeAtkL');
                         this.time.addEvent({
                             delay: 400,
                             callback: () => {
-                                playerAtk.visible = false;
+                                playerMeleeAtk.visible = false;
                                 player.visible = true;
                                 attackAnimPlaying = false;
                                 callAttack = false;
@@ -382,8 +493,106 @@ class RobotBossFight extends Phaser.Scene {
         }
     }
 
-    // Creates all the player animations
-    createPlayerAnimations() {
+    // Called when player casts ranged attack
+    playerRangedAttack(x, y) {
+        if (debug) { console.log('RANGED ATTACK') };
+
+        // Determines direction to fire projectile
+        if (x >= player.body.x) {
+            rangedAtkDir = 'R';
+        }
+        else {
+            rangedAtkDir = 'L';
+        }
+
+        // Actual attack animation
+        if (attackAnimPlaying == false) {
+            if (rangedAtkDir == 'R') {
+                if (playerArm.scaleX > 0) {
+                    playerArm.scaleX *= -1;
+                    playerArm.body.x = player.body.x + 10;
+                }
+                else {
+                    playerArm.body.x = player.body.x + 70;
+                }
+                playerArmFinal.body.x = player.body.x - 5;
+                attackAnimPlaying = true;
+                player.visible = false;
+                playerWalkNA.visible = true;
+                playerArm.visible = true;
+                if (Math.abs(player.body.velocity.x) > 0) {
+                    playerWalkNA.anims.play('rightNoArm', true)
+                }
+                else {
+                    playerWalkNA.anims.play('rightStatic', true)
+                }
+                playerArm.anims.play('preRangedAtk')
+                this.time.addEvent({
+                    delay: 280,
+                    callback: () => {
+                        this.launchDagger(x, y);
+                        playerArm.visible = false;
+                        playerArmFinal.visible = true;
+                        playerArmFinal.anims.play('playerRangedAtkR', true);
+                        this.time.addEvent({
+                            delay: 200,
+                            callback: () => {
+                                playerArmFinal.visible = false;
+                                playerWalkNA.visible = false;
+                                player.visible = true;
+                                attackAnimPlaying = false;
+                                callRangedAttack = false;
+                            }
+                        })
+                    }
+                })
+            }
+            else if (rangedAtkDir == 'L') {
+                if (playerArm.scaleX < 0) {
+                    playerArm.scaleX *= -1;
+                    playerArm.body.x = player.body.x + 50;
+                }
+                else {
+                    playerArm.body.x = player.body.x - 10;
+                }
+                playerArmFinal.body.x = player.body.x - 25;
+                attackAnimPlaying = true;
+                player.visible = false;
+                playerWalkNA.visible = true;
+                playerArm.visible = true;
+                if (Math.abs(player.body.velocity.x) > 0) {
+                    playerWalkNA.anims.play('leftNoArm', true)
+                }
+                else {
+                    playerWalkNA.anims.play('leftStatic', true)
+                }
+                playerArm.anims.play('preRangedAtk')
+                this.time.addEvent({
+                    delay: 280,
+                    callback: () => {
+                        this.launchDagger(x, y);
+                        playerArm.visible = false;
+                        playerArmFinal.visible = true;
+                        playerArmFinal.anims.play('playerRangedAtkL');
+                        this.time.addEvent({
+                            delay: 200,
+                            callback: () => {
+                                playerArmFinal.visible = false;
+                                playerWalkNA.visible = false;
+                                player.visible = true;
+                                attackAnimPlaying = false;
+                                callRangedAttack = false;
+                            }
+                        })
+                    }
+                })
+            }
+        }
+    }
+
+    // Creates player animations
+    createPlayerAnims() {
+        // Player default movement
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('hero', { start: 8, end: 13 }),
@@ -401,30 +610,90 @@ class RobotBossFight extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         });
+
+        // Player pre-melee attack
         this.anims.create({
-            key: 'preAtkL',
+            key: 'preMeleeAtkL',
             frames: this.anims.generateFrameNumbers('hero', { start: 0, end: 7 }),
             frameRate: 32,
             repeat: 0
         });
         this.anims.create({
-            key: 'preAtkR',
+            key: 'preMeleeAtkR',
             frames: this.anims.generateFrameNumbers('hero', { start: 21, end: 28 }),
             frameRate: 32,
             repeat: 0
         });
+
+        // Player melee attack
         this.anims.create({
-            key: 'playerAtkL',
+            key: 'playerMeleeAtkL',
             frames: this.anims.generateFrameNumbers('hero_attack', { start: 0, end: 5 }),
             frameRate: 15,
             repeat: 0
         });
         this.anims.create({
-            key: 'playerAtkR',
+            key: 'playerMeleeAtkR',
             frames: this.anims.generateFrameNumbers('hero_attack', { start: 6, end: 11 }),
             frameRate: 15,
             repeat: 0
         });
+
+        // Player no arm movement
+        this.anims.create({
+            key: 'leftNoArm',
+            frames: this.anims.generateFrameNumbers('hero_walk_no_arm', { start: 0, end: 5 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'leftStatic',
+            frames: [ { key: 'hero_walk_no_arm', frame: 3 } ],
+            freamRate: 10
+        })
+        this.anims.create({
+            key: 'turnNoArm',
+            frames: [ { key: 'hero_walk_no_arm', frame: 6 } ],
+            frameRate: 10
+        });
+        this.anims.create({
+            key: 'rightNoArm',
+            frames: this.anims.generateFrameNumbers('hero_walk_no_arm', { start: 7, end: 12 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'rightStatic',
+            frames: [ { key: 'hero_walk_no_arm', frame: 9 } ],
+            freamRate: 10
+        })
+
+        // Arm pre-ranged attack
+        this.anims.create({
+            key: 'preRangedAtk',
+            frames: this.anims.generateFrameNumbers('hero_ranged_attack_arm', { start: 0, end: 13 }),
+            frameRate: 50,
+            repeat: 0
+        });
+
+        // Arm final ranged attack frame
+        this.anims.create({
+           key: 'playerRangedAtkL',
+           frames: [ { key: 'hero_ranged_attack_arm_final', frame: 0 } ],
+           frameRate: 5,
+           repeat: -1
+        });
+        this.anims.create({
+            key: 'playerRangedAtkR',
+            frames: [ { key: 'hero_ranged_attack_arm_final', frame: 1 } ],
+            frameRate: 5,
+            repeat: -1
+         });
+    }
+
+    // Throws Dagger
+    launchDagger(aimX, aimY) {
+        daggerGroup.throwDagger(player.body.x, player.body.y, aimX, aimY)
     }
 }
 
@@ -501,5 +770,84 @@ class Laser extends Phaser.Physics.Arcade.Sprite {
         else if (direction == 'R') {
             this.setVelocityX(250);
         }
+    }
+}
+
+// Dagger Group Class
+class DaggerGroup1 extends Phaser.Physics.Arcade.Group {
+    constructor(scene) {
+        super(scene.physics.world, scene);
+
+        this.createMultiple({
+            classType: Dagger1,
+            frameQuantity: 1,
+            active: false,
+            visible: false,
+            key: 'dagger'
+        })
+    }
+
+    throwDagger (x, y, aimX, aimY) {
+        const dagger = this.getFirstDead(false);
+        if (dagger) {
+            dagger.displayWidth = game.config.width * 0.04;
+            dagger.scaleY = dagger.scaleX;
+            dagger.throw(x, y, aimX, aimY);
+        }
+    }
+}
+
+// Dagger Class
+class Dagger1 extends Phaser.Physics.Arcade.Sprite {
+    constructor(scene, x, y) {
+        super(scene, x, y, 'dagger');
+    }
+
+    preUpdate(time, delta) {
+        super.preUpdate(time, delta);
+
+        // Checks if dagger leaves screen
+        if (this.y >= 540 || this. y <= 0 || this.x >= game.config.width || this.x <= 0) {
+            this.setActive(false);
+            this.setVisible(false);
+        }
+        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), boss.getBounds())) && bossAlive) {
+            this.setActive(false);
+            this.setVisible(false);
+            bossLife -= 5;
+            bossLifeText.setText('Boss Life: ' + bossLife);
+            /*boss.setTint('0xff0000')
+            this.time.addEvent({
+                delay: 400,
+                callback: () => {
+                    boss.clearTint();
+                }
+            })*/
+            var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+            var bomb = bombs.create(x, 16, 'bomb');
+            bomb.setBounce(1);
+            bomb.setCollideWorldBounds(true);
+            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        }
+
+        if (bossLife == 0) {
+            boss.destroy();
+            bossAlive = false;
+        }
+    }
+
+
+    throw (x, y, aimX, aimY) {
+        this.body.reset(x + 25, y + 25);
+        this.setActive(true);
+        this.setVisible(true);
+        this.body.setGravityY(100);
+
+        // Finds angle between player and cursor aim location
+        var angle = Math.atan2((aimY - y), (aimX - x));
+        this.rotation = angle + Math.PI/4;
+
+        this.setVelocityX(Math.cos(angle) * 1000);
+        this.setVelocityY(Math.sin(angle) * 1000)
     }
 }
