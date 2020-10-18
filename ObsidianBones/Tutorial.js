@@ -4,32 +4,29 @@
     Has basic platforms to jump around on and targets to attack.
 */
 
-// Global Variables
-var graphics;
+// GLOBAL VARIABLES IN EACH SCENE
 var player, playerMeleeAtk, playerWalkNA, playerArm, playerArmFinal;
 var playerAlive = true;
-var delX, meleeAtkDir, rangedAtkDir, callRangedAttack;
+var meleeAtkDir, rangedAtkDir, callRangedAttack, attackAnimPlaying = false;
 var W, A, S, D, cursors, spaceBar, mouseX, mouseY;
 var playerLife = 100;
 var lifeText;
-var meleeAnimPlaying = false;
 var sky, clouds, far, back, mid, front;
 var ground, platforms, obstacles;
-var target1, target2;
-var target1life = 50;
-var target2life = 50;
-var target1Alive = true;
-var target2Alive = true;
-var target1LifeText = 50, target2LifeText = 50;
-
 var daggerGroup;
+
+// SCENE SPECIFIC VARIABLES
+var target1, target2;
+var target1life = 50, target2life = 50;
+var target1Alive = true, target2Alive = true;
+var target1LifeText = 50, target2LifeText = 50;
 
 // DEBUG PARAMETERS
 var debug = false;
-var testLine;
+var graphics, testLine;
 
-// Robot Boss Fight Class
-class Tutorial extends Phaser.Scene{
+// SCENE CLASS
+class Tutorial extends Phaser.Scene {
     constructor() {
         super({ key: 'Tutorial' });
     }
@@ -56,10 +53,10 @@ class Tutorial extends Phaser.Scene{
         this.load.image('platformV', 'assets/platforms/platformV1.png');
         this.load.image('platformH', 'assets/platforms/platformH.png');
 
-        // Targets
+        // Target
         this.load.image('target', 'assets/target.png');
 
-        // Daggers
+        // Dagger
         this.load.image('dagger', 'assets/dagger.png');
     }
 
@@ -78,23 +75,8 @@ class Tutorial extends Phaser.Scene{
         this.add.existing(ground);
         sky.fixedToCamera = true;
 
-        // Targets
-        target1 = this.add.image(750, 515, 'target');
-        target2 = this.add.image(600, 100, 'target');
-
-        // Platforms
-        obstacles = this.physics.add.staticGroup();
-        obstacles.create(250, 650, 'platformV');
-        obstacles.create(0, 525, 'platformH');
-        obstacles.create(250, 475, 'platformH');
-        obstacles.create(285, 500, 'platformH');
-        obstacles.create(320, 525, 'platformH');
-        obstacles.create(320, 550, 'platformH');
-
-        // Text
+        // Player Life Text
         lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
-        target1LifeText = this.add.text(650, 45, 'Life: 50', { fontSize: '25px', fill: '#ffffff' });
-        target2LifeText = this.add.text(650, 15, 'Life: 50', { fontSize: '25px', fill: '#ffffff' });
 
         // Platforms
         platforms = this.physics.add.staticGroup();
@@ -143,25 +125,58 @@ class Tutorial extends Phaser.Scene{
             testLine = new Phaser.Geom.Line(this, player.body.x, player.body.y - 50, player.body.x, player.body.y + 50);
         }
 
-        // Add Colliders
+        // Add Platform Colliders
         this.physics.add.collider(player, platforms);
         this.physics.add.collider(playerMeleeAtk, platforms);
         this.physics.add.collider(playerWalkNA, platforms);
         this.physics.add.collider(playerArm, platforms);
         this.physics.add.collider(playerArmFinal, platforms);
+        
+        // SCENE SPECIFIC GAME OBJECTS
+
+        // Reset Values
+        target1life = 50;
+        target2life = 50;
+        target1Alive = true;
+        target2Alive = true;
+        target1LifeText = 50;
+        target2LifeText = 50;
+        attackAnimPlaying = false;
+
+        // Targets
+        target1 = this.add.image(750, 515, 'target');
+        target2 = this.add.image(600, 100, 'target');
+
+        // Target Life Text
+        target1LifeText = this.add.text(650, 45, 'Life: 50', { fontSize: '25px', fill: '#ffffff' });
+        target2LifeText = this.add.text(650, 15, 'Life: 50', { fontSize: '25px', fill: '#ffffff' });
+
+        // Target Overlap
+        this.physics.add.overlap(player, target1);
+        this.physics.add.overlap(playerMeleeAtk, target1);
+        this.physics.add.overlap(player, target2);
+        this.physics.add.overlap(playerMeleeAtk, target2);
+
+        // Obstacles
+        obstacles = this.physics.add.staticGroup();
+        obstacles.create(250, 650, 'platformV');
+        obstacles.create(0, 525, 'platformH');
+        obstacles.create(250, 475, 'platformH');
+        obstacles.create(285, 500, 'platformH');
+        obstacles.create(320, 525, 'platformH');
+        obstacles.create(320, 550, 'platformH');
+
+        // Obstacle Colliders
         this.physics.add.collider(player, obstacles);
         this.physics.add.collider(playerMeleeAtk, obstacles);
         this.physics.add.collider(playerWalkNA, obstacles);
         this.physics.add.collider(playerArm, obstacles);
         this.physics.add.collider(playerArmFinal, obstacles);
-        this.physics.add.overlap(player, target1);
-        this.physics.add.overlap(playerMeleeAtk, target1);
-        this.physics.add.overlap(player, target2);
-        this.physics.add.overlap(playerMeleeAtk, target2);
     }
 
     // Constantly Updating Game Loop
     update() {
+        // Scene End Condition
         if (target1Alive == false && target2Alive == false) {
           this.scene.pause('Tutorial')
           this.scene.launch('TutorialCompleted');
@@ -202,6 +217,7 @@ class Tutorial extends Phaser.Scene{
             player.setVelocityY(-270);
         }
 
+        // Melee Attack
         if (spaceBar.isDown) {
             if (player.body.velocity.x >= 0) {
                 meleeAtkDir = 'R';
@@ -212,11 +228,12 @@ class Tutorial extends Phaser.Scene{
             this.playerMeleeAttack();
         }
 
+        // Ranged Attack
         if (callRangedAttack) {
             this.playerRangedAttack(mouseX, mouseY);
         }
 
-        // Updates each individual sprite's position each loop
+        // Updates each individual sprite's position/velocity each loop
         this.updatePlayerPos();
         this.updateVel();
 

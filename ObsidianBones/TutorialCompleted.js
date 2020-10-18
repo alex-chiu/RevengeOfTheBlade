@@ -23,7 +23,7 @@ class TutorialCompleted extends Phaser.Scene {
       const practiceAgainButton = this.add.text(game.config.width/2, 360, 'PRACTICE AGAIN', { fontSize: '40px', fill: '#b5dbf7' }).setOrigin(0.5);
       practiceAgainButton.setInteractive();
       practiceAgainButton.on('pointerdown', () => {
-        this.scene.restart('Tutorial');
+        this.scene.stop('Tutorial');
         this.scene.start('Tutorial');
       });
 
@@ -31,7 +31,6 @@ class TutorialCompleted extends Phaser.Scene {
       menuButton.setInteractive();
       menuButton.on('pointerdown', () => {
         this.scene.stop('Tutorial');
-        this.scene.restart('Tutorial');
         this.scene.start('Menu');
       });
     }
