@@ -16,7 +16,7 @@ var delX, atkDir, callAttack;
 var laserGroup;
 var cursors, spaceBar;
 var W, A, S, D;
-var life = 30, bossLife = 100;
+var life = 100, bossLife = 100;
 var lifeText, bossLifeText;
 var attackAnimPlaying = false;
 var sky, clouds;
@@ -72,7 +72,7 @@ class RobotBossFight extends Phaser.Scene {
         soundtrack5.play();
 
         // Reset Values
-        life = 30;
+        life = 100;
         bossLife = 100;
         playerAlive = true;
         bossAlive = true;
@@ -196,7 +196,9 @@ class RobotBossFight extends Phaser.Scene {
           panel.events.on('clickMenu', this.handleGoMenu, this);
           panel.events.on('clickTryAgain', this.handleTryAgain, this); */
         }
-        else if (bossAlive == false) {
+        if (bossAlive == false) {
+          this.scene.pause('RobotBossFight')
+          this.scene.launch('GameCompleted');
             // Boss dead, victory screen
         }
 
@@ -407,7 +409,12 @@ class RobotBossFight extends Phaser.Scene {
         var boundsB = boss.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && bossAlive) {
-            bossLife -= 10
+            if (bossLife < 10){
+              bossLife = 0
+            }
+            else{
+              bossLife -= 10
+            }
             bossLifeText.setText('Boss Life: ' + bossLife);
             boss.setTint('0xff0000')
             this.time.addEvent({
@@ -834,8 +841,8 @@ class Dagger1 extends Phaser.Physics.Arcade.Sprite {
         }
 
         if (bossLife == 0) {
-            boss.destroy();
             bossAlive = false;
+            boss.disableBody(true, true);
         }
     }
 
