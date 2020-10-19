@@ -935,7 +935,6 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
             this.setActive(false);
             this.setVisible(false);
             enemy1Life -= 5;
-<<<<<<< HEAD
             enemy1LifeText.setText('Enemy 1 Life: ' + enemy1Life);
             if (!playerDetected) {
                 playerDetected = true;
@@ -949,12 +948,6 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
             if (!playerDetected) {
                 playerDetected = true;
             }
-||||||| 0c48d07
-            enemy1LifeText.setText('Enemy Life: ' + enemy1Life);
-            if (!playerDetected) {
-                playerDetected = true;
-            }
-=======
             enemy1LifeText.setText('Boss Life: ' + enemy1Life);
             /*boss.setTint('0xff0000')
             this.time.addEvent({
@@ -963,7 +956,6 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
                     boss.clearTint();
                 }
             })*/
->>>>>>> a8caddcc5a528f8c631ba226f3e0c34b42110149
         }
 
         if (enemy1Life == 0) {
