@@ -29,7 +29,8 @@ class Menu extends Phaser.Scene {
       this.add.tileSprite(400, 300, 800, 600, 'sky0');
       this.add.tileSprite(400, 300, 800, 600, 'clouds1');
 
-      this.add.text(80,100,'OBSIDIAN BONES', { fontSize: '75px', fill: '#ffffff' });
+      this.add.text(80,90,'Revenge of The', { fontSize: '75px', fill: '#ffffff' });
+      this.add.text(280,170,'Blade', { fontSize: '75px', fill: '#ffffff' });
 
       tutorialButton = this.add.text(350, 300, 'TUTORIAL', { fontSize: '20px', fill: '#b5dbf7' });
       tutorialButton.setInteractive();
