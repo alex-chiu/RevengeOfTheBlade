@@ -25,7 +25,6 @@ class GameCompleted extends Phaser.Scene {
       menuButton.setInteractive();
       menuButton.on('pointerdown', () => {
         this.scene.stop('RobotBossFight');
-        this.scene.stop('GameCompleted');
         this.scene.start('Menu');
       });
     }
