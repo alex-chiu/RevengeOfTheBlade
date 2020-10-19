@@ -21,18 +21,9 @@ var delX1, delX2;
 var laserGroup;
 var cursors, spaceBar;
 var W, A, S, D;
-<<<<<<< HEAD
 var life = 30, enemy1Life = 50;
 var enemy2Life = 50;
 var lifeText, enemy1LifeText, enemy2LifeText;
-||||||| 0c48d07
-var life = 30, enemy1Life = 50;
-var lifeText, enemy1LifeText;
-=======
-var life = 30, enemy1Life = 15;
-var enemy2Life = 20;
-var lifeText, enemy1LifeText, enemy2LifeText;
->>>>>>> a8caddcc5a528f8c631ba226f3e0c34b42110149
 var attackAnimPlaying = false;
 var sky, clouds;
 var far, back, mid, front;
