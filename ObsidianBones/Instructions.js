@@ -9,12 +9,12 @@ var backButton;
 var practiceTxt;
 var menuTxt;
 
-class Instructions extends Phaser.Scene{
+class Instructions extends Phaser.Scene {
     constructor() {
         super({ key: 'Instructions' });
     }
 
-    preload(){
+    preload() {
       this.add.text(130,15,'INSTRUCTIONS', { fontSize: '75px', fill: '#6543b5' });
 
       this.add.text(50,150,'W - Jump', { fontSize: '40px', fill: '#d2c4f5' });
@@ -30,7 +30,7 @@ class Instructions extends Phaser.Scene{
       practiceTxt = this.add.text(605, 541,'PRACTICE', { fontSize: '20px', fill: '#ffffff' });
     }
 
-    create(){
+    create() {
       hero_static = this.physics.add.staticGroup();
       hero_static.create(660, 280, 'hero_static');
 

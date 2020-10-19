@@ -26,7 +26,6 @@ var soundtrack5;
 var bossSceneButton;
 var healthLoots;
 
-
 // DEBUG PARAMETERS
 var debug = false;
 var graphics, testLine;
@@ -299,7 +298,6 @@ class Stage5 extends Phaser.Scene {
                     if (bossAlive){
                       this.shootLaser('L');
                     }
-
                 }
             }
             else if (player.body.position.x > boss.body.position.x) {
@@ -315,7 +313,6 @@ class Stage5 extends Phaser.Scene {
                     if (bossAlive){
                       this.shootLaser('R');
                     }
-
                 }
             }
         }
@@ -333,7 +330,7 @@ class Stage5 extends Phaser.Scene {
         this.updatePlayerLifeText();
     }
 
-    pickupLoot(healthLoots){
+    pickupLoot(healthLoots) {
         healthLoots.disableBody(true, true);
         if (life < 95){
           life += 5;
@@ -429,9 +426,6 @@ class Stage5 extends Phaser.Scene {
             boss.disableBody(true, true);
             bossAlive = false;
         }
-
-        // boss.setAlpha(0.5);
-
     }
 
     // Updates player's life text
@@ -763,7 +757,6 @@ class Laser5 extends Phaser.Physics.Arcade.Sprite {
             soundtrack5.stop();
         }
     }
-
 
     fire (x, y, direction) {
         this.body.reset(x, y);

@@ -274,10 +274,9 @@ class RobotBossFight extends Phaser.Scene {
                 }
                 else {
                     boss.setVelocityX(0);
-                    if (bossAlive){
+                    if (bossAlive) {
                       this.shootLaser('L');
                     }
-
                 }
             }
             else if (player.body.position.x > boss.body.position.x) {
@@ -376,7 +375,7 @@ class RobotBossFight extends Phaser.Scene {
         playerArmFinal.visible = false;
     }
 
-    bombAttack(bomb, player){
+    bombAttack(bomb, player) {
       life -= 5
       lifeText.setText('Life: ' + life);
       player.setTint('0xff0000')
@@ -421,9 +420,6 @@ class RobotBossFight extends Phaser.Scene {
             boss.disableBody(true, true);
             bossAlive = false;
         }
-
-        // boss.setAlpha(0.5);
-
     }
 
     // Updates player's life text

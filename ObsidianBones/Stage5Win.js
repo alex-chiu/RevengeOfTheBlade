@@ -4,7 +4,7 @@
     Has options for returning to the menu or affronting the final robot boss.
 */
 
-class Stage5Win extends Phaser.Scene{
+class Stage5Win extends Phaser.Scene {
     constructor() {
         super({ key: 'Stage5Win' });
     }

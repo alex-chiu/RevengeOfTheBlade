@@ -4,7 +4,7 @@
     Has options for returning to the menu or trying the stage again.
 */
 
-class GameOver extends Phaser.Scene{
+class GameOver extends Phaser.Scene {
     constructor() {
         super({ key: 'GameOver' });
     }

@@ -10,7 +10,7 @@ var config = {
     height: 600,
     scene: [Menu, Instructions, Tutorial, RobotBossFight, GameOver, TutorialCompleted, Stage5, Stage5Die, Stage5Win],
 
-    scale:{
+    scale: {
         autoCenter: Phaser.Scale.CENTER_HORIZONALLY,
         mode: Phaser.Scale.FIT
     },

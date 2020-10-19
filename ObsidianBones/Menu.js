@@ -24,7 +24,7 @@ class Menu extends Phaser.Scene {
 
     create() {
       this.soundtrack = this.sound.add('menuMusic', {volume: 0.5, loop: true});
-      // this.soundtrack.play();
+      this.soundtrack.play();
 
       this.add.tileSprite(400, 300, 800, 600, 'sky0');
       this.add.tileSprite(400, 300, 800, 600, 'clouds1');
@@ -54,24 +54,23 @@ class Menu extends Phaser.Scene {
 
       audioButton = this.add.text(5, 570, 'audio', { fontSize: '30px', fill: '#8db9d9' });
       audioButton.setInteractive();
-      audioButton.on('pointerdown', () => {this.switchSound();});
+      audioButton.on('pointerdown', () => { this.switchSound(); });
       audioButton.on('pointerover', () => { this.buttonOver(audioButton); });
       audioButton.on('pointerout', () => { this.buttonNotOver(audioButton); });
-
     }
 
-    switchSound(){
-      if (soundState == 'off'){
+    switchSound() {
+      if (soundState == 'off') {
         this.soundtrack.play();
         soundState = 'on'
       }
-      else{
+      else {
         this.soundtrack.stop();
         soundState = 'off'
       }
     }
 
-    buttonOver(button){
+    buttonOver(button) {
       if (button == playButton) {
         playButton.setStyle({fill:'#fffb00'});
       }
@@ -83,7 +82,7 @@ class Menu extends Phaser.Scene {
       }
     }
 
-    buttonNotOver(button){
+    buttonNotOver(button) {
       if (button == playButton) {
         playButton.setStyle({fill:'#8db9d9'})
       }
@@ -95,7 +94,7 @@ class Menu extends Phaser.Scene {
       }
     }
 
-    update(){
+    update() {
 
     }
 }

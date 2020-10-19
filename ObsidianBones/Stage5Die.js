@@ -4,7 +4,7 @@
     Has options for returning to the menu or trying the stage again.
 */
 
-class Stage5Die extends Phaser.Scene{
+class Stage5Die extends Phaser.Scene {
     constructor() {
         super({ key: 'Stage5Die' });
     }
