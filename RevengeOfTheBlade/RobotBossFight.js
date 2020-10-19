@@ -196,6 +196,9 @@ class RobotBossFight extends Phaser.Scene {
           panel.events.on('clickMenu', this.handleGoMenu, this);
           panel.events.on('clickTryAgain', this.handleTryAgain, this); */
         }
+        else if (bossAlive == false) {
+            // Boss dead, victory screen
+        }
 
         // Implement Parallax Background
         clouds.tilePositionX -= 0.5;
@@ -375,7 +378,7 @@ class RobotBossFight extends Phaser.Scene {
         playerArmFinal.visible = false;
     }
 
-    bombAttack(bomb, player) {
+    bombAttack(player, bomb) {
       life -= 5
       lifeText.setText('Life: ' + life);
       player.setTint('0xff0000')
@@ -385,6 +388,10 @@ class RobotBossFight extends Phaser.Scene {
               player.clearTint();
           }
       })
+      bomb.disableBody(true, true);
+      bomb.setActive(false);
+      bomb.setVisible(false);
+
       if (life == 0) {
           player.disableBody(true, true);
           player.setActive(false);

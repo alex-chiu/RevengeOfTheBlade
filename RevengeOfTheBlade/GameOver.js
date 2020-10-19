@@ -23,7 +23,7 @@ class GameOver extends Phaser.Scene {
       const tryAgainButton = this.add.text(290, 360, 'TRY AGAIN', { fontSize: '40px', fill: '#b5dbf7' });
       tryAgainButton.setInteractive();
       tryAgainButton.on('pointerdown', () => {
-        this.scene.restart('RobotBossFight');
+        this.scene.stop('RobotBossFight');
         this.scene.start('RobotBossFight');
       });
 
@@ -31,7 +31,6 @@ class GameOver extends Phaser.Scene {
       menuButton.setInteractive();
       menuButton.on('pointerdown', () => {
         this.scene.stop('RobotBossFight');
-        this.scene.restart('RobotBossFight');
         this.scene.start('Menu');
       });
     }
