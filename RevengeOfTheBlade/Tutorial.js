@@ -93,9 +93,6 @@ class Tutorial extends Phaser.Scene {
         // Create Player
         this.createPlayerSprites();
 
-        // Create Player Animations
-        this.createPlayerAnims();
-
         // Add Input Sources
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         W = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
@@ -311,107 +308,6 @@ class Tutorial extends Phaser.Scene {
         playerArmFinal.scaleY = playerArmFinal.scaleX;
         playerArmFinal.body.setGravityY(300);
         playerArmFinal.visible = false;
-    }
-
-    // Creates player animations
-    createPlayerAnims() {
-        // Player default movement
-        this.anims.create({
-            key: 'left',
-            frames: this.anims.generateFrameNumbers('hero', { start: 8, end: 13 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'turn',
-            frames: [ { key: 'hero', frame: 14 } ],
-            frameRate: 10
-        });
-        this.anims.create({
-            key: 'right',
-            frames: this.anims.generateFrameNumbers('hero', { start: 15, end: 20 }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        // Player pre-melee attack
-        this.anims.create({
-            key: 'preMeleeAtkL',
-            frames: this.anims.generateFrameNumbers('hero', { start: 0, end: 7 }),
-            frameRate: 32,
-            repeat: 0
-        });
-        this.anims.create({
-            key: 'preMeleeAtkR',
-            frames: this.anims.generateFrameNumbers('hero', { start: 21, end: 28 }),
-            frameRate: 32,
-            repeat: 0
-        });
-
-        // Player melee attack
-        this.anims.create({
-            key: 'playerMeleeAtkL',
-            frames: this.anims.generateFrameNumbers('hero_attack', { start: 0, end: 5 }),
-            frameRate: 15,
-            repeat: 0
-        });
-        this.anims.create({
-            key: 'playerMeleeAtkR',
-            frames: this.anims.generateFrameNumbers('hero_attack', { start: 6, end: 11 }),
-            frameRate: 15,
-            repeat: 0
-        });
-
-        // Player no arm movement
-        this.anims.create({
-            key: 'leftNoArm',
-            frames: this.anims.generateFrameNumbers('hero_walk_no_arm', { start: 0, end: 5 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'leftStatic',
-            frames: [ { key: 'hero_walk_no_arm', frame: 3 } ],
-            freamRate: 10
-        })
-        this.anims.create({
-            key: 'turnNoArm',
-            frames: [ { key: 'hero_walk_no_arm', frame: 6 } ],
-            frameRate: 10
-        });
-        this.anims.create({
-            key: 'rightNoArm',
-            frames: this.anims.generateFrameNumbers('hero_walk_no_arm', { start: 7, end: 12 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'rightStatic',
-            frames: [ { key: 'hero_walk_no_arm', frame: 9 } ],
-            freamRate: 10
-        })
-
-        // Arm pre-ranged attack
-        this.anims.create({
-            key: 'preRangedAtk',
-            frames: this.anims.generateFrameNumbers('hero_ranged_attack_arm', { start: 0, end: 13 }),
-            frameRate: 50,
-            repeat: 0
-        });
-
-        // Arm final ranged attack frame
-        this.anims.create({
-           key: 'playerRangedAtkL',
-           frames: [ { key: 'hero_ranged_attack_arm_final', frame: 0 } ],
-           frameRate: 5,
-           repeat: -1
-        });
-        this.anims.create({
-            key: 'playerRangedAtkR',
-            frames: [ { key: 'hero_ranged_attack_arm_final', frame: 1 } ],
-            frameRate: 5,
-            repeat: -1
-         });
     }
 
     // Called when player starts melee attack.
