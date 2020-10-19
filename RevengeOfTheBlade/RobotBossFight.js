@@ -11,7 +11,7 @@ var daggerGroup;
 var boss;
 var bossAlive = true;
 var playerAlive = true;
-var playerDetected = true;
+var playerDetected = false;
 var delX, atkDir, callAttack;
 var laserGroup;
 var cursors, spaceBar;
@@ -76,7 +76,7 @@ class RobotBossFight extends Phaser.Scene {
         bossLife = 100;
         playerAlive = true;
         bossAlive = true;
-        playerDetected = true;
+        playerDetected = false;
 
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky0');
@@ -826,14 +826,11 @@ class Dagger1 extends Phaser.Physics.Arcade.Sprite {
             this.setActive(false);
             this.setVisible(false);
             bossLife -= 5;
-            bossLifeText.setText('Boss Life: ' + bossLife);
-            /*boss.setTint('0xff0000')
-            this.time.addEvent({
-                delay: 400,
-                callback: () => {
-                    boss.clearTint();
-                }
-            })*/
+            
+            if (!playerDetected) {
+                playerDetected = true;
+            }
+
             var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
             var bomb = bombs.create(x, 16, 'bomb');
             bomb.setBounce(1);

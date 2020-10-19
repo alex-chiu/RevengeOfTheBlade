@@ -11,7 +11,7 @@ var daggerGroup;
 var enemy1;
 var enemy1Alive = true;
 var playerAlive = true;
-var playerDetected = true;
+var playerDetected = false;
 var delX, atkDir, callAttack;
 var laserGroup;
 var cursors, spaceBar;
@@ -79,7 +79,7 @@ class Stage5 extends Phaser.Scene {
         enemy1Life = 50;
         playerAlive = true;
         enemy1Alive = true;
-        playerDetected = true;
+        playerDetected = false;
 
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky0');
@@ -829,13 +829,9 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
             enemy1Life -= 5;
             enemy1LifeText.setText('Enemy Life: ' + enemy1Life);
-            /*boss.setTint('0xff0000')
-            this.time.addEvent({
-                delay: 400,
-                callback: () => {
-                    boss.clearTint();
-                }
-            })*/
+            if (!playerDetected) {
+                playerDetected = true;
+            }
         }
 
         if (enemy1Life == 0) {
