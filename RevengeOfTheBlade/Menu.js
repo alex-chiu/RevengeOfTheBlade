@@ -7,7 +7,7 @@
 var playButton;
 var tutorialButton;
 var audioButton;
-var soundState = 'off';
+var soundState = 'on';
 
 class Menu extends Phaser.Scene {
     constructor() {

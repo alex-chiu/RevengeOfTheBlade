@@ -11,7 +11,7 @@ var daggerGroup;
 var boss;
 var bossAlive = true;
 var playerAlive = true;
-var playerDetected = false;
+var playerDetected = true;
 var delX, atkDir, callAttack;
 var laserGroup;
 var cursors, spaceBar;
@@ -76,7 +76,7 @@ class RobotBossFight extends Phaser.Scene {
         bossLife = 100;
         playerAlive = true;
         bossAlive = true;
-        playerDetected = false;
+        playerDetected = true;
 
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky0');
@@ -189,17 +189,18 @@ class RobotBossFight extends Phaser.Scene {
     // Constantly Updating Game Loop
     update() {
         if (playerAlive == false) {
-          this.scene.pause('RobotBossFight')
-          this.scene.launch('GameOver');
+            soundtrack5.stop();
+            this.scene.pause('RobotBossFight')
+            this.scene.launch('GameOver');
 
           /* let panel = this.scene.get('gameOverScreen');
           panel.events.on('clickMenu', this.handleGoMenu, this);
           panel.events.on('clickTryAgain', this.handleTryAgain, this); */
         }
         if (bossAlive == false) {
-          this.scene.pause('RobotBossFight')
-          this.scene.launch('GameCompleted');
-            // Boss dead, victory screen
+            soundtrack5.stop();
+            this.scene.pause('RobotBossFight')
+            this.scene.launch('GameCompleted');
         }
 
         // Implement Parallax Background

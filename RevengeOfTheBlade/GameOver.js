@@ -18,7 +18,7 @@ class GameOver extends Phaser.Scene {
       this.background.fillRoundedRect(150, 175, 500, 250, 25)
       this.background.fillStyle('#9ba3a0')
 
-      this.add.text(220,180,'YOU DIED', { fontSize: '75px', fill: '#ffffff' });
+      this.add.text(230,180,'YOU DIED', { fontSize: '75px', fill: '#ffffff' });
 
       const tryAgainButton = this.add.text(290, 360, 'TRY AGAIN', { fontSize: '40px', fill: '#b5dbf7' });
       tryAgainButton.setInteractive();

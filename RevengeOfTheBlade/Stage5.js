@@ -11,12 +11,12 @@ var daggerGroup;
 var enemy1;
 var enemy1Alive = true;
 var playerAlive = true;
-var playerDetected = false;
+var playerDetected = true;
 var delX, atkDir, callAttack;
 var laserGroup;
 var cursors, spaceBar;
 var W, A, S, D;
-var life = 30, enemy1Life = 15;
+var life = 30, enemy1Life = 50;
 var lifeText, enemy1LifeText;
 var attackAnimPlaying = false;
 var sky, clouds;
@@ -76,10 +76,10 @@ class Stage5 extends Phaser.Scene {
 
         // Reset Values
         life = 30;
-        enemy1Life = 15;
+        enemy1Life = 50;
         playerAlive = true;
         enemy1Alive = true;
-        playerDetected = false;
+        playerDetected = true;
 
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky0');
@@ -94,7 +94,7 @@ class Stage5 extends Phaser.Scene {
 
         // Text
         lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
-        enemy1LifeText = this.add.text(580, 15, 'Boss Life: 100', { fontSize: '25px', fill: '#ffffff' });
+        enemy1LifeText = this.add.text(560, 15, 'Enemy Life: 50', { fontSize: '25px', fill: '#ffffff' });
 
         // Platforms
         platforms = this.physics.add.staticGroup();
@@ -118,7 +118,7 @@ class Stage5 extends Phaser.Scene {
         // Boss' Laser Attacks
         laserGroup = new LaserGroup5(this);
 
-        // Create Boss Animations
+        // Create Enemy Animations
         this.anims.create({
             key:'enemy1LeftAtk',
             frames: this.anims.generateFrameNumbers('enemy1', { start: 0, end: 1}),
@@ -171,14 +171,16 @@ class Stage5 extends Phaser.Scene {
         this.physics.add.overlap(playerMeleeAtk, healthLoots, this.pickupLoot, null, this);
         this.physics.add.collider(healthLoots, platforms);
 
-        // TEMPORARY button
-        bossSceneButton = this.add.text(350, 300, 'BOSS', { fontSize: '80px', fill: '#b5dbf7' });
-        bossSceneButton.setInteractive();
-        bossSceneButton.on('pointerdown', () => {
-          soundtrack5.stop();
-          this.scene,stop('Stage5');
-          this.scene.start('RobotBossFight');
-        })
+        // Temporary button to get to boss fight
+        if (debug) {
+            bossSceneButton = this.add.text(350, 300, 'BOSS', { fontSize: '80px', fill: '#b5dbf7' });
+            bossSceneButton.setInteractive();
+            bossSceneButton.on('pointerdown', () => {
+            soundtrack5.stop();
+            this.scene,stop('Stage5');
+            this.scene.start('RobotBossFight');
+            })
+        }
 
         // Graphics for drawing debug line
         graphics = this.add.graphics();
@@ -204,20 +206,20 @@ class Stage5 extends Phaser.Scene {
     update() {
         //updates// Launch Stage5Die Scene
         if (playerAlive == false) {
-          this.scene.pause('Stage5')
-          this.scene.launch('Stage5Die');
+            soundtrack5.stop();
+            this.scene.pause('Stage5')
+            this.scene.launch('Stage5Die');
 
           /* let panel = this.scene.get('gameOverScreen');
           panel.events.on('clickMenu', this.handleGoMenu, this);
           panel.events.on('clickTryAgain', this.handleTryAgain, this); */
         }
-        // Launch Stage5Win Scene
-        /*
-        if (enemy1Alive == false && enemy2Alive == false) {
-          this.scene.pause('Stage5')
-          this.scene.launch('Stage5Win');
+        
+        if (enemy1Alive == false) {
+            soundtrack5.stop();
+            this.scene.pause('Stage5')
+            this.scene.launch('Stage5Win');
         }
-        */
 
         // Implement Parallax Background
         clouds.tilePositionX -= 0.5;
@@ -413,14 +415,14 @@ class Stage5 extends Phaser.Scene {
         var boundsB = enemy1.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && enemy1Alive) {
-            if (enemy1Life<10){
+            if (enemy1Life < 10) {
               enemy1Life = 0
             }
-            else{
+            else {
               enemy1Life -= 10
             }
 
-            enemy1LifeText.setText('Boss Life: ' + enemy1Life);
+            enemy1LifeText.setText('Enemy Life: ' + enemy1Life);
             enemy1.setTint('0xff0000')
             this.time.addEvent({
                 delay: 400,
@@ -826,7 +828,7 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
             this.setActive(false);
             this.setVisible(false);
             enemy1Life -= 5;
-            enemy1LifeText.setText('Boss Life: ' + enemy1Life);
+            enemy1LifeText.setText('Enemy Life: ' + enemy1Life);
             /*boss.setTint('0xff0000')
             this.time.addEvent({
                 delay: 400,
