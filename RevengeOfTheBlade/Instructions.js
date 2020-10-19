@@ -3,11 +3,9 @@
     Provides basic instructions to player regarding the controls of the game.
 */
 
-var hero_static;
-var playButton;
-var backButton;
-var practiceTxt;
-var menuTxt;
+var heroStatic;
+var playButton, backButton;
+var practiceTxt, menuTxt;
 
 class Instructions extends Phaser.Scene {
     constructor() {
@@ -15,15 +13,15 @@ class Instructions extends Phaser.Scene {
     }
 
     preload() {
-      this.add.text(130,15,'INSTRUCTIONS', { fontSize: '75px', fill: '#6543b5' });
+      this.add.text(game.config.width/2, 45, 'INSTRUCTIONS', { fontSize: '75px', fill: '#6543b5' }).setOrigin(0.5);
 
-      this.add.text(50,150,'W - Jump', { fontSize: '40px', fill: '#d2c4f5' });
-      this.add.text(50,200,'A - Move Left', { fontSize: '40px', fill: '#d2c4f5' });
-      this.add.text(50,250,'D - Move Right', { fontSize: '40px', fill: '#d2c4f5' });
-      this.add.text(50,350,'SPACE - Melee Attack', { fontSize: '40px', fill: '#d2c4f5' });
-      this.add.text(50,400,'MB1 - Ranged Attack', { fontSize: '40px', fill: '#d2c4f5' });
+      this.add.text(50, 150, 'W - Jump', { fontSize: '40px', fill: '#d2c4f5' });
+      this.add.text(50, 200, 'A - Move Left', { fontSize: '40px', fill: '#d2c4f5' });
+      this.add.text(50, 250, 'D - Move Right', { fontSize: '40px', fill: '#d2c4f5' });
+      this.add.text(50, 350, 'SPACE - Melee Attack', { fontSize: '40px', fill: '#d2c4f5' });
+      this.add.text(50, 400, 'MB1 - Ranged Attack', { fontSize: '40px', fill: '#d2c4f5' });
 
-      this.load.image('hero_static', 'assets/sprites/hero_static.png');
+      this.load.image('heroStatic', 'assets/sprites/hero_static.png');
       this.load.image('arrowR', 'assets/arrowR.png');
       this.load.image('arrowL', 'assets/arrowL.png');
       menuTxt = this.add.text(100, 541,'MENU', { fontSize: '20px', fill: '#ffffff' });
@@ -31,8 +29,8 @@ class Instructions extends Phaser.Scene {
     }
 
     create() {
-      hero_static = this.physics.add.staticGroup();
-      hero_static.create(660, 280, 'hero_static');
+      heroStatic = this.physics.add.staticGroup();
+      heroStatic.create(660, 280, 'heroStatic');
 
       playButton = this.add.image(750, 550, 'arrowR');
       playButton.setInteractive();

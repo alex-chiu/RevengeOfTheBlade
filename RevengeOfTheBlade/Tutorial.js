@@ -20,6 +20,7 @@ var target1, target2;
 var target1life = 50, target2life = 50;
 var target1Alive = true, target2Alive = true;
 var target1LifeText = 50, target2LifeText = 50;
+var target1Dmg = false, target2Dmg = false;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -238,6 +239,26 @@ class Tutorial extends Phaser.Scene {
         if (debug) {
             testLine.setTo(player.body.x + 27, player.body.y - 50, player.body.x + 27, player.body.y + 50);
             graphics.strokeLineShape(testLine);
+        }
+
+        // Clear Target Tint
+        if (target1Dmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    target1.clearTint();
+                    target1Dmg = false;
+                }
+            })
+        }
+        if (target2Dmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    target2.clearTint();
+                    target2Dmg = false;
+                }
+            })
         }
 
         // Update Life Text
@@ -475,12 +496,7 @@ class Tutorial extends Phaser.Scene {
               target1life = 0
             }
             target1.setTint('0xff0000')
-            this.time.addEvent({
-                delay: 400,
-                callback: () => {
-                    target1.clearTint();
-                }
-            })
+            target1Dmg = true;
         }
         if (target1life <= 0) {
             target1.destroy();
@@ -498,12 +514,7 @@ class Tutorial extends Phaser.Scene {
               target2life = 0
             }
             target2.setTint('0xff0000')
-            this.time.addEvent({
-                delay: 400,
-                callback: () => {
-                    target2.clearTint();
-                }
-            })
+            target2Dmg = true;
         }
         if (target2life <= 0) {
             target2.destroy();
@@ -565,11 +576,15 @@ class Dagger extends Phaser.Physics.Arcade.Sprite {
             this.setActive(false);
             this.setVisible(false);
             target1life -= 5;
+            target1.setTint('0xff0000')
+            target1Dmg = true;
         }
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), target2.getBounds())) && target2Alive) {
             this.setActive(false);
             this.setVisible(false);
             target2life -= 5;
+            target2.setTint('0xff0000')
+            target2Dmg = true;
         }
 
         if (target1life == 0) {
