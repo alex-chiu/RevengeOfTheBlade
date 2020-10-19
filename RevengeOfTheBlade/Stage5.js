@@ -133,18 +133,10 @@ class Stage5 extends Phaser.Scene {
         enemy1Alive = true;
         playerDetected = false;
 
-<<<<<<< HEAD
-        // Reset Values of enemy2
-        enemy2Life = 50;
-        enemy2Alive = true;
-
-||||||| 0c48d07
-=======
         // Reset Values of enemy2
         enemy2Life = 15;
         enemy2Alive = true;
 
->>>>>>> a8caddcc5a528f8c631ba226f3e0c34b42110149
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky0');
         clouds = this.add.tileSprite(400, 300, 800, 600, 'clouds1');
@@ -158,15 +150,8 @@ class Stage5 extends Phaser.Scene {
 
         // Text
         lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
-<<<<<<< HEAD
-        enemy1LifeText = this.add.text(580, 15, 'Enemy 1 Life: 50', { fontSize: '20px', fill: '#ffffff' });
-        enemy2LifeText = this.add.text(330, 15, 'Enemy 2 Life: 50', { fontSize: '20px', fill: '#ffffff' });
-||||||| 0c48d07
-        enemy1LifeText = this.add.text(560, 15, 'Enemy Life: 50', { fontSize: '25px', fill: '#ffffff' });
-=======
         enemy1LifeText = this.add.text(580, 15, 'Enemy 1 Life: 100', { fontSize: '20px', fill: '#ffffff' });
         enemy2LifeText = this.add.text(330, 15, 'Enemy 2 Life: 150', { fontSize: '20px', fill: '#ffffff' });
->>>>>>> a8caddcc5a528f8c631ba226f3e0c34b42110149
 
         // Platforms
         platforms = this.physics.add.staticGroup();
@@ -179,16 +164,11 @@ class Stage5 extends Phaser.Scene {
         // Create Dagger Group
         daggerGroup = new DaggerGroup5(this);
 
-<<<<<<< HEAD
         // Create Player
         this.createPlayerSprites();
 
         // Create Enemies
-||||||| 0c48d07
-        // Create Boss
-=======
         // Create Enemy1
->>>>>>> a8caddcc5a528f8c631ba226f3e0c34b42110149
         enemy1 = this.physics.add.sprite(650, 400, 'enemy1')
         enemy1.setBounce(0);
         enemy1.setCollideWorldBounds(true);
@@ -196,7 +176,6 @@ class Stage5 extends Phaser.Scene {
         enemy1.scaleY = enemy1.scaleX;
         enemy1.body.setGravityY(300);
 
-<<<<<<< HEAD
         // Create Enemy2
         enemy2 = this.physics.add.sprite(350, 400, 'enemy2')
         enemy2.setBounce(0);
@@ -204,30 +183,6 @@ class Stage5 extends Phaser.Scene {
         enemy2.displayWidth = game.config.width * 0.095;
         enemy2.scaleY = enemy2.scaleX;
         enemy2.body.setGravityY(300);
-||||||| 0c48d07
-        // Boss' Laser Attacks
-        laserGroup = new LaserGroup5(this);
-
-        // Create Enemy Animations
-        this.anims.create({
-            key:'enemy1LeftAtk',
-            frames: this.anims.generateFrameNumbers('enemy1', { start: 0, end: 1}),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key:'enemy1RightAtk',
-            frames: this.anims.generateFrameNumbers('enemy1', { start: 3, end: 4}),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key:'enemy1Default',
-            frames: [ { key: 'enemy1', frame: 2 } ],
-            frameRate: 10,
-            repeat: -1
-        });
-=======
         // enemy1's Laser Attacks
         laserGroup = new LaserGroup5(this);
 
@@ -250,17 +205,9 @@ class Stage5 extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         });
->>>>>>> a8caddcc5a528f8c631ba226f3e0c34b42110149
 
-<<<<<<< HEAD
         // enemy1's Laser Attacks
         laserGroup = new LaserGroup5(this);
-||||||| 0c48d07
-        // Create Player
-        this.createPlayerSprites();
-        // Create Player Animations
-        this.createPlayerAnims();
-=======
         // Create Enemy2
         enemy2 = this.physics.add.sprite(350, 400, 'enemy2')
         enemy2.setBounce(0);
@@ -297,7 +244,6 @@ class Stage5 extends Phaser.Scene {
         this.createPlayerSprites();
         // Create Player Animations
         this.createPlayerAnims();
->>>>>>> a8caddcc5a528f8c631ba226f3e0c34b42110149
 
         // Add Input Sources
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -327,7 +273,6 @@ class Stage5 extends Phaser.Scene {
         this.physics.add.overlap(playerMeleeAtk, healthLoots, this.pickupLoot, null, this);
         this.physics.add.collider(healthLoots, platforms);
 
-<<<<<<< HEAD
         // Temporary button to get to boss fight
         if (debug) {
             bossSceneButton = this.add.text(350, 300, 'BOSS', { fontSize: '80px', fill: '#b5dbf7' });
@@ -338,18 +283,6 @@ class Stage5 extends Phaser.Scene {
             this.scene.start('RobotBossFight');
             })
         }
-||||||| 0c48d07
-        // Temporary button to get to boss fight
-        if (debug) {
-            bossSceneButton = this.add.text(350, 300, 'BOSS', { fontSize: '80px', fill: '#b5dbf7' });
-            bossSceneButton.setInteractive();
-            bossSceneButton.on('pointerdown', () => {
-            soundtrack5.stop();
-            this.scene,stop('Stage5');
-            this.scene.start('RobotBossFight');
-            })
-        }
-=======
         // TEMPORARY button
         bossSceneButton = this.add.text(350, 300, 'BOSS', { fontSize: '80px', fill: '#b5dbf7' });
         bossSceneButton.setInteractive();
@@ -358,7 +291,6 @@ class Stage5 extends Phaser.Scene {
           this.scene,stop('Stage5');
           this.scene.start('RobotBossFight');
         })
->>>>>>> a8caddcc5a528f8c631ba226f3e0c34b42110149
 
         // Graphics for drawing debug line
         graphics = this.add.graphics();
