@@ -21,9 +21,18 @@ var delX1, delX2;
 var laserGroup;
 var cursors, spaceBar;
 var W, A, S, D;
+<<<<<<< HEAD
 var life = 30, enemy1Life = 50;
 var enemy2Life = 50;
 var lifeText, enemy1LifeText, enemy2LifeText;
+||||||| 0c48d07
+var life = 30, enemy1Life = 50;
+var lifeText, enemy1LifeText;
+=======
+var life = 30, enemy1Life = 15;
+var enemy2Life = 20;
+var lifeText, enemy1LifeText, enemy2LifeText;
+>>>>>>> a8caddcc5a528f8c631ba226f3e0c34b42110149
 var attackAnimPlaying = false;
 var sky, clouds;
 var far, back, mid, front;
@@ -128,15 +137,23 @@ class Stage5 extends Phaser.Scene {
 
         // Reset Values
         life = 30;
-        enemy1Life = 50;
+        enemy1Life = 15;
         playerAlive = true;
         enemy1Alive = true;
         playerDetected = false;
 
+<<<<<<< HEAD
         // Reset Values of enemy2
         enemy2Life = 50;
         enemy2Alive = true;
 
+||||||| 0c48d07
+=======
+        // Reset Values of enemy2
+        enemy2Life = 15;
+        enemy2Alive = true;
+
+>>>>>>> a8caddcc5a528f8c631ba226f3e0c34b42110149
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky0');
         clouds = this.add.tileSprite(400, 300, 800, 600, 'clouds1');
@@ -150,8 +167,15 @@ class Stage5 extends Phaser.Scene {
 
         // Text
         lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
+<<<<<<< HEAD
         enemy1LifeText = this.add.text(580, 15, 'Enemy 1 Life: 50', { fontSize: '20px', fill: '#ffffff' });
         enemy2LifeText = this.add.text(330, 15, 'Enemy 2 Life: 50', { fontSize: '20px', fill: '#ffffff' });
+||||||| 0c48d07
+        enemy1LifeText = this.add.text(560, 15, 'Enemy Life: 50', { fontSize: '25px', fill: '#ffffff' });
+=======
+        enemy1LifeText = this.add.text(580, 15, 'Enemy 1 Life: 100', { fontSize: '20px', fill: '#ffffff' });
+        enemy2LifeText = this.add.text(330, 15, 'Enemy 2 Life: 150', { fontSize: '20px', fill: '#ffffff' });
+>>>>>>> a8caddcc5a528f8c631ba226f3e0c34b42110149
 
         // Platforms
         platforms = this.physics.add.staticGroup();
@@ -164,10 +188,16 @@ class Stage5 extends Phaser.Scene {
         // Create Dagger Group
         daggerGroup = new DaggerGroup5(this);
 
+<<<<<<< HEAD
         // Create Player
         this.createPlayerSprites();
 
         // Create Enemies
+||||||| 0c48d07
+        // Create Boss
+=======
+        // Create Enemy1
+>>>>>>> a8caddcc5a528f8c631ba226f3e0c34b42110149
         enemy1 = this.physics.add.sprite(650, 400, 'enemy1')
         enemy1.setBounce(0);
         enemy1.setCollideWorldBounds(true);
@@ -175,6 +205,71 @@ class Stage5 extends Phaser.Scene {
         enemy1.scaleY = enemy1.scaleX;
         enemy1.body.setGravityY(300);
 
+<<<<<<< HEAD
+        // Create Enemy2
+        enemy2 = this.physics.add.sprite(350, 400, 'enemy2')
+        enemy2.setBounce(0);
+        enemy2.setCollideWorldBounds(true);
+        enemy2.displayWidth = game.config.width * 0.095;
+        enemy2.scaleY = enemy2.scaleX;
+        enemy2.body.setGravityY(300);
+||||||| 0c48d07
+        // Boss' Laser Attacks
+        laserGroup = new LaserGroup5(this);
+
+        // Create Enemy Animations
+        this.anims.create({
+            key:'enemy1LeftAtk',
+            frames: this.anims.generateFrameNumbers('enemy1', { start: 0, end: 1}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'enemy1RightAtk',
+            frames: this.anims.generateFrameNumbers('enemy1', { start: 3, end: 4}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'enemy1Default',
+            frames: [ { key: 'enemy1', frame: 2 } ],
+            frameRate: 10,
+            repeat: -1
+        });
+=======
+        // enemy1's Laser Attacks
+        laserGroup = new LaserGroup5(this);
+
+        // Create enemy1 Animations
+        this.anims.create({
+            key:'enemy1LeftAtk',
+            frames: this.anims.generateFrameNumbers('enemy1', { start: 0, end: 1}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'enemy1RightAtk',
+            frames: this.anims.generateFrameNumbers('enemy1', { start: 3, end: 4}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'enemy1Default',
+            frames: [ { key: 'enemy1', frame: 2 } ],
+            frameRate: 10,
+            repeat: -1
+        });
+>>>>>>> a8caddcc5a528f8c631ba226f3e0c34b42110149
+
+<<<<<<< HEAD
+        // enemy1's Laser Attacks
+        laserGroup = new LaserGroup5(this);
+||||||| 0c48d07
+        // Create Player
+        this.createPlayerSprites();
+        // Create Player Animations
+        this.createPlayerAnims();
+=======
         // Create Enemy2
         enemy2 = this.physics.add.sprite(350, 400, 'enemy2')
         enemy2.setBounce(0);
@@ -183,8 +278,35 @@ class Stage5 extends Phaser.Scene {
         enemy2.scaleY = enemy2.scaleX;
         enemy2.body.setGravityY(300);
 
-        // enemy1's Laser Attacks
+        // Enemy2's Laser Attacks
         laserGroup = new LaserGroup5(this);
+
+        // Create Enemy2 Animations
+        this.anims.create({
+            key:'enemy2LeftAtk',
+            frames: this.anims.generateFrameNumbers('enemy2', { start: 0, end: 1}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'enemy2RightAtk',
+            frames: this.anims.generateFrameNumbers('enemy2', { start: 3, end: 4}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'enemy2Default',
+            frames: [ { key: 'enemy2', frame: 2 } ],
+            frameRate: 10,
+            repeat: -1
+        });
+
+
+        // Create Player
+        this.createPlayerSprites();
+        // Create Player Animations
+        this.createPlayerAnims();
+>>>>>>> a8caddcc5a528f8c631ba226f3e0c34b42110149
 
         // Add Input Sources
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -214,6 +336,7 @@ class Stage5 extends Phaser.Scene {
         this.physics.add.overlap(playerMeleeAtk, healthLoots, this.pickupLoot, null, this);
         this.physics.add.collider(healthLoots, platforms);
 
+<<<<<<< HEAD
         // Temporary button to get to boss fight
         if (debug) {
             bossSceneButton = this.add.text(350, 300, 'BOSS', { fontSize: '80px', fill: '#b5dbf7' });
@@ -224,6 +347,27 @@ class Stage5 extends Phaser.Scene {
             this.scene.start('RobotBossFight');
             })
         }
+||||||| 0c48d07
+        // Temporary button to get to boss fight
+        if (debug) {
+            bossSceneButton = this.add.text(350, 300, 'BOSS', { fontSize: '80px', fill: '#b5dbf7' });
+            bossSceneButton.setInteractive();
+            bossSceneButton.on('pointerdown', () => {
+            soundtrack5.stop();
+            this.scene,stop('Stage5');
+            this.scene.start('RobotBossFight');
+            })
+        }
+=======
+        // TEMPORARY button
+        bossSceneButton = this.add.text(350, 300, 'BOSS', { fontSize: '80px', fill: '#b5dbf7' });
+        bossSceneButton.setInteractive();
+        bossSceneButton.on('pointerdown', () => {
+          soundtrack5.stop();
+          this.scene,stop('Stage5');
+          this.scene.start('RobotBossFight');
+        })
+>>>>>>> a8caddcc5a528f8c631ba226f3e0c34b42110149
 
         // Graphics for drawing debug line
         graphics = this.add.graphics();
@@ -868,6 +1012,7 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
             this.setActive(false);
             this.setVisible(false);
             enemy1Life -= 5;
+<<<<<<< HEAD
             enemy1LifeText.setText('Enemy 1 Life: ' + enemy1Life);
             if (!playerDetected) {
                 playerDetected = true;
@@ -881,6 +1026,21 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
             if (!playerDetected) {
                 playerDetected = true;
             }
+||||||| 0c48d07
+            enemy1LifeText.setText('Enemy Life: ' + enemy1Life);
+            if (!playerDetected) {
+                playerDetected = true;
+            }
+=======
+            enemy1LifeText.setText('Boss Life: ' + enemy1Life);
+            /*boss.setTint('0xff0000')
+            this.time.addEvent({
+                delay: 400,
+                callback: () => {
+                    boss.clearTint();
+                }
+            })*/
+>>>>>>> a8caddcc5a528f8c631ba226f3e0c34b42110149
         }
 
         if (enemy1Life == 0) {
