@@ -155,7 +155,7 @@ class Stage5 extends Phaser.Scene {
             bossSceneButton.setInteractive();
             bossSceneButton.on('pointerdown', () => {
             soundtrack5.stop();
-            this.scene,stop('Stage5');
+            this.scene.stop('Stage5');
             this.scene.start('RobotBossFight');
             })
         }

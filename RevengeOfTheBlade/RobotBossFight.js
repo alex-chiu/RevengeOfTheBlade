@@ -703,6 +703,7 @@ class Dagger1 extends Phaser.Physics.Arcade.Sprite {
             this.setActive(false);
             this.setVisible(false);
             bossLife -= 5;
+            bossLifeText.setText('Boss Life: ' + bossLife);
             
             if (!playerDetected) {
                 playerDetected = true;

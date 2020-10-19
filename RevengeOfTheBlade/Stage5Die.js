@@ -23,15 +23,17 @@ class Stage5Die extends Phaser.Scene {
       const tryAgainButton = this.add.text(game.config.width/2, 360, 'TRY AGAIN', { fontSize: '40px', fill: '#b5dbf7' }).setOrigin(0.5);
       tryAgainButton.setInteractive();
       tryAgainButton.on('pointerdown', () => {
-        this.scene.restart('Stage5');
+        this.scene.stop('Stage5');
+        this.scene.stop('Stage5Die');
         this.scene.start('Stage5');
       });
 
       const menuButton = this.add.text(game.config.width/2, 290, 'MENU', { fontSize: '40px', fill: '#8db9d9' }).setOrigin(0.5);
       menuButton.setInteractive();
       menuButton.on('pointerdown', () => {
-        this.scene.restart('Stage5');
+        // this.scene.restart('Stage5');
         this.scene.stop('Stage5');
+        this.scene.stop('Stage5Die');
         this.scene.start('Menu');
       });
     }
