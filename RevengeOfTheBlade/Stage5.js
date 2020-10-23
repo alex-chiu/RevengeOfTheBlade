@@ -4,10 +4,17 @@
     Final stage for game.
 */
 
-// Global Variables
+// GLOBAL VARIABLES IN EACH SCENE
 var player, playerMeleeAtk, playerWalkNA, playerArm, playerArmFinal;
+var playerAlive = true;
 var meleeAtkDir, rangedAtkDir, callRangedAttack, attackAnimPlaying = false;
+var W, A, S, D, cursors, spaceBar, mouseX, mouseY;
+var playerLife = 100;
+var lifeText;
+var sky, clouds, far, back, mid, front;
+var ground, platforms, obstacles;
 var daggerGroup;
+<<<<<<< HEAD
 var enemy1;
 var enemy1Alive = true;
 var playerAlive = true;
@@ -22,15 +29,32 @@ var attackAnimPlaying = false;
 var sky, clouds;
 var far, back, mid, front;
 var ground, platforms;
+=======
+
+// SCENE SPECIFIC VARIABLES
+
+// Enemies
+var enemy1, enemy2;
+var delX1, delX2;
+var enemy1Life = 50, enemy2Life = 50;
+var enemy1Alive = true, enemy2Alive = true;
+var enemy1LifeText = 50, enemy2LifeText = 50;
+var enemy1Dmg = false, enemy2Dmg = false;
+
+// Loot
+var healthLoot;
+
+// SFX
+>>>>>>> ddb16a13900abe3b14ed6252812dea7ff71d3a22
 var soundtrack5;
-var bossSceneButton;
-var healthLoots;
+var preattack1, preattack2, attack1_metal, attack1_object, attack1_platform;
+var attack2_throw, attack2_metal, attack_noenemy;
 
 // DEBUG PARAMETERS
 var debug = false;
 var graphics, testLine;
 
-// Robot Boss Fight Class
+// SCENE CLASS
 class Stage5 extends Phaser.Scene {
     constructor() {
         super({ key: 'Stage5' });
@@ -39,9 +63,27 @@ class Stage5 extends Phaser.Scene {
     // Preload Images and Sprites
     preload() {
         // Soundtrack
-        this.load.audio('stage5Music', ['assets/audio/soundtrack/stage1.wav'])
+        this.load.audio('stage5Music', ['assets/audio/soundtrack/stage1.wav']);
+        
+        // Sound Effects
+        // Melee
+        this.load.audio('preattack1', ['assets/audio/soundeffects/player/preattack1.mp3']);
+        this.load.audio('attack1_metal', ['assets/audio/soundeffects/player/attack1_metal.mp3']);
+        this.load.audio('attack1_object', ['assets/audio/soundeffects/player/attack1_object.mp3']);
+        this.load.audio('attack1_platform', ['assets/audio/soundeffects/player/attack1_platform.mp3']);
+        // Range
+        this.load.audio('preattack2', ['assets/audio/soundeffects/player/preattack2.mp3']);
+        this.load.audio('attack2_throw', ['assets/audio/soundeffects/player/preattack2.mp3']);
+        this.load.audio('attack2_metal', ['assets/audio/soundeffects/player/preattack2.mp3']);
+        // Both 
+        this.load.audio('attack_noenemy', ['assets/audio/soundeffects/player/attack1_noenemy.mp3']);
 
+        // Enemy Spritesheets
         this.load.spritesheet('enemy1', 'assets/sprites/robot1.png', { frameWidth: 167, frameHeight: 280 });
+        this.load.spritesheet('enemy2', 'assets/sprites/robot2.png', { frameWidth: 133, frameHeight: 195 });
+        this.load.spritesheet('drone', 'assets/sprites/drone.png', { frameWidth: 110, frameHeight: 75 });
+
+        // Hero Spritesheets
         this.load.spritesheet('hero', 'assets/sprites/hero-walk-preattack-sprite.png', { frameWidth: 150, frameHeight: 230 });
         this.load.spritesheet('hero_attack', 'assets/sprites/hero-attack-sprite.png', { frameWidth: 255, frameHeight: 230 });
         this.load.spritesheet('hero_ranged_attack_arm', 'assets/sprites/ranged-attack/hero-attack2-arm-sprite.png', { frameWidth: 145, frameHeight: 230 });
@@ -57,29 +99,46 @@ class Stage5 extends Phaser.Scene {
         this.load.image('front5', 'assets/backgrounds/stage5/5front.png');
         this.load.image('ground', 'assets/backgrounds/stage5/6platform.png');
 
-        // Laser
-        this.load.image('laser', 'assets/laser.png')
+        // Platforms
+        this.load.image('platformV', 'assets/platforms/platformV1.png');
+        this.load.image('platformH', 'assets/platforms/platformH.png');
 
+        // Laser
+        this.load.image('laser', 'assets/laser.png');
+        
         // Dagger
         this.load.image('dagger', 'assets/dagger.png');
 
-        //Loot
-        this.load.image('healthLoot', 'assets/healthLoot.png')
+        // Loot
+        this.load.image('healthLoot', 'assets/healthLoot.png');
     }
 
     // Create all the Sprites/Images/Platforms
     create() {
         this.cameras.main.setBackgroundColor('#828b99')
 
-        soundtrack5 = this.sound.add('stage5Music', {volume: 0.5, loop: true});
+        // Play background music
+        soundtrack5 = this.sound.add('stage5Music', {volume: 0.25, loop: true});
         soundtrack5.play();
 
+<<<<<<< HEAD
         // Reset Values
         life = 100;
         enemy1Life = 100;
         playerAlive = true;
         enemy1Alive = true;
         playerDetected = false;
+=======
+        // Player attack sound effects
+        preattack1 = this.sound.add('preattack1');
+        attack1_metal = this.sound.add('attack1_metal');
+        attack1_object = this.sound.add('attack1_object');
+        attack1_platform = this.sound.add('attack1_platform');
+        preattack2 = this.sound.add('preattack2');
+        attack2_throw = this.sound.add('attack2_throw');
+        attack2_metal = this.sound.add('attack2_metal');
+        attack_noenemy = this.sound.add('attack_noenemy');
+>>>>>>> ddb16a13900abe3b14ed6252812dea7ff71d3a22
 
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky0');
@@ -92,9 +151,12 @@ class Stage5 extends Phaser.Scene {
         this.add.existing(ground);
         sky.fixedToCamera = true;
 
-        // Text
+        // Player Life Text
         lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
+<<<<<<< HEAD
         enemy1LifeText = this.add.text(560, 15, 'Enemy Life: 100', { fontSize: '25px', fill: '#ffffff' });
+=======
+>>>>>>> ddb16a13900abe3b14ed6252812dea7ff71d3a22
 
         // Platforms
         platforms = this.physics.add.staticGroup();
@@ -104,44 +166,12 @@ class Stage5 extends Phaser.Scene {
         if (debug == false) {
             platforms.setVisible(false);
         }
+
         // Create Dagger Group
         daggerGroup = new DaggerGroup5(this);
 
-        // Create Boss
-        enemy1 = this.physics.add.sprite(650, 400, 'enemy1')
-        enemy1.setBounce(0);
-        enemy1.setCollideWorldBounds(true);
-        enemy1.displayWidth = game.config.width * 0.15;
-        enemy1.scaleY = enemy1.scaleX;
-        enemy1.body.setGravityY(300);
-
-        // Boss' Laser Attacks
-        laserGroup = new LaserGroup5(this);
-
-        // Create Boss Animations
-        this.anims.create({
-            key:'enemy1LeftAtk',
-            frames: this.anims.generateFrameNumbers('enemy1', { start: 0, end: 1}),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key:'enemy1RightAtk',
-            frames: this.anims.generateFrameNumbers('enemy1', { start: 3, end: 4}),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key:'enemy1Default',
-            frames: [ { key: 'enemy1', frame: 2 } ],
-            frameRate: 10,
-            repeat: -1
-        });
-
         // Create Player
         this.createPlayerSprites();
-        // Create Player Animations
-        this.createPlayerAnims();
 
         // Add Input Sources
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -165,6 +195,7 @@ class Stage5 extends Phaser.Scene {
             callRangedAttack = true;
         })
 
+<<<<<<< HEAD
         // Loot
         healthLoots = this.physics.add.group();
         this.physics.add.overlap(player, healthLoots, this.pickupLoot, null, this);
@@ -179,6 +210,13 @@ class Stage5 extends Phaser.Scene {
           this.scene,stop('Stage5');
           this.scene.start('RobotBossFight');
         })
+=======
+        // Create Loot
+        healthLoot = this.physics.add.group();
+        this.physics.add.overlap(player, healthLoot, this.pickupLoot, null, this);
+        this.physics.add.overlap(playerMeleeAtk, healthLoot, this.pickupLoot, null, this);
+        this.physics.add.collider(healthLoot, platforms);
+>>>>>>> ddb16a13900abe3b14ed6252812dea7ff71d3a22
 
         // Graphics for drawing debug line
         graphics = this.add.graphics();
@@ -193,24 +231,59 @@ class Stage5 extends Phaser.Scene {
         this.physics.add.collider(playerWalkNA, platforms);
         this.physics.add.collider(playerArm, platforms);
         this.physics.add.collider(playerArmFinal, platforms);
+        
+        // SCENE SPECIFIC GAME OBJECTS
 
-        // Add Colliders
+        // Reset Values
+        playerLife = 100;
+        enemy1Life = 50;
+        enemy2Life = 50;
+        playerAlive = true;
+        enemy1Alive = true;
+        enemy2Alive = true;
+        enemy1LifeText = 50;
+        enemy2LifeText = 50;
+        playerDetected = false;
+        attackAnimPlaying = false;
+
+        // Create Enemies
+        enemy1 = this.physics.add.sprite(650, 400, 'enemy1')
+        enemy1.setBounce(0);
+        enemy1.setCollideWorldBounds(true);
+        enemy1.displayWidth = game.config.width * 0.11;
+        enemy1.scaleY = enemy1.scaleX;
+        enemy1.body.setGravityY(300);
+
+        enemy2 = this.physics.add.sprite(450, 400, 'enemy2')
+        enemy2.setBounce(0);
+        enemy2.setCollideWorldBounds(true);
+        enemy2.displayWidth = game.config.width * 0.10;
+        enemy2.scaleY = enemy2.scaleX;
+        enemy2.body.setGravityY(300);
+
+        laserGroup = new LaserGroup5(this);
+
+        // Enemy Life Text
+        enemy1LifeText = this.add.text(580, 15, 'Enemy 1 Life: 50', { fontSize: '20px', fill: '#ffffff' });
+        enemy2LifeText = this.add.text(330, 15, 'Enemy 2 Life: 50', { fontSize: '20px', fill: '#ffffff' });
+
+        // Enemy Overlap
+        this.physics.add.collider(enemy1, platforms);
+        this.physics.add.collider(enemy2, platforms);
         this.physics.add.overlap(player, enemy1);
         this.physics.add.overlap(playerMeleeAtk, enemy1);
-        this.physics.add.collider(enemy1, platforms);
+        this.physics.add.overlap(player, enemy2);
+        this.physics.add.overlap(playerMeleeAtk, enemy2);
     }
 
     // Constantly Updating Game Loop
     update() {
-        //updates// Launch Stage5Die Scene
-        if (playerAlive == false) {
-          this.scene.pause('Stage5')
-          this.scene.launch('Stage5Die');
-
-          /* let panel = this.scene.get('gameOverScreen');
-          panel.events.on('clickMenu', this.handleGoMenu, this);
-          panel.events.on('clickTryAgain', this.handleTryAgain, this); */
+        // Scene End Condition
+        if (!enemy1Alive && !enemy2Alive) {
+            this.scene.pause('Stage5');
+            this.scene.launch('Stage5Win');
         }
+<<<<<<< HEAD
         // Launch Stage5Win Scene
 
         if (enemy1Alive == false) {
@@ -218,6 +291,12 @@ class Stage5 extends Phaser.Scene {
           this.scene.launch('Stage5Win');
         }
 
+=======
+        else if (!playerAlive) {
+            this.scene.pause('Stage5');
+            this.scene.launch('Stage5Die')
+        }
+>>>>>>> ddb16a13900abe3b14ed6252812dea7ff71d3a22
 
         // Implement Parallax Background
         clouds.tilePositionX -= 0.5;
@@ -228,8 +307,8 @@ class Stage5 extends Phaser.Scene {
         // Player Movement
         if (A.isDown) {
             player.setVelocityX(-160);
-            if (!attackAnimPlaying) {
-                player.anims.play('left', true);
+            if (!attackAnimPlaying) { 
+                player.anims.play('left', true); 
                 playerWalkNA.anims.play('leftNoArm', true);
             }
             front.tilePositionX -= 3;
@@ -237,9 +316,9 @@ class Stage5 extends Phaser.Scene {
         }
         else if (D.isDown) {
             player.setVelocityX(160);
-            if (!attackAnimPlaying) {
+            if (!attackAnimPlaying) { 
                 player.anims.play('right', true);
-                playerWalkNA.anims.play('rightNoArm', true);
+                playerWalkNA.anims.play('rightNoArm', true); 
             }
             front.tilePositionX += 3;
             ground.tilePositionX += 2.7;
@@ -280,19 +359,42 @@ class Stage5 extends Phaser.Scene {
             graphics.strokeLineShape(testLine);
         }
 
-        // Boss AI/Movement
+        // Clear Target Tint
+        if (enemy1Dmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    enemy1.clearTint();
+                    enemy1Dmg = false;
+                }
+            })
+        }
+        if (enemy2Dmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    enemy2.clearTint();
+                    enemy2Dmg = false;
+                }
+            })
+        }
+
+        // Enemy Movement
         if (!playerDetected) {
             enemy1.anims.play('enemy1Default');
+            enemy2.anims.play('enemy2Default');
         }
         else {
-            delX = enemy1.body.position.x - player.body.position.x;
+            delX1 = enemy1.body.position.x - player.body.position.x;
+            delX2 = enemy2.body.position.x - player.body.position.x;
+            // Player is left of enemies
             if (player.body.position.x < enemy1.body.position.x) {
                 enemy1.anims.play('enemy1LeftAtk');
-                if (delX > 150) {
-                    enemy1.setVelocityX(-40);
+                if (delX1 > 160) {
+                    enemy1.setVelocityX(-35);
                 }
-                else if (delX < 140) {
-                    enemy1.setVelocityX(40);
+                else if (delX1 < 130) {
+                    enemy1.setVelocityX(35);
                 }
                 else {
                     enemy1.setVelocityX(0);
@@ -301,13 +403,14 @@ class Stage5 extends Phaser.Scene {
                     }
                 }
             }
+            // Player is right of enemies
             else if (player.body.position.x > enemy1.body.position.x) {
                 enemy1.anims.play('enemy1RightAtk');
-                if (delX < -150) {
-                    enemy1.setVelocityX(40);
+                if (delX1 < -130) {
+                    enemy1.setVelocityX(35);
                 }
-                else if (delX > -140) {
-                    enemy1.setVelocityX(-40);
+                else if (delX1 > -160) {
+                    enemy1.setVelocityX(-35);
                 }
                 else {
                     enemy1.setVelocityX(0);
@@ -316,27 +419,46 @@ class Stage5 extends Phaser.Scene {
                     }
                 }
             }
+            // Enemy 2: Faster
+            if (player.body.position.x < enemy2.body.position.x) {
+                enemy2.anims.play('enemy2LeftAtk');
+                if (delX2 > 50) {
+                    enemy2.setVelocityX(-50);
+                }
+                else if (delX2 <= 50) {
+                    enemy2.setVelocityX(50);
+                }
+            }
+            else if (player.body.position.x > enemy2.body.position.x) {
+                enemy2.anims.play('enemy2RightAtk');
+                if (delX2 < -50) {
+                    enemy2.setVelocityX(50);
+                }
+                else if (delX2 > -50) {
+                    enemy2.setVelocityX(-50);
+                }
+            }
         }
 
+        // Checks if player is detected
         if (Math.abs(player.body.position.x - enemy1.body.position.x) <= 200) {
             playerDetected = true;
         }
 
-        // Debug Player and Boss Locations
-        if (debug) {
-            console.log("Player X Location:" + player.body.position.x);
-            console.log("Boss X Location:" + enemy1.body.position.x);
+        if (Math.abs(player.body.position.x - enemy2.body.position.x) <= 150) {
+            playerDetected = true;
         }
 
+        // Update Life Text
         this.updatePlayerLifeText();
     }
 
-    pickupLoot(player, healthLoots) {
-        healthLoots.disableBody(true, true);
+    pickupLoot(player, healthLoot) {
+        healthLoot.disableBody(true, true);
         if (life < 95){
           life += 10;
         }
-        else{
+        else {
           life = 100
         }
         this.updatePlayerLifeText()
@@ -407,21 +529,27 @@ class Stage5 extends Phaser.Scene {
         playerArmFinal.visible = false;
     }
 
-    // Function that Updates the Boss' Life Text
+    // Function that Updates the enemy's Life Text
     updateEnemy1LifeText() {
         var boundsA = playerMeleeAtk.getBounds();
         var boundsB = enemy1.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && enemy1Alive) {
-            if (enemy1Life<10){
+            if (enemy1Life < 10) {
               enemy1Life = 0
             }
-            else{
+            else {
               enemy1Life -= 10
             }
+<<<<<<< HEAD
 
             enemy1LifeText.setText('Enemy Life: ' + enemy1Life);
             enemy1.setTint('0xff0000')
+=======
+            enemy1LifeText.setText('Enemy 1 Life: ' + enemy1Life);
+            enemy1.setTint('0xff0000');
+            attack2_metal.play();
+>>>>>>> ddb16a13900abe3b14ed6252812dea7ff71d3a22
             this.time.addEvent({
                 delay: 400,
                 callback: () => {
@@ -430,7 +558,7 @@ class Stage5 extends Phaser.Scene {
             })
         }
         if (enemy1Life == 0) {
-            var hLoot = healthLoots.create(enemy1.body.x, enemy1.body.y, 'healthLoot');
+            var hLoot = healthLoot.create(enemy1.body.x, enemy1.body.y, 'healthLoot');
             hLoot.setBounce(0.5);
             hLoot.setCollideWorldBounds(true);
             enemy1.disableBody(true, true);
@@ -438,20 +566,39 @@ class Stage5 extends Phaser.Scene {
         }
     }
 
-    // Updates player's life text
-    updatePlayerLifeText() {
-        lifeText.setText('Life: ' + life);
+    updateEnemy2LifeText() {
+        var boundsA = playerMeleeAtk.getBounds();
+        var boundsB = enemy2.getBounds();
 
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && enemy2Alive) {
+            if (enemy2Life < 10) {
+              enemy2Life = 0
+            }
+            else {
+              enemy2Life -= 10
+            }
+            enemy2LifeText.setText('Enemy 2 Life: ' + enemy2Life);
+            enemy2.setTint('0xff0000');
+            attack2_metal.play();
+            this.time.addEvent({
+                delay: 400,
+                callback: () => {
+                    enemy2.clearTint();
+                }
+            })
+        }
+        if (enemy2Life == 0) {
+            var hLoot = healthLoot.create(enemy2.body.x, enemy2.body.y, 'healthLoot');
+            hLoot.setBounce(0.5);
+            hLoot.setCollideWorldBounds(true);
+            enemy2.disableBody(true, true);
+            enemy2Alive = false;
+        }
     }
 
-    // Function that fires laser from boss
-    shootLaser(direction) {
-        if (direction == 'L') {
-            laserGroup.fireLaser(enemy1.body.position.x, enemy1.body.position.y + 82, direction);
-        }
-        else {
-            laserGroup.fireLaser(enemy1.body.position.x + 100, enemy1.body.position.y + 110, direction);
-        }
+    // Updates player's life text
+    updatePlayerLifeText() {
+        lifeText.setText('Life: ' + playerLife);
     }
 
     // Called when player starts melee attack.
@@ -461,12 +608,14 @@ class Stage5 extends Phaser.Scene {
             if (meleeAtkDir == 'R') {
                 attackAnimPlaying = true;
                 player.anims.play('preMeleeAtkR');
+                preattack1.play();
                 this.time.addEvent({
                     delay: 250,
                     callback: () => {
                         player.visible = false;
                         playerMeleeAtk.visible = true;
                         this.updateEnemy1LifeText();
+                        this.updateEnemy2LifeText();
                         playerMeleeAtk.anims.play('playerMeleeAtkR');
                         this.time.addEvent({
                             delay: 400,
@@ -483,12 +632,14 @@ class Stage5 extends Phaser.Scene {
             else if (meleeAtkDir == 'L') {
                 attackAnimPlaying = true;
                 player.anims.play('preMeleeAtkL');
+                preattack1.play();
                 this.time.addEvent({
                     delay: 250,
                     callback: () => {
                         player.visible = false;
                         playerMeleeAtk.visible = true;
                         this.updateEnemy1LifeText();
+                        this.updateEnemy2LifeText();
                         playerMeleeAtk.anims.play('playerMeleeAtkL');
                         this.time.addEvent({
                             delay: 400,
@@ -539,6 +690,7 @@ class Stage5 extends Phaser.Scene {
                     playerWalkNA.anims.play('rightStatic', true)
                 }
                 playerArm.anims.play('preRangedAtk')
+                preattack2.play();
                 this.time.addEvent({
                     delay: 280,
                     callback: () => {
@@ -546,6 +698,7 @@ class Stage5 extends Phaser.Scene {
                         playerArm.visible = false;
                         playerArmFinal.visible = true;
                         playerArmFinal.anims.play('playerRangedAtkR', true);
+                        attack2_throw.play();
                         this.time.addEvent({
                             delay: 200,
                             callback: () => {
@@ -579,6 +732,7 @@ class Stage5 extends Phaser.Scene {
                     playerWalkNA.anims.play('leftStatic', true)
                 }
                 playerArm.anims.play('preRangedAtk')
+                preattack2.play();
                 this.time.addEvent({
                     delay: 280,
                     callback: () => {
@@ -586,6 +740,7 @@ class Stage5 extends Phaser.Scene {
                         playerArm.visible = false;
                         playerArmFinal.visible = true;
                         playerArmFinal.anims.play('playerRangedAtkL');
+                        attack2_throw.play();
                         this.time.addEvent({
                             delay: 200,
                             callback: () => {
@@ -602,110 +757,19 @@ class Stage5 extends Phaser.Scene {
         }
     }
 
-    // Creates player animations
-    createPlayerAnims() {
-        // Player default movement
-        this.anims.create({
-            key: 'left',
-            frames: this.anims.generateFrameNumbers('hero', { start: 8, end: 13 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'turn',
-            frames: [ { key: 'hero', frame: 14 } ],
-            frameRate: 10
-        });
-        this.anims.create({
-            key: 'right',
-            frames: this.anims.generateFrameNumbers('hero', { start: 15, end: 20 }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        // Player pre-melee attack
-        this.anims.create({
-            key: 'preMeleeAtkL',
-            frames: this.anims.generateFrameNumbers('hero', { start: 0, end: 7 }),
-            frameRate: 32,
-            repeat: 0
-        });
-        this.anims.create({
-            key: 'preMeleeAtkR',
-            frames: this.anims.generateFrameNumbers('hero', { start: 21, end: 28 }),
-            frameRate: 32,
-            repeat: 0
-        });
-
-        // Player melee attack
-        this.anims.create({
-            key: 'playerMeleeAtkL',
-            frames: this.anims.generateFrameNumbers('hero_attack', { start: 0, end: 5 }),
-            frameRate: 15,
-            repeat: 0
-        });
-        this.anims.create({
-            key: 'playerMeleeAtkR',
-            frames: this.anims.generateFrameNumbers('hero_attack', { start: 6, end: 11 }),
-            frameRate: 15,
-            repeat: 0
-        });
-
-        // Player no arm movement
-        this.anims.create({
-            key: 'leftNoArm',
-            frames: this.anims.generateFrameNumbers('hero_walk_no_arm', { start: 0, end: 5 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'leftStatic',
-            frames: [ { key: 'hero_walk_no_arm', frame: 3 } ],
-            freamRate: 10
-        })
-        this.anims.create({
-            key: 'turnNoArm',
-            frames: [ { key: 'hero_walk_no_arm', frame: 6 } ],
-            frameRate: 10
-        });
-        this.anims.create({
-            key: 'rightNoArm',
-            frames: this.anims.generateFrameNumbers('hero_walk_no_arm', { start: 7, end: 12 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'rightStatic',
-            frames: [ { key: 'hero_walk_no_arm', frame: 9 } ],
-            freamRate: 10
-        })
-
-        // Arm pre-ranged attack
-        this.anims.create({
-            key: 'preRangedAtk',
-            frames: this.anims.generateFrameNumbers('hero_ranged_attack_arm', { start: 0, end: 13 }),
-            frameRate: 50,
-            repeat: 0
-        });
-
-        // Arm final ranged attack frame
-        this.anims.create({
-           key: 'playerRangedAtkL',
-           frames: [ { key: 'hero_ranged_attack_arm_final', frame: 0 } ],
-           frameRate: 5,
-           repeat: -1
-        });
-        this.anims.create({
-            key: 'playerRangedAtkR',
-            frames: [ { key: 'hero_ranged_attack_arm_final', frame: 1 } ],
-            frameRate: 5,
-            repeat: -1
-         });
-    }
-
     // Throws Dagger
     launchDagger(aimX, aimY) {
         daggerGroup.throwDagger(player.body.x, player.body.y, aimX, aimY)
+    }
+
+    // Function that fires lasers
+    shootLaser(direction) {
+        if (direction == 'L') {
+            laserGroup.fireLaser(enemy1.body.position.x, enemy1.body.position.y + 82, direction);
+        }
+        else {
+            laserGroup.fireLaser(enemy1.body.position.x + 100, enemy1.body.position.y + 110, direction);
+        }
     }
 }
 
@@ -745,16 +809,7 @@ class Laser5 extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
         }
         else if (Phaser.Geom.Rectangle.Overlaps(this.getBounds(), player.getBounds()) && playerAlive) {
-            life -= 5;
-
-            /*player.setTint('0xff0000')
-            this.time.addEvent({
-                delay: 400,
-                callback: () => {
-                    player.clearTint();
-                }
-            })*/
-
+            playerLife -= 5;
             this.setActive(false);
             this.setVisible(false);
 
@@ -811,7 +866,7 @@ class DaggerGroup5 extends Phaser.Physics.Arcade.Group {
 // Dagger Class
 class Dagger5 extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
-        super(scene, x, y, 'dagger');
+        super(scene, x, y, 'dagger5');
     }
 
     preUpdate(time, delta) {
@@ -826,6 +881,7 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
             this.setActive(false);
             this.setVisible(false);
             enemy1Life -= 5;
+<<<<<<< HEAD
             enemy1LifeText.setText('Enemy Life: ' + enemy1Life);
             /*boss.setTint('0xff0000')
             this.time.addEvent({
@@ -834,11 +890,35 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
                     boss.clearTint();
                 }
             })*/
+=======
+            if (!playerDetected) {
+                playerDetected = true;
+            }
+            enemy1LifeText.setText('Enemy 1 Life: ' + enemy1Life);
+            enemy1.setTint('0xff0000')
+            enemy1Dmg = true;
+>>>>>>> ddb16a13900abe3b14ed6252812dea7ff71d3a22
+        }
+        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), enemy2.getBounds())) && enemy2Alive) {
+            this.setActive(false);
+            this.setVisible(false);
+            enemy2Life -= 5;
+            if (!playerDetected) {
+                playerDetected = true;
+            }
+            enemy2LifeText.setText('Enemy 2 Life: ' + enemy2Life);
+            enemy2.setTint('0xff0000')
+            enemy2Dmg = true;
+        }
+        
+        if (enemy1Life == 0) {
+            enemy1.disableBody(true, true);
+            enemy1Alive = false;
         }
 
-        if (enemy1Life == 0) {
-            enemy1Alive = false;
-            enemy1.disableBody(true, true);
+        if (enemy2Life == 0) {
+            enemy2.disableBody(true, true);
+            enemy2Alive = false;
         }
     }
 

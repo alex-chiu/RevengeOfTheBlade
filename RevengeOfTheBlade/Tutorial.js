@@ -20,6 +20,7 @@ var target1, target2;
 var target1life = 50, target2life = 50;
 var target1Alive = true, target2Alive = true;
 var target1LifeText = 50, target2LifeText = 50;
+var target1Dmg = false, target2Dmg = false;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -92,9 +93,6 @@ class Tutorial extends Phaser.Scene {
 
         // Create Player
         this.createPlayerSprites();
-
-        // Create Player Animations
-        this.createPlayerAnims();
 
         // Add Input Sources
         spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -243,6 +241,26 @@ class Tutorial extends Phaser.Scene {
             graphics.strokeLineShape(testLine);
         }
 
+        // Clear Target Tint
+        if (target1Dmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    target1.clearTint();
+                    target1Dmg = false;
+                }
+            })
+        }
+        if (target2Dmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    target2.clearTint();
+                    target2Dmg = false;
+                }
+            })
+        }
+
         // Update Life Text
         this.updatePlayerLifeText();
         this.updateTargetLifeText();
@@ -311,107 +329,6 @@ class Tutorial extends Phaser.Scene {
         playerArmFinal.scaleY = playerArmFinal.scaleX;
         playerArmFinal.body.setGravityY(300);
         playerArmFinal.visible = false;
-    }
-
-    // Creates player animations
-    createPlayerAnims() {
-        // Player default movement
-        this.anims.create({
-            key: 'left',
-            frames: this.anims.generateFrameNumbers('hero', { start: 8, end: 13 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'turn',
-            frames: [ { key: 'hero', frame: 14 } ],
-            frameRate: 10
-        });
-        this.anims.create({
-            key: 'right',
-            frames: this.anims.generateFrameNumbers('hero', { start: 15, end: 20 }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        // Player pre-melee attack
-        this.anims.create({
-            key: 'preMeleeAtkL',
-            frames: this.anims.generateFrameNumbers('hero', { start: 0, end: 7 }),
-            frameRate: 32,
-            repeat: 0
-        });
-        this.anims.create({
-            key: 'preMeleeAtkR',
-            frames: this.anims.generateFrameNumbers('hero', { start: 21, end: 28 }),
-            frameRate: 32,
-            repeat: 0
-        });
-
-        // Player melee attack
-        this.anims.create({
-            key: 'playerMeleeAtkL',
-            frames: this.anims.generateFrameNumbers('hero_attack', { start: 0, end: 5 }),
-            frameRate: 15,
-            repeat: 0
-        });
-        this.anims.create({
-            key: 'playerMeleeAtkR',
-            frames: this.anims.generateFrameNumbers('hero_attack', { start: 6, end: 11 }),
-            frameRate: 15,
-            repeat: 0
-        });
-
-        // Player no arm movement
-        this.anims.create({
-            key: 'leftNoArm',
-            frames: this.anims.generateFrameNumbers('hero_walk_no_arm', { start: 0, end: 5 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'leftStatic',
-            frames: [ { key: 'hero_walk_no_arm', frame: 3 } ],
-            freamRate: 10
-        })
-        this.anims.create({
-            key: 'turnNoArm',
-            frames: [ { key: 'hero_walk_no_arm', frame: 6 } ],
-            frameRate: 10
-        });
-        this.anims.create({
-            key: 'rightNoArm',
-            frames: this.anims.generateFrameNumbers('hero_walk_no_arm', { start: 7, end: 12 }),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'rightStatic',
-            frames: [ { key: 'hero_walk_no_arm', frame: 9 } ],
-            freamRate: 10
-        })
-
-        // Arm pre-ranged attack
-        this.anims.create({
-            key: 'preRangedAtk',
-            frames: this.anims.generateFrameNumbers('hero_ranged_attack_arm', { start: 0, end: 13 }),
-            frameRate: 50,
-            repeat: 0
-        });
-
-        // Arm final ranged attack frame
-        this.anims.create({
-           key: 'playerRangedAtkL',
-           frames: [ { key: 'hero_ranged_attack_arm_final', frame: 0 } ],
-           frameRate: 5,
-           repeat: -1
-        });
-        this.anims.create({
-            key: 'playerRangedAtkR',
-            frames: [ { key: 'hero_ranged_attack_arm_final', frame: 1 } ],
-            frameRate: 5,
-            repeat: -1
-         });
     }
 
     // Called when player starts melee attack.
@@ -579,12 +496,7 @@ class Tutorial extends Phaser.Scene {
               target1life = 0
             }
             target1.setTint('0xff0000')
-            this.time.addEvent({
-                delay: 400,
-                callback: () => {
-                    target1.clearTint();
-                }
-            })
+            target1Dmg = true;
         }
         if (target1life <= 0) {
             target1.destroy();
@@ -602,12 +514,7 @@ class Tutorial extends Phaser.Scene {
               target2life = 0
             }
             target2.setTint('0xff0000')
-            this.time.addEvent({
-                delay: 400,
-                callback: () => {
-                    target2.clearTint();
-                }
-            })
+            target2Dmg = true;
         }
         if (target2life <= 0) {
             target2.destroy();
@@ -669,11 +576,15 @@ class Dagger extends Phaser.Physics.Arcade.Sprite {
             this.setActive(false);
             this.setVisible(false);
             target1life -= 5;
+            target1.setTint('0xff0000')
+            target1Dmg = true;
         }
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), target2.getBounds())) && target2Alive) {
             this.setActive(false);
             this.setVisible(false);
             target2life -= 5;
+            target2.setTint('0xff0000')
+            target2Dmg = true;
         }
 
         if (target1life == 0) {
