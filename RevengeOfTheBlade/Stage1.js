@@ -1,7 +1,7 @@
-/*  TUTORIAL SCENE
+/*  SATGE 1 SCENE
 
-    Scene that appears when the player wishes to enter the tutorial.
-    Has basic platforms to jump around on and targets to attack.
+    1st stage of game
+
 */
 
 // GLOBAL VARIABLES IN EACH SCENE
@@ -16,20 +16,16 @@ var ground, platforms, obstacles;
 var daggerGroup;
 
 // SCENE SPECIFIC VARIABLES
-var target1, target2;
-var target1life = 50, target2life = 50;
-var target1Alive = true, target2Alive = true;
-var target1LifeText = 50, target2LifeText = 50;
-var target1Dmg = false, target2Dmg = false;
+
 
 // DEBUG PARAMETERS
 var debug = false;
 var graphics, testLine;
 
 // SCENE CLASS
-class Tutorial extends Phaser.Scene {
+class Stage1 extends Phaser.Scene {
     constructor() {
-        super({ key: 'Tutorial' });
+        super({ key: 'Stage1' });
     }
 
     // Preload Images and Sprites
@@ -54,11 +50,8 @@ class Tutorial extends Phaser.Scene {
         this.load.image('platformV', 'assets/platforms/platformV1.png');
         this.load.image('platformH', 'assets/platforms/platformH.png');
 
-        // Target
-        this.load.image('target', 'assets/target.png');
-
         // Dagger
-        this.load.image('dagger', 'assets/daggers.png');
+        this.load.image('dagger', 'assets/dagger.png');
     }
 
     // Create all the Sprites/Images/Platforms
@@ -89,7 +82,7 @@ class Tutorial extends Phaser.Scene {
         }
 
         // Create Dagger Group
-        daggerGroup = new DaggerGroup(this);
+        daggerGroup = new DaggerGroupS1(this);
 
         // Create Player
         this.createPlayerSprites();
@@ -133,52 +126,16 @@ class Tutorial extends Phaser.Scene {
         // SCENE SPECIFIC GAME OBJECTS
 
         // Reset Values
-        target1life = 50;
-        target2life = 50;
-        target1Alive = true;
-        target2Alive = true;
-        target1LifeText = 50;
-        target2LifeText = 50;
-        attackAnimPlaying = false;
-
-        // Targets
-        target1 = this.add.image(750, 515, 'target');
-        target2 = this.add.image(600, 100, 'target');
-
-        // Target Life Text
-        target1LifeText = this.add.text(650, 45, 'Life: 50', { fontSize: '25px', fill: '#ffffff' });
-        target2LifeText = this.add.text(650, 15, 'Life: 50', { fontSize: '25px', fill: '#ffffff' });
-
-        // Target Overlap
-        this.physics.add.overlap(player, target1);
-        this.physics.add.overlap(playerMeleeAtk, target1);
-        this.physics.add.overlap(player, target2);
-        this.physics.add.overlap(playerMeleeAtk, target2);
 
         // Obstacles
-        obstacles = this.physics.add.staticGroup();
-        obstacles.create(250, 650, 'platformV');
-        obstacles.create(0, 525, 'platformH');
-        obstacles.create(250, 475, 'platformH');
-        obstacles.create(285, 500, 'platformH');
-        obstacles.create(320, 525, 'platformH');
-        obstacles.create(320, 550, 'platformH');
 
         // Obstacle Colliders
-        this.physics.add.collider(player, obstacles);
-        this.physics.add.collider(playerMeleeAtk, obstacles);
-        this.physics.add.collider(playerWalkNA, obstacles);
-        this.physics.add.collider(playerArm, obstacles);
-        this.physics.add.collider(playerArmFinal, obstacles);
+
     }
 
     // Constantly Updating Game Loop
     update() {
         // Scene End Condition
-        if (target1Alive == false && target2Alive == false) {
-          this.scene.pause('Tutorial')
-          this.scene.launch('TutorialCompleted');
-        }
 
         // Implement Parallax Background
         clouds.tilePositionX -= 0.5;
@@ -241,29 +198,8 @@ class Tutorial extends Phaser.Scene {
             graphics.strokeLineShape(testLine);
         }
 
-        // Clear Target Tint
-        if (target1Dmg) {
-            this.time.addEvent({
-                delay: 200,
-                callback: () => {
-                    target1.clearTint();
-                    target1Dmg = false;
-                }
-            })
-        }
-        if (target2Dmg) {
-            this.time.addEvent({
-                delay: 200,
-                callback: () => {
-                    target2.clearTint();
-                    target2Dmg = false;
-                }
-            })
-        }
-
         // Update Life Text
         this.updatePlayerLifeText();
-        this.updateTargetLifeText();
     }
 
     // Makes sure each sprite is in the same position.
@@ -343,8 +279,7 @@ class Tutorial extends Phaser.Scene {
                     callback: () => {
                         player.visible = false;
                         playerMeleeAtk.visible = true;
-                        this.updateTarget1Life();
-                        this.updateTarget2Life();
+                        // Check damage against targets
                         playerMeleeAtk.anims.play('playerMeleeAtkR');
                         this.time.addEvent({
                             delay: 400,
@@ -366,8 +301,7 @@ class Tutorial extends Phaser.Scene {
                     callback: () => {
                         player.visible = false;
                         playerMeleeAtk.visible = true;
-                        this.updateTarget1Life();
-                        this.updateTarget2Life();
+                        // Check damage against targets
                         playerMeleeAtk.anims.play('playerMeleeAtkL');
                         this.time.addEvent({
                             delay: 400,
@@ -486,47 +420,6 @@ class Tutorial extends Phaser.Scene {
         lifeText.setText('Life: ' + playerLife);
     }
 
-    // Updates Target 1's Life
-    updateTarget1Life () {
-        var boundsA = playerMeleeAtk.getBounds();
-        var boundsB = target1.getBounds();
-        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && target1Alive) {
-            target1life -= 10
-            if (target1life < 0){
-              target1life = 0
-            }
-            target1.setTint('0xff0000')
-            target1Dmg = true;
-        }
-        if (target1life <= 0) {
-            target1.destroy();
-            target1Alive = false;
-        }
-    }
-
-    // Updates Target 2's Life
-    updateTarget2Life () {
-        var boundsA2 = playerMeleeAtk.getBounds();
-        var boundsB2 = target2.getBounds();
-        if ((Phaser.Geom.Rectangle.Overlaps(boundsA2, boundsB2)) && target2Alive) {
-            target2life -= 10
-            if (target2life < 0){
-              target2life = 0
-            }
-            target2.setTint('0xff0000')
-            target2Dmg = true;
-        }
-        if (target2life <= 0) {
-            target2.destroy();
-            target2Alive = false;
-        }
-    }
-
-    updateTargetLifeText() {
-        target1LifeText.setText('Life: ' + target1life)
-        target2LifeText.setText('Life: ' + target2life)
-    }
-
     // Throws Dagger
     launchDagger(aimX, aimY) {
         daggerGroup.throwDagger(player.body.x, player.body.y, aimX, aimY)
@@ -535,12 +428,12 @@ class Tutorial extends Phaser.Scene {
 }
 
 // Dagger Group Class
-class DaggerGroup extends Phaser.Physics.Arcade.Group {
+class DaggerGroupS1 extends Phaser.Physics.Arcade.Group {
     constructor(scene) {
         super(scene.physics.world, scene);
 
         this.createMultiple({
-            classType: Dagger,
+            classType: DaggerS1,
             frameQuantity: 1,
             active: false,
             visible: false,
@@ -559,7 +452,7 @@ class DaggerGroup extends Phaser.Physics.Arcade.Group {
 }
 
 // Dagger Class
-class Dagger extends Phaser.Physics.Arcade.Sprite {
+class DaggerS1 extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
         super(scene, x, y, 'dagger');
     }
@@ -572,31 +465,10 @@ class Dagger extends Phaser.Physics.Arcade.Sprite {
             this.setActive(false);
             this.setVisible(false);
         }
-        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), target1.getBounds())) && target1Alive) {
-            this.setActive(false);
-            this.setVisible(false);
-            target1life -= 5;
-            target1.setTint('0xff0000')
-            target1Dmg = true;
-        }
-        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), target2.getBounds())) && target2Alive) {
-            this.setActive(false);
-            this.setVisible(false);
-            target2life -= 5;
-            target2.setTint('0xff0000')
-            target2Dmg = true;
-        }
+        // Check dagger overlap with enemies
 
-        if (target1life == 0) {
-            target1.destroy();
-            target1Alive = false;
-        }
-        if (target2life == 0) {
-            target2.destroy();
-            target2Alive = false;
-        }
+        // Disable enemies if their health reaches 0
     }
-
 
     throw (x, y, aimX, aimY) {
         this.body.reset(x + 25, y + 25);
