@@ -9,7 +9,6 @@ var player, playerMeleeAtk, playerWalkNA, playerArm, playerArmFinal;
 var playerAlive = true;
 var meleeAtkDir, rangedAtkDir, callRangedAttack, attackAnimPlaying = false;
 var W, A, S, D, cursors, spaceBar, mouseX, mouseY;
-var playerLife = 100;
 var lifeText;
 var sky, clouds, far, back, mid, front;
 var ground, platforms, obstacles;
@@ -26,6 +25,9 @@ var target1Dmg = false, target2Dmg = false;
 var debug = false;
 var graphics, testLine;
 
+// SOUND
+var preattack1, preattack2, attack1_metal, attack1_object, attack1_platform;
+
 // SCENE CLASS
 class Tutorial extends Phaser.Scene {
     constructor() {
@@ -40,6 +42,10 @@ class Tutorial extends Phaser.Scene {
         this.load.spritesheet('hero_ranged_attack_arm', 'assets/sprites/ranged-attack/hero-attack2-arm-sprite.png', { frameWidth: 145, frameHeight: 230 });
         this.load.spritesheet('hero_walk_no_arm', 'assets/sprites/ranged-attack/hero-walk-sprite-noarm.png', { frameWidth: 150, frameHeight: 230 });
         this.load.spritesheet('hero_ranged_attack_arm_final', 'assets/sprites/ranged-attack/attack2-throw.png', { frameWidth: 220, frameHeight: 230 });
+
+        // soundeffects
+        this.load.audio('preattack1', ['assets/audio/soundeffects/player/preattack1.mp3']);
+        this.load.audio('preattack2', ['assets/audio/soundeffects/player/preattack2.mp3']);
 
         // Background Images
         this.load.image('sky01', 'assets/backgrounds/stage1/0sky1.png');
@@ -76,8 +82,9 @@ class Tutorial extends Phaser.Scene {
         this.add.existing(ground);
         sky.fixedToCamera = true;
 
-        // Player Life Text
-        lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
+        // soundeffects
+        preattack1 = this.sound.add('preattack1');
+        preattack2 = this.sound.add('preattack2');
 
         // Platforms
         platforms = this.physics.add.staticGroup();
@@ -262,7 +269,6 @@ class Tutorial extends Phaser.Scene {
         }
 
         // Update Life Text
-        this.updatePlayerLifeText();
         this.updateTargetLifeText();
     }
 
@@ -338,6 +344,7 @@ class Tutorial extends Phaser.Scene {
             if (meleeAtkDir == 'R') {
                 attackAnimPlaying = true;
                 player.anims.play('preMeleeAtkR');
+                preattack1.play();
                 this.time.addEvent({
                     delay: 250,
                     callback: () => {
@@ -361,6 +368,7 @@ class Tutorial extends Phaser.Scene {
             else if (meleeAtkDir == 'L') {
                 attackAnimPlaying = true;
                 player.anims.play('preMeleeAtkL');
+                preattack1.play();
                 this.time.addEvent({
                     delay: 250,
                     callback: () => {
@@ -418,6 +426,7 @@ class Tutorial extends Phaser.Scene {
                     playerWalkNA.anims.play('rightStatic', true)
                 }
                 playerArm.anims.play('preRangedAtk')
+                preattack2.play();
                 this.time.addEvent({
                     delay: 280,
                     callback: () => {
@@ -458,6 +467,7 @@ class Tutorial extends Phaser.Scene {
                     playerWalkNA.anims.play('leftStatic', true)
                 }
                 playerArm.anims.play('preRangedAtk')
+                preattack2.play();
                 this.time.addEvent({
                     delay: 280,
                     callback: () => {
@@ -479,11 +489,6 @@ class Tutorial extends Phaser.Scene {
                 })
             }
         }
-    }
-
-    // Function that updates the player's life text
-    updatePlayerLifeText() {
-        lifeText.setText('Life: ' + playerLife);
     }
 
     // Updates Target 1's Life

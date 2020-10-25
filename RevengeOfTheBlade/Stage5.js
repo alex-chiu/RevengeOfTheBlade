@@ -241,10 +241,12 @@ class Stage5 extends Phaser.Scene {
     update() {
         // Scene End Condition
         if (!enemy1Alive && !enemy2Alive) {
+            soundtrack5.stop();
             this.scene.pause('Stage5');
             this.scene.launch('Stage5Win');
         }
         else if (!playerAlive) {
+            soundtrack5.stop();
             this.scene.pause('Stage5');
             this.scene.launch('Stage5Die')
         }
@@ -414,7 +416,7 @@ class Stage5 extends Phaser.Scene {
         var boundsP = player.getBounds();
         var boundsE2 = enemy2.getBounds();
 
-        if ((Phaser.Geom.Rectangle.Overlaps(boundsP, boundsE2)) && playerAlive) {
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsP, boundsE2)) && playerAlive && enemy2Alive) {
             playerLife -= 0.1
             if (playerLife <= 0) {
                 player.disableBody(true, true);
@@ -904,9 +906,13 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
             enemy1Alive = false;
         }
 
-        if (enemy2Life == 0) {
+        if (enemy2Life == 0 && lootCounter2 == 0) {
+            var hLoot = healthLoot.create(enemy2.body.x, enemy2.body.y, 'healthLoot');
+            hLoot.setBounce(0.5);
+            hLoot.setCollideWorldBounds(true);
             enemy2.disableBody(true, true);
             enemy2Alive = false;
+            lootCounter2 += 1
         }
     }
 
