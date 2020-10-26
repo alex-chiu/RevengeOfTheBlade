@@ -247,6 +247,14 @@ class Stage5 extends Phaser.Scene {
         this.physics.add.overlap(playerMeleeAtk, enemy2);
         this.physics.add.overlap(player, enemy3);
         this.physics.add.overlap(playerMeleeAtk, enemy3);
+
+        tutorialButton = this.add.text(50, 50, 'BOSS', { fontSize: '20px', fill: '#b5dbf7' });
+        tutorialButton.setInteractive();
+        tutorialButton.on('pointerdown', () => {
+          soundtrack5.stop();
+          this.scene.stop('Stage5');
+          this.scene.start('RobotBossFight');
+        });
     }
 
     // Constantly Updating Game Loop
@@ -332,7 +340,7 @@ class Stage5 extends Phaser.Scene {
             enemy1.anims.play('enemy1Default');
             enemy2.anims.play('enemy2Default');
             enemy3.anims.play('enemy3Default');
-            
+
         }
         else {
             delX1 = enemy1.body.position.x - player.body.position.x;
@@ -404,7 +412,7 @@ class Stage5 extends Phaser.Scene {
                     enemy3.setVelocityY(-20);
                 }
             }
-            // enemy3 is upper left 
+            // enemy3 is upper left
             else if (player.body.position.x > enemy3.body.position.x && player.body.position.y < enemy3.body.position.y) {
                 enemy3.anims.play('enemy3Default');
                 if (delX3 > 10 && delY3 > 10) {
@@ -416,7 +424,7 @@ class Stage5 extends Phaser.Scene {
                     enemy3.setVelocityY(-50);
                 }
             }
-            // enemy3 lower right 
+            // enemy3 lower right
             else if (player.body.position.x < enemy3.body.position.x && player.body.position.y > enemy3.body.position.y) {
                 enemy3.anims.play('enemy3Default');
                 if (delX3 > 10 && delY3 > 10) {
