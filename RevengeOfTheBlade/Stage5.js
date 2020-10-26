@@ -19,16 +19,17 @@ var daggerGroup;
 
 // Enemies
 var enemy1, enemy2, enemy3;
-var delX1, delX2, dronePos;
-var enemy1Life = 50, enemy2Life = 50;
-var enemy1Alive = true, enemy2Alive = true;
-var enemy1LifeText = 50, enemy2LifeText = 50;
-var enemy1Dmg = false, enemy2Dmg = false;
+var delX1, delX2, dronePos, delX3, delY3;
+var enemy1Life = 50, enemy2Life = 50, enemy3Life = 25;
+var enemy1Alive = true, enemy2Alive = true, enemy3Alive = true;
+var enemy1LifeText = 50, enemy2LifeText = 50, enemy3LifeText = 25;
+var enemy1Dmg = false, enemy2Dmg = false, enemy3Dmg = false;
 
 // Loot
 var healthLoot;
 var lootCounter1 = 0;
 var lootCounter2 = 0;
+var lootCounter3 = 0;
 
 // SFX
 var soundtrack5;
@@ -66,7 +67,7 @@ class Stage5 extends Phaser.Scene {
         // Enemy Spritesheets
         this.load.spritesheet('enemy1', 'assets/sprites/robot1.png', { frameWidth: 167, frameHeight: 280 });
         this.load.spritesheet('enemy2', 'assets/sprites/robot2.png', { frameWidth: 133, frameHeight: 195 });
-        this.load.spritesheet('drone', 'assets/sprites/drone.png', { frameWidth: 110, frameHeight: 75 });
+        this.load.spritesheet('enemy3', 'assets/sprites/drone.png', { frameWidth: 110, frameHeight: 75 });
 
         // Hero Spritesheets
         this.load.spritesheet('hero', 'assets/sprites/hero-walk-preattack-sprite.png', { frameWidth: 150, frameHeight: 230 });
@@ -139,6 +140,8 @@ class Stage5 extends Phaser.Scene {
             platforms.setVisible(false);
         }
 
+        //this.platforms.create(60, 100, 'platformH');
+
         // Create Dagger Group
         daggerGroup = new DaggerGroup5(this);
 
@@ -193,13 +196,17 @@ class Stage5 extends Phaser.Scene {
         playerLife = 100;
         enemy1Life = 50;
         enemy2Life = 50;
+        enemy3Life = 25;
         playerAlive = true;
         enemy1Alive = true;
         enemy2Alive = true;
+        enemy3Alive = true;
         enemy1LifeText = 50;
         enemy2LifeText = 50;
+        enemy3LifeText = 25;
         lootCounter1 = 0;
         lootCounter2 = 0;
+        lootCounter3 = 0;
         playerDetected = false;
         attackAnimPlaying = false;
 
@@ -218,17 +225,18 @@ class Stage5 extends Phaser.Scene {
         enemy2.scaleY = enemy2.scaleX;
         enemy2.body.setGravityY(300);
 
-        enemy3 = this.physics.add.sprite(450, 400, 'drone')
+        enemy3 = this.physics.add.sprite(50, 400, 'enemy3')
         enemy3.setCollideWorldBounds(true);
         enemy3.displayWidth = game.config.width * 0.10;
         enemy3.scaleY = enemy3.scaleX;
-        enemy3.body.setGravityY(0);
+        enemy3.body.setGravityY(5);
 
         laserGroup = new LaserGroup5(this);
 
         // Enemy Life Text
-        enemy1LifeText = this.add.text(580, 15, 'Enemy 1 Life: 50', { fontSize: '20px', fill: '#ffffff' });
-        enemy2LifeText = this.add.text(330, 15, 'Enemy 2 Life: 50', { fontSize: '20px', fill: '#ffffff' });
+        enemy1LifeText = this.add.text(590, 20, 'Enemy 1 Life: 50', { fontSize: '15px', fill: '#ffffff' });
+        enemy2LifeText = this.add.text(390, 20, 'Enemy 2 Life: 50', { fontSize: '15px', fill: '#ffffff' });
+        enemy3LifeText = this.add.text(190, 20, 'Enemy 3 Life: 25', { fontSize: '15px', fill: '#ffffff' });
 
         // Enemy Overlap
         this.physics.add.collider(enemy1, platforms);
@@ -237,6 +245,8 @@ class Stage5 extends Phaser.Scene {
         this.physics.add.overlap(playerMeleeAtk, enemy1);
         this.physics.add.overlap(player, enemy2, this.collisionDmg, null, this);
         this.physics.add.overlap(playerMeleeAtk, enemy2);
+        this.physics.add.overlap(player, enemy3);
+        this.physics.add.overlap(playerMeleeAtk, enemy3);
     }
 
     // Constantly Updating Game Loop
@@ -321,10 +331,14 @@ class Stage5 extends Phaser.Scene {
         if (!playerDetected) {
             enemy1.anims.play('enemy1Default');
             enemy2.anims.play('enemy2Default');
+            enemy3.anims.play('enemy3Default');
+            
         }
         else {
             delX1 = enemy1.body.position.x - player.body.position.x;
             delX2 = enemy2.body.position.x - player.body.position.x;
+            delX3 = enemy3.body.position.x - player.body.position.x;
+            delY3 = enemy3.body.position.y - player.body.position.y;
             // Player is left of enemies
             if (player.body.position.x < enemy1.body.position.x) {
                 enemy1.anims.play('enemy1LeftAtk');
@@ -376,17 +390,121 @@ class Stage5 extends Phaser.Scene {
                     enemy2.setVelocityX(-50);
                 }
             }
+
+            // enemy3 - flying (x and y dependent)
+            // enemy3 is upper right of player
+            if (player.body.position.x < enemy3.body.position.x && player.body.position.y < enemy3.body.position.y) {
+                enemy3.anims.play('enemy3Default');
+                if (delX3 > 10 && delY3 > 10) {
+                    enemy3.setVelocityX(-30);
+                    enemy3.setVelocityY(-5);
+                }
+                else  {
+                    enemy3.setVelocityX(-30);
+                    enemy3.setVelocityY(-20);
+                }
+            }
+            // enemy3 is upper left 
+            else if (player.body.position.x > enemy3.body.position.x && player.body.position.y < enemy3.body.position.y) {
+                enemy3.anims.play('enemy3Default');
+                if (delX3 > 10 && delY3 > 10) {
+                    enemy3.setVelocityX(30);
+                    enemy3.setVelocityY(-50);
+                }
+                else  {
+                    enemy3.setVelocityX(30);
+                    enemy3.setVelocityY(-50);
+                }
+            }
+            // enemy3 lower right 
+            else if (player.body.position.x < enemy3.body.position.x && player.body.position.y > enemy3.body.position.y) {
+                enemy3.anims.play('enemy3Default');
+                if (delX3 > 10 && delY3 > 10) {
+                    enemy3.setVelocityX(-30);
+                    enemy3.setVelocityY(5);
+                }
+                else  {
+                    enemy3.setVelocityX(-30);
+                    enemy3.setVelocityY(30);
+                }
+            }
+            // enemy3 lower left
+            else if (player.body.position.x > enemy3.body.position.x && player.body.position.y > enemy3.body.position.y) {
+                enemy3.anims.play('enemy3Default');
+                if (delX3 > 10 && delY3 > 10) {
+                    enemy3.setVelocityX(-40);
+                    enemy3.setVelocityY(-40);
+                }
+                else  {
+                    enemy3.setVelocityX(30);
+                    enemy3.setVelocityY(30);
+                }
+            }
+
+            // enemy3 directly above
+            else if (player.body.position.x == enemy3.body.position.x && player.body.position.y < enemy3.body.position.y) {
+                enemy3.anims.play('enemy3Default');
+                if (delY3 > 10) {
+                    enemy3.setVelocityX(10);
+                    enemy3.setVelocityY(10);
+                }
+                else  {
+                    enemy3.setVelocityX(0);
+                    enemy3.setVelocityY(-50);
+                }
+            }
+
+            // enemy3 directly below
+            else if (player.body.position.x == enemy3.body.position.x && player.body.position.y > enemy3.body.position.y) {
+                enemy3.anims.play('enemy3Default');
+                if (delY3 > 10) {
+                    enemy3.setVelocityX(10);
+                    enemy3.setVelocityY(10);
+                }
+                else  {
+                    enemy3.setVelocityX(3);
+                    enemy3.setVelocityY(30);
+                }
+            }
+
+            // enemy3 directly left
+            else if (player.body.position.x > enemy3.body.position.x && player.body.position.y == enemy3.body.position.y) {
+                enemy3.anims.play('enemy3Default');
+                if (delX3 > 10) {
+                    enemy3.setVelocityX(10);
+                    enemy3.setVelocityY(10);
+                }
+                else  {
+                    enemy3.setVelocityX(30);
+                    enemy3.setVelocityY(3);
+                }
+            }
+
+            // enemy3 directly right
+            else if (player.body.position.x < enemy3.body.position.x && player.body.position.y == enemy3.body.position.y) {
+                enemy3.anims.play('enemy3Default');
+                if (delX3 > 200) {
+                    enemy3.setVelocityX(10);
+                    enemy3.setVelocityY(10);
+                }
+                else  {
+                    enemy3.setVelocityX(-30);
+                    enemy3.setVelocityY(3);
+                }
+            }
         }
 
-        dronePos = 700 - enemy3.body.position.x;
-        if (playerAlive){
-          if (dronePos > 50){
-            enemy3.setVelocityX(50);
-          }
-          else{
-            enemy3.setVelocityX(-50);
-          }
-        }
+        // dronePos = 700 - enemy3.body.position.x;
+        // enemy3.anims.play('enemy3float')
+        // if (playerAlive){
+        //   if (dronePos > 50){
+        //     enemy3.setVelocityX(50);
+        //   }
+        //   else{
+        //     enemy3.setVelocityX(-50);
+        //   }
+        // }
+
 
 
         // Checks if player is detected
@@ -395,6 +513,14 @@ class Stage5 extends Phaser.Scene {
         }
 
         if (Math.abs(player.body.position.x - enemy2.body.position.x) <= 150) {
+            playerDetected = true;
+        }
+
+        if (Math.abs(player.body.position.x - enemy3.body.position.x) <= 800) {
+            playerDetected = true;
+        }
+
+        if (Math.abs(player.body.position.y - enemy3.body.position.y) <= 600) {
             playerDetected = true;
         }
 
@@ -443,6 +569,15 @@ class Stage5 extends Phaser.Scene {
                 callback: () => {
                     enemy2.clearTint();
                     enemy2Dmg = false;
+                }
+            })
+        }
+        if (enemy3Dmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    enemy3.clearTint();
+                    enemy3Dmg = false;
                 }
             })
         }
@@ -615,6 +750,38 @@ class Stage5 extends Phaser.Scene {
         }
     }
 
+
+    updateEnemy3LifeText() {
+        var boundsA = playerMeleeAtk.getBounds();
+        var boundsB = enemy3.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && enemy3Alive) {
+            if (enemy3Life < 5) {
+              enemy3Life = 0
+            }
+            else {
+              enemy3Life -= 5
+            }
+            enemy3LifeText.setText('Enemy 3 Life: ' + enemy3Life);
+            enemy3.setTint('0xff0000');
+            attack2_metal.play();
+            this.time.addEvent({
+                delay: 400,
+                callback: () => {
+                    enemy3.clearTint();
+                }
+            })
+        }
+        if (enemy3Life == 0 && lootCounter3 == 0) {
+            var hLoot = healthLoot.create(enemy3.body.x, enemy3.body.y, 'healthLoot');
+            hLoot.setBounce(0.7);
+            hLoot.setCollideWorldBounds(true);
+            enemy3.disableBody(true, true);
+            enemy3Alive = false;
+            lootCounter3 += 1
+        }
+    }
+
     // Updates player's life text
     updatePlayerLifeText() {
         lifeText.setText('Life: ' + Math.round(playerLife));
@@ -635,6 +802,7 @@ class Stage5 extends Phaser.Scene {
                         playerMeleeAtk.visible = true;
                         this.updateEnemy1LifeText();
                         this.updateEnemy2LifeText();
+                        this.updateEnemy3LifeText();
                         playerMeleeAtk.anims.play('playerMeleeAtkR');
                         this.time.addEvent({
                             delay: 400,
@@ -659,6 +827,7 @@ class Stage5 extends Phaser.Scene {
                         playerMeleeAtk.visible = true;
                         this.updateEnemy1LifeText();
                         this.updateEnemy2LifeText();
+                        this.updateEnemy3LifeText();
                         playerMeleeAtk.anims.play('playerMeleeAtkL');
                         this.time.addEvent({
                             delay: 400,
@@ -925,7 +1094,17 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
             enemy2.setTint('0xff0000')
             enemy2Dmg = true;
         }
-
+        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), enemy3.getBounds())) && enemy3Alive) {
+            this.setActive(false);
+            this.setVisible(false);
+            enemy3Life -= 5;
+            if (!playerDetected) {
+                playerDetected = true;
+            }
+            enemy3LifeText.setText('Enemy 3 Life: ' + enemy3Life);
+            enemy3.setTint('0xff0000')
+            enemy3Dmg = true;
+        }
         if (enemy1Life == 0) {
             enemy1.disableBody(true, true);
             enemy1Alive = false;
@@ -938,6 +1117,10 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
             enemy2.disableBody(true, true);
             enemy2Alive = false;
             lootCounter2 += 1
+        }
+        if (enemy3Life == 0) {
+            enemy3.disableBody(true, true);
+            enemy3Alive = false;
         }
     }
 
