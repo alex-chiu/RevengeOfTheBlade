@@ -1,6 +1,6 @@
 /* STAGE 5 SCENE
 
-    5TH AND LAST STAGE OF THE GAME BEFORE FACING THE FINAL
+    5TH AND LAST STAGE OF THE GAME BEFORE FACING THE FINAL BOSS
     Final stage for game.
 */
 
@@ -314,6 +314,7 @@ class Stage5 extends Phaser.Scene {
             graphics.strokeLineShape(testLine);
         }
 
+        // Resets tints on game objects.
         this.resetTints();
 
         // Enemy Movement
