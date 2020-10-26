@@ -83,8 +83,8 @@ class Tutorial extends Phaser.Scene {
         sky.fixedToCamera = true;
 
         // soundeffects
-        preattack1 = this.sound.add('preattack1');
-        preattack2 = this.sound.add('preattack2');
+        preattack1 = this.sound.add('preattack1', {volume: 0.25});
+        preattack2 = this.sound.add('preattack2', {volume: 0.25});
 
         // Platforms
         platforms = this.physics.add.staticGroup();

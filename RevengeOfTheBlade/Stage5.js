@@ -103,18 +103,18 @@ class Stage5 extends Phaser.Scene {
         this.cameras.main.setBackgroundColor('#828b99')
 
         // Play background music
-        soundtrack5 = this.sound.add('stage5Music', {volume: 0.25, loop: true});
+        soundtrack5 = this.sound.add('stage5Music', {volume: 0.15, loop: true});
         soundtrack5.play();
 
         // Player attack sound effects
-        preattack1 = this.sound.add('preattack1');
-        attack1_metal = this.sound.add('attack1_metal');
-        attack1_object = this.sound.add('attack1_object');
-        attack1_platform = this.sound.add('attack1_platform');
-        preattack2 = this.sound.add('preattack2');
-        attack2_throw = this.sound.add('attack2_throw');
-        attack2_metal = this.sound.add('attack2_metal');
-        attack_noenemy = this.sound.add('attack_noenemy');
+        preattack1 = this.sound.add('preattack1', {volume: 0.15});
+        attack1_metal = this.sound.add('attack1_metal', {volume: 0.15});
+        attack1_object = this.sound.add('attack1_object', {volume: 0.15});
+        attack1_platform = this.sound.add('attack1_platform', {volume: 0.15});
+        preattack2 = this.sound.add('preattack2', {volume: 0.15});
+        attack2_throw = this.sound.add('attack2_throw', {volume: 0.15});
+        attack2_metal = this.sound.add('attack2_metal', {volume: 0.15});
+        attack_noenemy = this.sound.add('attack_noenemy', {volume: 0.15});
 
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky0');
