@@ -867,7 +867,7 @@ class DaggerGroup5 extends Phaser.Physics.Arcade.Group {
 // Dagger Class
 class Dagger5 extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
-        super(scene, x, y, 'dagger5');
+        super(scene, x, y, 'dagger');
     }
 
     preUpdate(time, delta) {
