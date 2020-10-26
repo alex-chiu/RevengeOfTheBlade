@@ -16,6 +16,7 @@ var ground, platforms, obstacles;
 var daggerGroup;
 
 // SCENE SPECIFIC VARIABLES
+var button;
 
 // Enemies
 var enemy1, enemy2, enemy3;
@@ -248,9 +249,9 @@ class Stage5 extends Phaser.Scene {
         this.physics.add.overlap(player, enemy3);
         this.physics.add.overlap(playerMeleeAtk, enemy3);
 
-        tutorialButton = this.add.text(50, 50, 'BOSS', { fontSize: '20px', fill: '#b5dbf7' });
-        tutorialButton.setInteractive();
-        tutorialButton.on('pointerdown', () => {
+        button = this.add.text(50, 50, 'BOSS', { fontSize: '20px', fill: '#b5dbf7' });
+        button.setInteractive();
+        button.on('pointerdown', () => {
           soundtrack5.stop();
           this.scene.stop('Stage5');
           this.scene.start('RobotBossFight');
