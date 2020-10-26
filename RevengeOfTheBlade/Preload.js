@@ -19,7 +19,7 @@ class Preload extends Phaser.Scene {
         // Load all enemy spritesheets
         this.load.spritesheet('enemy1', 'assets/sprites/robot1.png', { frameWidth: 167, frameHeight: 280 });
         this.load.spritesheet('enemy2', 'assets/sprites/robot2.png', { frameWidth: 133, frameHeight: 195 });
-        this.load.spritesheet('drone', 'assets/sprites/drone.png', { frameWidth: 110, frameHeight: 75 });
+        this.load.spritesheet('enemy3', 'assets/sprites/drone.png', { frameWidth: 110, frameHeight: 75 });
         this.load.spritesheet('robotBoss', 'assets/sprites/robot-boss-sprite.png', { frameWidth: 390, frameHeight: 500 });
     }
 
@@ -28,6 +28,7 @@ class Preload extends Phaser.Scene {
         this.createPlayerAnims();
         this.createEnemy1Anims();
         this.createEnemy2Anims();
+        this.createEnemy3Anims();
         this.createBossAnims();
         this.scene.stop('Preload');
         this.scene.start('Menu');
@@ -175,6 +176,16 @@ class Preload extends Phaser.Scene {
             frames: [ { key: 'enemy2', frame: 2 } ],
             frameRate: 10,
             repeat: -1
+        });
+    }
+
+    // flying enemy [no specific orientation]
+    createEnemy3Anims() {
+        this.anims.create({
+            key:'enemy3Default',
+            frames: this.anims.generateFrameNumbers('enemy3', { start: 0, end: 3}),
+            frameRate: 10,
+            repeat: 1
         });
     }
 
