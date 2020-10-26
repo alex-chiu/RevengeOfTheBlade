@@ -5,7 +5,7 @@
 */
 
 // GLOBAL VARIABLES IN EACH SCENE
-var player, playerMeleeAtk, playerWalkNA, playerArm, playerArmFinal;
+var player, playerMeleeAtk, playerWalkNA, playerArm, playerArmFinal, playerDmg = false;
 var playerAlive = true;
 var meleeAtkDir, rangedAtkDir, callRangedAttack, attackAnimPlaying = false;
 var W, A, S, D, cursors, spaceBar, mouseX, mouseY;
@@ -198,6 +198,8 @@ class Stage5 extends Phaser.Scene {
         enemy2Alive = true;
         enemy1LifeText = 50;
         enemy2LifeText = 50;
+        lootCounter1 = 0;
+        lootCounter2 = 0;
         playerDetected = false;
         attackAnimPlaying = false;
 
@@ -312,25 +314,7 @@ class Stage5 extends Phaser.Scene {
             graphics.strokeLineShape(testLine);
         }
 
-        // Clear Target Tint
-        if (enemy1Dmg) {
-            this.time.addEvent({
-                delay: 200,
-                callback: () => {
-                    enemy1.clearTint();
-                    enemy1Dmg = false;
-                }
-            })
-        }
-        if (enemy2Dmg) {
-            this.time.addEvent({
-                delay: 200,
-                callback: () => {
-                    enemy2.clearTint();
-                    enemy2Dmg = false;
-                }
-            })
-        }
+        this.resetTints();
 
         // Enemy Movement
         if (!playerDetected) {
@@ -351,24 +335,24 @@ class Stage5 extends Phaser.Scene {
                 }
                 else {
                     enemy1.setVelocityX(0);
-                    if (enemy1Alive){
-                      this.shootLaser('L');
+                    if (enemy1Alive) {
+                        this.shootLaser('L');
                     }
                 }
             }
             // Player is right of enemies
             else if (player.body.position.x > enemy1.body.position.x) {
                 enemy1.anims.play('enemy1RightAtk');
-                if (delX1 < -130) {
-                    enemy1.setVelocityX(35);
-                }
-                else if (delX1 > -160) {
+                if (delX1 > -130) {
                     enemy1.setVelocityX(-35);
+                }
+                else if (delX1 < -160) {
+                    enemy1.setVelocityX(35);
                 }
                 else {
                     enemy1.setVelocityX(0);
                     if (enemy1Alive){
-                      this.shootLaser('R');
+                        this.shootLaser('R');
                     }
                 }
             }
@@ -437,6 +421,39 @@ class Stage5 extends Phaser.Scene {
 
         // Update Life Text
         this.updatePlayerLifeText();
+    }
+
+    // Function that clears the tints on each object (player and enemies) each loop.
+    // Necessary because Events/Callbacks not allowed in Dagger/Laser detection
+    resetTints() {
+        // Clear Tint
+        if (enemy1Dmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    enemy1.clearTint();
+                    enemy1Dmg = false;
+                }
+            })
+        }
+        if (enemy2Dmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    enemy2.clearTint();
+                    enemy2Dmg = false;
+                }
+            })
+        }
+        if (playerDmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    player.clearTint();
+                    playerDmg = false;
+                }
+            })
+        }
     }
 
     /*collisionDmg(){
@@ -766,10 +783,10 @@ class Stage5 extends Phaser.Scene {
     // Function that fires lasers
     shootLaser(direction) {
         if (direction == 'L') {
-            laserGroup.fireLaser(enemy1.body.position.x, enemy1.body.position.y + 82, direction);
+            laserGroup.fireLaser(enemy1.body.position.x - 20, enemy1.body.position.y + 75, direction);
         }
-        else {
-            laserGroup.fireLaser(enemy1.body.position.x + 100, enemy1.body.position.y + 110, direction);
+        else if (direction == 'R') {
+            laserGroup.fireLaser(enemy1.body.position.x + 100, enemy1.body.position.y + 75, direction);
         }
     }
 }
@@ -811,11 +828,13 @@ class Laser5 extends Phaser.Physics.Arcade.Sprite {
         }
         else if (Phaser.Geom.Rectangle.Overlaps(this.getBounds(), player.getBounds()) && playerAlive) {
             playerLife -= 5;
+            player.setTint('0xff0000');
+            playerDmg = true;
             this.setActive(false);
             this.setVisible(false);
-
         }
-        if (playerLife == 0) {
+        if (playerLife <= 0) {
+            playerLife = 0;
             player.disableBody(true, true);
             player.setActive(false);
             player.setVisible(false);
@@ -833,9 +852,14 @@ class Laser5 extends Phaser.Physics.Arcade.Sprite {
         if (direction == 'L') {
             this.setVelocityX(-250);
             this.setVelocityY(100);
+            var angle = Math.atan2(-100, 250);
+            this.rotation = angle;
         }
         else if (direction == 'R') {
             this.setVelocityX(250);
+            this.setVelocityY(100);
+            var angle = Math.atan2(-100, -250);
+            this.rotation = angle;
         }
     }
 }
