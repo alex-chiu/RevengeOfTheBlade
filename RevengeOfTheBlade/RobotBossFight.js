@@ -24,6 +24,7 @@ var far, back, mid, front;
 var ground, platforms;
 var soundtrack5;
 var bombs;
+var bossDmg = false;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -62,6 +63,10 @@ class RobotBossFight extends Phaser.Scene {
 
         // Dagger
         this.load.image('dagger', 'assets/dagger.png');
+
+        // soundeffects
+        this.load.audio('preattack1', ['assets/audio/soundeffects/player/preattack1.mp3']);
+        this.load.audio('preattack2', ['assets/audio/soundeffects/player/preattack2.mp3']);
     }
 
     // Create all the Sprites/Images/Platforms
@@ -70,6 +75,9 @@ class RobotBossFight extends Phaser.Scene {
 
         soundtrack5 = this.sound.add('stage5Music', {volume: 0.5, loop: true});
         soundtrack5.play();
+
+        preattack1 = this.sound.add('preattack1', {volume: 0.25});
+        preattack2 = this.sound.add('preattack2', {volume: 0.25});
 
         // Reset Values
         life = 100;
@@ -101,6 +109,7 @@ class RobotBossFight extends Phaser.Scene {
         if (debug == false) {
             platforms.setVisible(false);
         }
+
         // Create Dagger Group
         daggerGroup = new DaggerGroup1(this);
 
@@ -242,6 +251,8 @@ class RobotBossFight extends Phaser.Scene {
             graphics.strokeLineShape(testLine);
         }
 
+        this.resetTints();
+
         // Boss AI/Movement
         if (!playerDetected) {
             boss.anims.play('bossDefault');
@@ -292,6 +303,19 @@ class RobotBossFight extends Phaser.Scene {
         }
 
         this.updatePlayerLifeText();
+    }
+
+    resetTints() {
+        // Clear Tint
+        if (bossDmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    boss.clearTint();
+                    bossDmg = false;
+                }
+            })
+        }
     }
 
     // Makes sure each sprite is in the same position.
@@ -438,6 +462,7 @@ class RobotBossFight extends Phaser.Scene {
             if (meleeAtkDir == 'R') {
                 attackAnimPlaying = true;
                 player.anims.play('preMeleeAtkR');
+                preattack1.play();
                 this.time.addEvent({
                     delay: 250,
                     callback: () => {
@@ -460,6 +485,7 @@ class RobotBossFight extends Phaser.Scene {
             else if (meleeAtkDir == 'L') {
                 attackAnimPlaying = true;
                 player.anims.play('preMeleeAtkL');
+                preattack1.play();
                 this.time.addEvent({
                     delay: 250,
                     callback: () => {
@@ -516,6 +542,7 @@ class RobotBossFight extends Phaser.Scene {
                     playerWalkNA.anims.play('rightStatic', true)
                 }
                 playerArm.anims.play('preRangedAtk')
+                preattack2.play();
                 this.time.addEvent({
                     delay: 280,
                     callback: () => {
@@ -556,6 +583,7 @@ class RobotBossFight extends Phaser.Scene {
                     playerWalkNA.anims.play('leftStatic', true)
                 }
                 playerArm.anims.play('preRangedAtk')
+                preattack2.play();
                 this.time.addEvent({
                     delay: 280,
                     callback: () => {
@@ -703,10 +731,14 @@ class Dagger1 extends Phaser.Physics.Arcade.Sprite {
             this.setActive(false);
             this.setVisible(false);
             bossLife -= 5;
-            
+
             if (!playerDetected) {
                 playerDetected = true;
             }
+
+            bossLifeText.setText('Boss Life: ' + bossLife);
+            boss.setTint('0xff0000');
+            bossDmg = true;
 
             var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
             var bomb = bombs.create(x, 16, 'bomb');

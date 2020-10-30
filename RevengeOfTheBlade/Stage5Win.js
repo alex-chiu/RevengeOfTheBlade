@@ -23,8 +23,8 @@ class Stage5Win extends Phaser.Scene {
       const finalBossButton = this.add.text(game.config.width/2, 360, 'FINAL BOSS', { fontSize: '40px', fill: '#b5dbf7' }).setOrigin(0.5);
       finalBossButton.setInteractive();
       finalBossButton.on('pointerdown', () => {
-        this.scene.restart('Stage5');
-        this.scene.stop('Stage5');
+        //this.scene.restart('Stage5');
+        //this.scene.stop('Stage5');
         this.scene.start('RobotBossFight');
       });
 

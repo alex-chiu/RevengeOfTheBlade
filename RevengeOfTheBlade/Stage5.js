@@ -21,9 +21,9 @@ var button;
 // Enemies
 var enemy1, enemy2, enemy3;
 var delX1, delX2, dronePos, delX3, delY3;
-var enemy1Life = 50, enemy2Life = 50, enemy3Life = 25;
+var enemy1Life = 50, enemy2Life = 50, enemy3Life = 40;
 var enemy1Alive = true, enemy2Alive = true, enemy3Alive = true;
-var enemy1LifeText = 50, enemy2LifeText = 50, enemy3LifeText = 25;
+var enemy1LifeText = 50, enemy2LifeText = 50, enemy3LifeText = 40;
 var enemy1Dmg = false, enemy2Dmg = false, enemy3Dmg = false;
 
 // Loot
@@ -204,7 +204,7 @@ class Stage5 extends Phaser.Scene {
         enemy3Alive = true;
         enemy1LifeText = 50;
         enemy2LifeText = 50;
-        enemy3LifeText = 25;
+        enemy3LifeText = 40;
         lootCounter1 = 0;
         lootCounter2 = 0;
         lootCounter3 = 0;
@@ -226,7 +226,7 @@ class Stage5 extends Phaser.Scene {
         enemy2.scaleY = enemy2.scaleX;
         enemy2.body.setGravityY(300);
 
-        enemy3 = this.physics.add.sprite(50, 400, 'enemy3')
+        enemy3 = this.physics.add.sprite(600, 400, 'enemy3')
         enemy3.setCollideWorldBounds(true);
         enemy3.displayWidth = game.config.width * 0.10;
         enemy3.scaleY = enemy3.scaleX;
@@ -237,14 +237,14 @@ class Stage5 extends Phaser.Scene {
         // Enemy Life Text
         enemy1LifeText = this.add.text(590, 20, 'Enemy 1 Life: 50', { fontSize: '15px', fill: '#ffffff' });
         enemy2LifeText = this.add.text(390, 20, 'Enemy 2 Life: 50', { fontSize: '15px', fill: '#ffffff' });
-        enemy3LifeText = this.add.text(190, 20, 'Enemy 3 Life: 25', { fontSize: '15px', fill: '#ffffff' });
+        enemy3LifeText = this.add.text(190, 20, 'Enemy 3 Life: 40', { fontSize: '15px', fill: '#ffffff' });
 
         // Enemy Overlap
         this.physics.add.collider(enemy1, platforms);
         this.physics.add.collider(enemy2, platforms);
         this.physics.add.overlap(player, enemy1);
         this.physics.add.overlap(playerMeleeAtk, enemy1);
-        this.physics.add.overlap(player, enemy2, this.collisionDmg, null, this);
+        this.physics.add.overlap(player, enemy2);
         this.physics.add.overlap(playerMeleeAtk, enemy2);
         this.physics.add.overlap(player, enemy3);
         this.physics.add.overlap(playerMeleeAtk, enemy3);
@@ -261,7 +261,7 @@ class Stage5 extends Phaser.Scene {
     // Constantly Updating Game Loop
     update() {
         // Scene End Condition
-        if (!enemy1Alive && !enemy2Alive) {
+        if (!enemy1Alive && !enemy2Alive && !enemy3Alive) {
             soundtrack5.stop();
             this.scene.pause('Stage5');
             this.scene.launch('Stage5Win');
@@ -352,10 +352,10 @@ class Stage5 extends Phaser.Scene {
             if (player.body.position.x < enemy1.body.position.x) {
                 enemy1.anims.play('enemy1LeftAtk');
                 if (delX1 > 160) {
-                    enemy1.setVelocityX(-35);
+                    enemy1.setVelocityX(-50);
                 }
                 else if (delX1 < 130) {
-                    enemy1.setVelocityX(35);
+                    enemy1.setVelocityX(50);
                 }
                 else {
                     enemy1.setVelocityX(0);
@@ -405,11 +405,11 @@ class Stage5 extends Phaser.Scene {
             if (player.body.position.x < enemy3.body.position.x && player.body.position.y < enemy3.body.position.y) {
                 enemy3.anims.play('enemy3Default');
                 if (delX3 > 10 && delY3 > 10) {
-                    enemy3.setVelocityX(-30);
+                    enemy3.setVelocityX(-60);
                     enemy3.setVelocityY(-5);
                 }
                 else  {
-                    enemy3.setVelocityX(-30);
+                    enemy3.setVelocityX(-60);
                     enemy3.setVelocityY(-20);
                 }
             }
@@ -417,11 +417,11 @@ class Stage5 extends Phaser.Scene {
             else if (player.body.position.x > enemy3.body.position.x && player.body.position.y < enemy3.body.position.y) {
                 enemy3.anims.play('enemy3Default');
                 if (delX3 > 10 && delY3 > 10) {
-                    enemy3.setVelocityX(30);
+                    enemy3.setVelocityX(60);
                     enemy3.setVelocityY(-50);
                 }
                 else  {
-                    enemy3.setVelocityX(30);
+                    enemy3.setVelocityX(60);
                     enemy3.setVelocityY(-50);
                 }
             }
@@ -429,7 +429,7 @@ class Stage5 extends Phaser.Scene {
             else if (player.body.position.x < enemy3.body.position.x && player.body.position.y > enemy3.body.position.y) {
                 enemy3.anims.play('enemy3Default');
                 if (delX3 > 10 && delY3 > 10) {
-                    enemy3.setVelocityX(-30);
+                    enemy3.setVelocityX(-60);
                     enemy3.setVelocityY(5);
                 }
                 else  {
@@ -441,7 +441,7 @@ class Stage5 extends Phaser.Scene {
             else if (player.body.position.x > enemy3.body.position.x && player.body.position.y > enemy3.body.position.y) {
                 enemy3.anims.play('enemy3Default');
                 if (delX3 > 10 && delY3 > 10) {
-                    enemy3.setVelocityX(-40);
+                    enemy3.setVelocityX(-60);
                     enemy3.setVelocityY(-40);
                 }
                 else  {
@@ -555,6 +555,27 @@ class Stage5 extends Phaser.Scene {
             })
         }
 
+        var boundsE3 = enemy3.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsP, boundsE3)) && playerAlive && enemy3Alive) {
+            playerLife -= 0.1
+            if (playerLife <= 0) {
+                player.disableBody(true, true);
+                player.setActive(false);
+                player.setVisible(false);
+                playerAlive = false;
+                soundtrack5.stop();
+            }
+            this.updatePlayerLifeText()
+            player.setTint('0xff0000');
+            this.time.addEvent({
+                delay: 300,
+                callback: () => {
+                    player.clearTint();
+                }
+            })
+        }
+
         // Update Life Text
         this.updatePlayerLifeText();
     }
@@ -601,28 +622,9 @@ class Stage5 extends Phaser.Scene {
         }
     }
 
-    /*collisionDmg(){
-        playerLife -= 5
-        if (playerLife <= 0) {
-            player.disableBody(true, true);
-            player.setActive(false);
-            player.setVisible(false);
-            playerAlive = false;
-            soundtrack5.stop();
-        }
-        this.updatePlayerLifeText()
-        player.setTint('0xff0000');
-        this.time.addEvent({
-            delay: 300,
-            callback: () => {
-                player.clearTint();
-            }
-        })
-    }*/
-
     pickupLoot(player, healthLoot) {
         healthLoot.disableBody(true, true);
-        if (playerLife < 95){
+        if (playerLife < 90){
           playerLife += 10;
         }
         else {
@@ -1114,9 +1116,13 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
             enemy3.setTint('0xff0000')
             enemy3Dmg = true;
         }
-        if (enemy1Life == 0) {
+        if (enemy1Life == 0 && lootCounter1 == 0) {
+            var hLoot = healthLoot.create(enemy1.body.x, enemy1.body.y, 'healthLoot');
+            hLoot.setBounce(0.5);
+            hLoot.setCollideWorldBounds(true);
             enemy1.disableBody(true, true);
             enemy1Alive = false;
+            lootCounter1 += 1
         }
 
         if (enemy2Life == 0 && lootCounter2 == 0) {
@@ -1127,9 +1133,14 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
             enemy2Alive = false;
             lootCounter2 += 1
         }
-        if (enemy3Life == 0) {
+
+        if (enemy3Life == 0 && lootCounter3 == 0) {
+            var hLoot = healthLoot.create(enemy3.body.x, enemy3.body.y, 'healthLoot');
+            hLoot.setBounce(0.5);
+            hLoot.setCollideWorldBounds(true);
             enemy3.disableBody(true, true);
             enemy3Alive = false;
+            lootCounter3 += 1
         }
     }
 
