@@ -23,16 +23,16 @@ class Stage5Win extends Phaser.Scene {
       const finalBossButton = this.add.text(game.config.width/2, 360, 'FINAL BOSS', { fontSize: '40px', fill: '#b5dbf7' }).setOrigin(0.5);
       finalBossButton.setInteractive();
       finalBossButton.on('pointerdown', () => {
-        //this.scene.restart('Stage5');
-        //this.scene.stop('Stage5');
+        this.scene.stop('Stage5');
+        this.scene.stop('Stage5Win');
         this.scene.start('RobotBossFight');
       });
 
       const menuButton = this.add.text(game.config.width/2, 290, 'MENU', { fontSize: '40px', fill: '#8db9d9' }).setOrigin(0.5);
       menuButton.setInteractive();
       menuButton.on('pointerdown', () => {
-        this.scene.restart('Stage5');
         this.scene.stop('Stage5');
+        this.scene.stop('Stage5Win');
         this.scene.start('Menu');
       });
     }

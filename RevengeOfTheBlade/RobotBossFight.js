@@ -6,7 +6,7 @@
 
 // Global Variables
 var player, playerMeleeAtk, playerWalkNA, playerArm, playerArmFinal;
-var meleeAtkDir, rangedAtkDir, callRangedAttack, attackAnimPlaying = false;
+var meleeAtkDir, rangedAtkDir, callRangedAttack, attackAnimPlaying;
 var daggerGroup;
 var boss;
 var bossAlive = true;
@@ -85,6 +85,7 @@ class RobotBossFight extends Phaser.Scene {
         playerAlive = true;
         bossAlive = true;
         playerDetected = false;
+        attackAnimPlaying = false;
 
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky0');
@@ -179,10 +180,6 @@ class RobotBossFight extends Phaser.Scene {
             soundtrack5.stop();
             this.scene.pause('RobotBossFight')
             this.scene.launch('GameOver');
-
-          /* let panel = this.scene.get('gameOverScreen');
-          panel.events.on('clickMenu', this.handleGoMenu, this);
-          panel.events.on('clickTryAgain', this.handleTryAgain, this); */
         }
         if (bossAlive == false) {
             soundtrack5.stop();
@@ -442,7 +439,6 @@ class RobotBossFight extends Phaser.Scene {
     // Updates player's life text
     updatePlayerLifeText() {
         lifeText.setText('Life: ' + life);
-
     }
 
     // Function that fires laser from boss
