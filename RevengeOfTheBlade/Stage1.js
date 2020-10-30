@@ -51,12 +51,19 @@ class Stage1 extends Phaser.Scene {
         this.load.image('platformH', 'assets/platforms/platformH.png');
 
         // Dagger
-        this.load.image('dagger', 'assets/dagger.png');
+        this.load.image('dagger', 'assets/daggers.png');
+
+        // soundeffects
+        this.load.audio('preattack1', ['assets/audio/soundeffects/player/preattack1.mp3']);
+        this.load.audio('preattack2', ['assets/audio/soundeffects/player/preattack2.mp3']);
     }
 
     // Create all the Sprites/Images/Platforms
     create() {
-        this.cameras.main.setBackgroundColor('#828b99')
+        this.cameras.main.setBackgroundColor('#828b99');
+
+        preattack1 = this.sound.add('preattack1', {volume: 0.15});
+        preattack2 = this.sound.add('preattack2', {volume: 0.15});
 
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky01');
@@ -283,6 +290,7 @@ class Stage1 extends Phaser.Scene {
             if (meleeAtkDir == 'R') {
                 attackAnimPlaying = true;
                 player.anims.play('preMeleeAtkR');
+                preattack1.play();
                 this.time.addEvent({
                     delay: 250,
                     callback: () => {
@@ -305,6 +313,7 @@ class Stage1 extends Phaser.Scene {
             else if (meleeAtkDir == 'L') {
                 attackAnimPlaying = true;
                 player.anims.play('preMeleeAtkL');
+                preattack1.play();
                 this.time.addEvent({
                     delay: 250,
                     callback: () => {
@@ -361,6 +370,7 @@ class Stage1 extends Phaser.Scene {
                     playerWalkNA.anims.play('rightStatic', true)
                 }
                 playerArm.anims.play('preRangedAtk')
+                preattack2.play();
                 this.time.addEvent({
                     delay: 280,
                     callback: () => {
@@ -401,6 +411,7 @@ class Stage1 extends Phaser.Scene {
                     playerWalkNA.anims.play('leftStatic', true)
                 }
                 playerArm.anims.play('preRangedAtk')
+                preattack2.play();
                 this.time.addEvent({
                     delay: 280,
                     callback: () => {
