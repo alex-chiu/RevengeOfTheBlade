@@ -249,6 +249,8 @@ class Stage5 extends Phaser.Scene {
         this.physics.add.overlap(player, enemy3);
         this.physics.add.overlap(playerMeleeAtk, enemy3);
 
+
+        // temporary button
         button = this.add.text(50, 50, 'BOSS', { fontSize: '20px', fill: '#b5dbf7' });
         button.setInteractive();
         button.on('pointerdown', () => {

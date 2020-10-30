@@ -48,7 +48,7 @@ class Menu extends Phaser.Scene {
       playButton.on('pointerdown', () => {
         this.soundtrack.stop();
         this.scene.stop('Menu');
-        this.scene.start('Stage5');
+        this.scene.start('Stage1');
       });
       playButton.on('pointerover', () => { this.buttonOver(playButton); });
       playButton.on('pointerout', () => { this.buttonNotOver(playButton); });
