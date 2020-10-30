@@ -33,7 +33,7 @@ class Stage1Win extends Phaser.Scene {
       menuButton.on('pointerdown', () => {
         this.scene.restart('Stage1');
         this.scene.stop('Stage1');
-        this.scene.start('Menu');
+        this.scene.start('MenuStage1C');
       });
     }
 

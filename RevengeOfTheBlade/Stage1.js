@@ -19,6 +19,15 @@ var daggerGroup;
 var button1;
 var playButton;
 
+var enemyV;
+var enemyVLife = 80;
+var enemyVAlive = true;
+var enemyVLifeText = 80;
+var enemyVDmg = false;
+
+var healthLoot;
+var lootCounter1 = 0;
+
 // DEBUG PARAMETERS
 var debug = false;
 var graphics, testLine;
@@ -37,6 +46,9 @@ class Stage1 extends Phaser.Scene {
         this.load.spritesheet('hero_ranged_attack_arm', 'assets/sprites/ranged-attack/hero-attack2-arm-sprite.png', { frameWidth: 145, frameHeight: 230 });
         this.load.spritesheet('hero_walk_no_arm', 'assets/sprites/ranged-attack/hero-walk-sprite-noarm.png', { frameWidth: 150, frameHeight: 230 });
         this.load.spritesheet('hero_ranged_attack_arm_final', 'assets/sprites/ranged-attack/attack2-throw.png', { frameWidth: 220, frameHeight: 230 });
+
+        // enemy spritesheet
+        this.load.spritesheet('enemyV', 'assets/sprites/velociraptor.png', { frameWidth: 390, frameHeight: 230 });
 
         // Background Images
         this.load.image('sky01', 'assets/backgrounds/stage1/0sky1.png');
@@ -57,6 +69,9 @@ class Stage1 extends Phaser.Scene {
         // soundeffects
         this.load.audio('preattack1', ['assets/audio/soundeffects/player/preattack1.mp3']);
         this.load.audio('preattack2', ['assets/audio/soundeffects/player/preattack2.mp3']);
+
+        // Loot
+        this.load.image('healthLoot', 'assets/healthLoot.png');
     }
 
     // Create all the Sprites/Images/Platforms
@@ -117,6 +132,12 @@ class Stage1 extends Phaser.Scene {
             callRangedAttack = true;
         })
 
+        // Create Loot
+        healthLoot = this.physics.add.group();
+        this.physics.add.overlap(player, healthLoot, this.pickupLoot, null, this);
+        this.physics.add.overlap(playerMeleeAtk, healthLoot, this.pickupLoot, null, this);
+        this.physics.add.collider(healthLoot, platforms);
+
         // Graphics for drawing debug line
         graphics = this.add.graphics();
         if (debug) {
@@ -130,6 +151,32 @@ class Stage1 extends Phaser.Scene {
         this.physics.add.collider(playerWalkNA, platforms);
         this.physics.add.collider(playerArm, platforms);
         this.physics.add.collider(playerArmFinal, platforms);
+
+        // Reset Values
+        playerLife = 100;
+        enemyVLife = 80;
+        playerAlive = true;
+        enemyVAlive = true;
+        enemyVLifeText = 80;
+        lootCounter1 = 0;
+        playerDetected = false;
+        attackAnimPlaying = false;
+
+        // Create Enemies
+        enemyV = this.physics.add.sprite(650, 400, 'enemyV')
+        enemyV.setBounce(0);
+        enemyV.setCollideWorldBounds(true);
+        enemyV.displayWidth = game.config.width * 0.7;
+        enemyV.scaleY = enemyV.scaleX;
+        enemyV.body.setGravityY(300);
+
+        // Enemy Life Text
+        enemyVLifeText = this.add.text(590, 20, 'Enemy 1 Life: 80', { fontSize: '15px', fill: '#ffffff' });
+
+        // Enemy Overlap
+        this.physics.add.collider(enemyV, platforms);
+        this.physics.add.overlap(player, enemyV);
+        this.physics.add.overlap(playerMeleeAtk, enemyV);
 
         // temporary buttons
         button1 = this.add.text(50, 50, 'BOSS 1', { fontSize: '20px', fill: '#b5dbf7' });
@@ -147,19 +194,20 @@ class Stage1 extends Phaser.Scene {
           this.scene.start('MenuStage1C');
         });
 
-        // SCENE SPECIFIC GAME OBJECTS
-
-        // Reset Values
-
-        // Obstacles
-
-        // Obstacle Colliders
 
     }
 
     // Constantly Updating Game Loop
     update() {
         // Scene End Condition
+        if (!enemyVAlive) {
+            this.scene.pause('Stage1');
+            this.scene.launch('Stage1Win');
+        }
+        else if (!playerAlive) {
+            this.scene.pause('Stage1');
+            this.scene.launch('Stage1Die')
+        }
 
         // Implement Parallax Background
         clouds.tilePositionX -= 0.5;
@@ -222,8 +270,100 @@ class Stage1 extends Phaser.Scene {
             graphics.strokeLineShape(testLine);
         }
 
+        // Resets tints on game objects.
+        this.resetTints();
+
+        // Enemy Movement
+        if (!playerDetected) {
+            enemyV.anims.play('enemyVDefault');
+        }
+        else {
+            delX2 = enemyV.body.position.x - player.body.position.x;
+
+            // Enemy 2: Faster
+            if (player.body.position.x < enemyV.body.position.x) {
+                enemyV.anims.play('enemyVLeftAtk');
+                if (delX2 > 50) {
+                    enemyV.setVelocityX(-50);
+                }
+                else if (delX2 <= 50) {
+                    enemyV.setVelocityX(50);
+                }
+            }
+            else if (player.body.position.x > enemyV.body.position.x) {
+                enemyV.anims.play('enemyVRightAtk');
+                if (delX2 < -50) {
+                    enemyV.setVelocityX(50);
+                }
+                else if (delX2 > -50) {
+                    enemyV.setVelocityX(-50);
+                }
+            }
+        }
+
+        if (Math.abs(player.body.position.x - enemyV.body.position.x) <= 150) {
+            playerDetected = true;
+        }
+
+        var boundsPl = player.getBounds();
+        var boundsV = enemyV.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsV)) && playerAlive && enemyVAlive) {
+            playerLife -= 0.1
+            if (playerLife <= 0) {
+                player.disableBody(true, true);
+                player.setActive(false);
+                player.setVisible(false);
+                playerAlive = false;
+            }
+            this.updatePlayerLifeText()
+            player.setTint('0xff0000');
+            this.time.addEvent({
+                delay: 300,
+                callback: () => {
+                    player.clearTint();
+                }
+            })
+        }
+
         // Update Life Text
         this.updatePlayerLifeText();
+    }
+
+    // Function that clears the tints on each object (player and enemies) each loop.
+    // Necessary because Events/Callbacks not allowed in Dagger/Laser detection
+    resetTints() {
+        // Clear Tint
+        if (enemyVDmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    enemyV.clearTint();
+                    enemyVDmg = false;
+                }
+            })
+        }
+
+        if (playerDmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    player.clearTint();
+                    playerDmg = false;
+                }
+            })
+        }
+    }
+
+    pickupLoot(player, healthLoot) {
+        healthLoot.disableBody(true, true);
+        if (playerLife < 90){
+          playerLife += 10;
+        }
+        else {
+          playerLife = 100
+        }
+        this.updatePlayerLifeText()
     }
 
     // Makes sure each sprite is in the same position.
@@ -443,9 +583,72 @@ class Stage1 extends Phaser.Scene {
         }
     }
 
-    // Function that updates the player's life text
+    // Function that Updates the enemy's Life Text
+    updateEnemy1LifeText() {
+        var boundsA = playerMeleeAtk.getBounds();
+        var boundsB = enemy1.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && enemy1Alive) {
+            if (enemy1Life < 10) {
+              enemy1Life = 0
+            }
+            else {
+              enemy1Life -= 10
+            }
+            enemy1LifeText.setText('Enemy 1 Life: ' + enemy1Life);
+            enemy1.setTint('0xff0000');
+            attack2_metal.play();
+            this.time.addEvent({
+                delay: 400,
+                callback: () => {
+                    enemy1.clearTint();
+                }
+            })
+        }
+        if (enemy1Life == 0 && lootCounter1 == 0) {
+            var hLoot = healthLoot.create(enemy1.body.x, enemy1.body.y, 'healthLoot');
+            hLoot.setBounce(0.5);
+            hLoot.setCollideWorldBounds(true);
+            enemy1.disableBody(true, true);
+            enemy1Alive = false;
+            lootCounter1 += 1
+        }
+    }
+
+    updateEnemyVLifeText() {
+        var boundsA = playerMeleeAtk.getBounds();
+        var boundsB = enemyV.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && enemyVAlive) {
+            if (enemyVLife < 10) {
+              enemyVLife = 0
+            }
+            else {
+              enemyVLife -= 10
+            }
+            enemyVLifeText.setText('Enemy 1 Life: ' + enemyVLife);
+            enemyV.setTint('0xff0000');
+            attack2_metal.play();
+            this.time.addEvent({
+                delay: 400,
+                callback: () => {
+                    enemyV.clearTint();
+                }
+            })
+        }
+        if (enemyVLife == 0 && lootCounter1 == 0) {
+            var hLoot = healthLoot.create(enemyV.body.x, enemyV.body.y, 'healthLoot');
+            hLoot.setBounce(0.5);
+            hLoot.setCollideWorldBounds(true);
+            enemyV.disableBody(true, true);
+            enemyVAlive = false;
+            lootCounter1 += 1
+        }
+    }
+
+    // Updates player's life text
     updatePlayerLifeText() {
-        lifeText.setText('Life: ' + playerLife);
+        lifeText.setText('Life: ' + Math.round(playerLife));
     }
 
     // Throws Dagger
@@ -494,6 +697,26 @@ class DaggerS1 extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
         }
         // Check dagger overlap with enemies
+        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), enemyV.getBounds())) && enemyVAlive) {
+            this.setActive(false);
+            this.setVisible(false);
+            enemyVLife -= 5;
+            if (!playerDetected) {
+                playerDetected = true;
+            }
+            enemyVLifeText.setText('Enemy 1 Life: ' + enemyVLife);
+            enemyV.setTint('0xff0000')
+            enemyVDmg = true;
+        }
+
+        if (enemyVLife == 0 && lootCounter1 == 0) {
+            var hLoot = healthLoot.create(enemyV.body.x, enemyV.body.y, 'healthLoot');
+            hLoot.setBounce(0.5);
+            hLoot.setCollideWorldBounds(true);
+            enemyV.disableBody(true, true);
+            enemyVAlive = false;
+            lootCounter1 += 1
+        }
 
         // Disable enemies if their health reaches 0
     }
