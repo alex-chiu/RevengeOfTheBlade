@@ -16,7 +16,7 @@ var ground, platforms, obstacles;
 var daggerGroup;
 
 // SCENE SPECIFIC VARIABLES
-
+var button1B;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -122,6 +122,15 @@ class Stage1Boss extends Phaser.Scene {
         this.physics.add.collider(playerWalkNA, platforms);
         this.physics.add.collider(playerArm, platforms);
         this.physics.add.collider(playerArmFinal, platforms);
+
+        // temporary button
+        button1B = this.add.text(50, 50, 'STAGE 2', { fontSize: '20px', fill: '#b5dbf7' });
+        button1B.setInteractive();
+        button1B.on('pointerdown', () => {
+          //soundtrack5.stop();
+          this.scene.stop('Stage1Boss');
+          this.scene.start('Stage5');
+        });
 
         // SCENE SPECIFIC GAME OBJECTS
 
