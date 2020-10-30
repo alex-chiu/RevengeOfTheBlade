@@ -21,7 +21,7 @@ class GameCompleted extends Phaser.Scene {
       this.add.text(game.config.width/2, 210, 'CONGRATULATIONS', { fontSize: '45px', fill: '#ffffff' }).setOrigin(0.5);
       this.add.text(game.config.width/2, 280, 'YOU WON!', { fontSize: '75px', fill: '#ffffff' }).setOrigin(0.5);
 
-      const menuButton = this.add.text(game.config.width/2, 350, 'MENU', { fontSize: '40px', fill: '#8db9d9' }).setOrigin(0.5);
+      const menuButton = this.add.text(game.config.width/2, 375, 'MENU', { fontSize: '40px', fill: '#8db9d9' }).setOrigin(0.5);
       menuButton.setInteractive();
       menuButton.on('pointerdown', () => {
         this.scene.stop('RobotBossFight');
