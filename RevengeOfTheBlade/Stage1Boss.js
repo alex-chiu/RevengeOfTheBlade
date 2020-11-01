@@ -9,7 +9,6 @@ var player, playerMeleeAtk, playerWalkNA, playerArm, playerArmFinal;
 var playerAlive = true;
 var meleeAtkDir, rangedAtkDir, callRangedAttack, attackAnimPlaying = false;
 var W, A, S, D, cursors, spaceBar, mouseX, mouseY;
-var playerLife = 100;
 var lifeText;
 var sky, clouds, far, back, mid, front;
 var ground, platforms, obstacles;
@@ -150,6 +149,7 @@ class Stage1Boss extends Phaser.Scene {
         // SCENE SPECIFIC GAME OBJECTS
 
         // Reset Values
+        playerLife = Math.floor(playerLife);
 
         // Obstacles
 

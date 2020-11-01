@@ -1,7 +1,7 @@
-/*  SATGE 1 SCENE
+/*  STAGE 1 SCENE
 
-    1st stage of game
-
+    1st stage of game. 
+    Prehistoric era
 */
 
 // GLOBAL VARIABLES IN EACH SCENE
@@ -19,11 +19,11 @@ var daggerGroup;
 var button1;
 var playButton;
 
-var enemyV;
-var enemyVLife = 80;
-var enemyVAlive = true;
-var enemyVLifeText = 80;
-var enemyVDmg = false;
+var raptor;
+var raptorLife = 80;
+var raptorAlive = true;
+var raptorLifeText = 80;
+var raptorDmg = false;
 
 var healthLoot;
 var lootCounter1 = 0;
@@ -48,7 +48,7 @@ class Stage1 extends Phaser.Scene {
         this.load.spritesheet('hero_ranged_attack_arm_final', 'assets/sprites/ranged-attack/attack2-throw.png', { frameWidth: 220, frameHeight: 230 });
 
         // enemy spritesheet
-        this.load.spritesheet('enemyV', 'assets/sprites/velociraptor.png', { frameWidth: 390, frameHeight: 230 });
+        this.load.spritesheet('raptor', 'assets/sprites/velociraptor.png', { frameWidth: 390, frameHeight: 195 });
 
         // Background Images
         this.load.image('sky01', 'assets/backgrounds/stage1/0sky1.png');
@@ -66,9 +66,18 @@ class Stage1 extends Phaser.Scene {
         // Dagger
         this.load.image('dagger', 'assets/daggers.png');
 
-        // soundeffects
+        // Sound Effects
+        // Melee
         this.load.audio('preattack1', ['assets/audio/soundeffects/player/preattack1.mp3']);
+        this.load.audio('attack1_metal', ['assets/audio/soundeffects/player/attack1_metal.mp3']);
+        this.load.audio('attack1_object', ['assets/audio/soundeffects/player/attack1_object.mp3']);
+        this.load.audio('attack1_platform', ['assets/audio/soundeffects/player/attack1_platform.mp3']);
+        // Range
         this.load.audio('preattack2', ['assets/audio/soundeffects/player/preattack2.mp3']);
+        this.load.audio('attack2_throw', ['assets/audio/soundeffects/player/preattack2.mp3']);
+        this.load.audio('attack2_metal', ['assets/audio/soundeffects/player/preattack2.mp3']);
+        // Both
+        this.load.audio('attack_noenemy', ['assets/audio/soundeffects/player/attack1_noenemy.mp3']);
 
         // Loot
         this.load.image('healthLoot', 'assets/healthLoot.png');
@@ -78,8 +87,15 @@ class Stage1 extends Phaser.Scene {
     create() {
         this.cameras.main.setBackgroundColor('#828b99');
 
+        // Player attack sound effects
         preattack1 = this.sound.add('preattack1', {volume: 0.15});
+        attack1_metal = this.sound.add('attack1_metal', {volume: 0.15});
+        attack1_object = this.sound.add('attack1_object', {volume: 0.15});
+        attack1_platform = this.sound.add('attack1_platform', {volume: 0.15});
         preattack2 = this.sound.add('preattack2', {volume: 0.15});
+        attack2_throw = this.sound.add('attack2_throw', {volume: 0.15});
+        attack2_metal = this.sound.add('attack2_metal', {volume: 0.15});
+        attack_noenemy = this.sound.add('attack_noenemy', {volume: 0.15});
 
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky01');
@@ -154,29 +170,29 @@ class Stage1 extends Phaser.Scene {
 
         // Reset Values
         playerLife = 100;
-        enemyVLife = 80;
+        raptorLife = 80;
         playerAlive = true;
-        enemyVAlive = true;
-        enemyVLifeText = 80;
+        raptorAlive = true;
+        raptorLifeText = 80;
         lootCounter1 = 0;
         playerDetected = false;
         attackAnimPlaying = false;
 
         // Create Enemies
-        enemyV = this.physics.add.sprite(650, 400, 'enemyV')
-        enemyV.setBounce(0);
-        enemyV.setCollideWorldBounds(true);
-        enemyV.displayWidth = game.config.width * 0.7;
-        enemyV.scaleY = enemyV.scaleX;
-        enemyV.body.setGravityY(300);
+        raptor = this.physics.add.sprite(650, 400, 'raptor')
+        raptor.setBounce(0);
+        raptor.setCollideWorldBounds(true);
+        raptor.displayWidth = game.config.width * 0.2;
+        raptor.scaleY = raptor.scaleX;
+        raptor.body.setGravityY(300);
 
         // Enemy Life Text
-        enemyVLifeText = this.add.text(590, 20, 'Enemy 1 Life: 80', { fontSize: '15px', fill: '#ffffff' });
+        raptorLifeText = this.add.text(590, 20, 'Raptor Life: 80', { fontSize: '15px', fill: '#ffffff' });
 
         // Enemy Overlap
-        this.physics.add.collider(enemyV, platforms);
-        this.physics.add.overlap(player, enemyV);
-        this.physics.add.overlap(playerMeleeAtk, enemyV);
+        this.physics.add.collider(raptor, platforms);
+        this.physics.add.overlap(player, raptor);
+        this.physics.add.overlap(playerMeleeAtk, raptor);
 
         // temporary buttons
         button1 = this.add.text(50, 50, 'BOSS 1', { fontSize: '20px', fill: '#b5dbf7' });
@@ -193,14 +209,12 @@ class Stage1 extends Phaser.Scene {
           this.scene.stop('Stage1');
           this.scene.start('MenuStage1C');
         });
-
-
     }
 
     // Constantly Updating Game Loop
     update() {
         // Scene End Condition
-        if (!enemyVAlive) {
+        if (!raptorAlive) {
             this.scene.pause('Stage1');
             this.scene.launch('Stage1Win');
         }
@@ -275,41 +289,32 @@ class Stage1 extends Phaser.Scene {
 
         // Enemy Movement
         if (!playerDetected) {
-            enemyV.anims.play('enemyVDefault');
+            raptor.anims.play('raptorStatic');
         }
         else {
-            delX2 = enemyV.body.position.x - player.body.position.x;
-
-            // Enemy 2: Faster
-            if (player.body.position.x < enemyV.body.position.x) {
-                enemyV.anims.play('enemyVLeftAtk');
-                if (delX2 > 50) {
-                    enemyV.setVelocityX(-50);
-                }
-                else if (delX2 <= 50) {
-                    enemyV.setVelocityX(50);
-                }
+            if (player.body.position.x < raptor.body.position.x - 5) {
+                raptor.anims.play('raptorLeft');
+                raptor.setVelocityX(-70);
             }
-            else if (player.body.position.x > enemyV.body.position.x) {
-                enemyV.anims.play('enemyVRightAtk');
-                if (delX2 < -50) {
-                    enemyV.setVelocityX(50);
-                }
-                else if (delX2 > -50) {
-                    enemyV.setVelocityX(-50);
-                }
+            else if (player.body.position.x > raptor.body.position.x + 5) {
+                raptor.anims.play('raptorRight');
+                raptor.setVelocityX(70);
+            }
+            else {
+                raptor.anims.play('raptorStatic');
+                raptor.setVelocityX(0);
             }
         }
 
-        if (Math.abs(player.body.position.x - enemyV.body.position.x) <= 150) {
+        if (Math.abs(player.body.position.x - raptor.body.position.x) <= 150) {
             playerDetected = true;
         }
 
         var boundsPl = player.getBounds();
-        var boundsV = enemyV.getBounds();
+        var boundsV = raptor.getBounds();
 
-        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsV)) && playerAlive && enemyVAlive) {
-            playerLife -= 0.1
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsV)) && playerAlive && raptorAlive) {
+            playerLife -= 0.1;
             if (playerLife <= 0) {
                 player.disableBody(true, true);
                 player.setActive(false);
@@ -334,12 +339,12 @@ class Stage1 extends Phaser.Scene {
     // Necessary because Events/Callbacks not allowed in Dagger/Laser detection
     resetTints() {
         // Clear Tint
-        if (enemyVDmg) {
+        if (raptorDmg) {
             this.time.addEvent({
                 delay: 200,
                 callback: () => {
-                    enemyV.clearTint();
-                    enemyVDmg = false;
+                    raptor.clearTint();
+                    raptorDmg = false;
                 }
             })
         }
@@ -445,6 +450,7 @@ class Stage1 extends Phaser.Scene {
                         player.visible = false;
                         playerMeleeAtk.visible = true;
                         // Check damage against targets
+                        this.updateRaptorLife();
                         playerMeleeAtk.anims.play('playerMeleeAtkR');
                         this.time.addEvent({
                             delay: 400,
@@ -468,6 +474,7 @@ class Stage1 extends Phaser.Scene {
                         player.visible = false;
                         playerMeleeAtk.visible = true;
                         // Check damage against targets
+                        this.updateRaptorLife();
                         playerMeleeAtk.anims.play('playerMeleeAtkL');
                         this.time.addEvent({
                             delay: 400,
@@ -583,65 +590,28 @@ class Stage1 extends Phaser.Scene {
         }
     }
 
-    // Function that Updates the enemy's Life Text
-    updateEnemy1LifeText() {
+    updateRaptorLife() {
         var boundsA = playerMeleeAtk.getBounds();
-        var boundsB = enemy1.getBounds();
+        var boundsB = raptor.getBounds();
 
-        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && enemy1Alive) {
-            if (enemy1Life < 10) {
-              enemy1Life = 0
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && raptorAlive) {
+            if (raptorLife < 10) {
+              raptorLife = 0
             }
             else {
-              enemy1Life -= 10
+              raptorLife -= 10
             }
-            enemy1LifeText.setText('Enemy 1 Life: ' + enemy1Life);
-            enemy1.setTint('0xff0000');
+            raptorLifeText.setText('Enemy 1 Life: ' + raptorLife);
+            raptor.setTint('0xff0000');
             attack2_metal.play();
-            this.time.addEvent({
-                delay: 400,
-                callback: () => {
-                    enemy1.clearTint();
-                }
-            })
+            raptorDmg = true;
         }
-        if (enemy1Life == 0 && lootCounter1 == 0) {
-            var hLoot = healthLoot.create(enemy1.body.x, enemy1.body.y, 'healthLoot');
+        if (raptorLife == 0 && lootCounter1 == 0) {
+            var hLoot = healthLoot.create(raptor.body.x, raptor.body.y, 'healthLoot');
             hLoot.setBounce(0.5);
             hLoot.setCollideWorldBounds(true);
-            enemy1.disableBody(true, true);
-            enemy1Alive = false;
-            lootCounter1 += 1
-        }
-    }
-
-    updateEnemyVLifeText() {
-        var boundsA = playerMeleeAtk.getBounds();
-        var boundsB = enemyV.getBounds();
-
-        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && enemyVAlive) {
-            if (enemyVLife < 10) {
-              enemyVLife = 0
-            }
-            else {
-              enemyVLife -= 10
-            }
-            enemyVLifeText.setText('Enemy 1 Life: ' + enemyVLife);
-            enemyV.setTint('0xff0000');
-            attack2_metal.play();
-            this.time.addEvent({
-                delay: 400,
-                callback: () => {
-                    enemyV.clearTint();
-                }
-            })
-        }
-        if (enemyVLife == 0 && lootCounter1 == 0) {
-            var hLoot = healthLoot.create(enemyV.body.x, enemyV.body.y, 'healthLoot');
-            hLoot.setBounce(0.5);
-            hLoot.setCollideWorldBounds(true);
-            enemyV.disableBody(true, true);
-            enemyVAlive = false;
+            raptor.disableBody(true, true);
+            raptorAlive = false;
             lootCounter1 += 1
         }
     }
@@ -697,28 +667,26 @@ class DaggerS1 extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
         }
         // Check dagger overlap with enemies
-        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), enemyV.getBounds())) && enemyVAlive) {
+        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), raptor.getBounds())) && raptorAlive) {
             this.setActive(false);
             this.setVisible(false);
-            enemyVLife -= 5;
+            raptorLife -= 5;
             if (!playerDetected) {
                 playerDetected = true;
             }
-            enemyVLifeText.setText('Enemy 1 Life: ' + enemyVLife);
-            enemyV.setTint('0xff0000')
-            enemyVDmg = true;
+            raptorLifeText.setText('Enemy 1 Life: ' + raptorLife);
+            raptor.setTint('0xff0000')
+            raptorDmg = true;
         }
 
-        if (enemyVLife == 0 && lootCounter1 == 0) {
-            var hLoot = healthLoot.create(enemyV.body.x, enemyV.body.y, 'healthLoot');
+        if (raptorLife == 0 && lootCounter1 == 0) {
+            var hLoot = healthLoot.create(raptor.body.x, raptor.body.y, 'healthLoot');
             hLoot.setBounce(0.5);
             hLoot.setCollideWorldBounds(true);
-            enemyV.disableBody(true, true);
-            enemyVAlive = false;
+            raptor.disableBody(true, true);
+            raptorAlive = false;
             lootCounter1 += 1
         }
-
-        // Disable enemies if their health reaches 0
     }
 
     throw (x, y, aimX, aimY) {

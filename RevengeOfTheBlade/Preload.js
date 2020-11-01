@@ -17,6 +17,10 @@ class Preload extends Phaser.Scene {
         this.load.spritesheet('hero_ranged_attack_arm_final', 'assets/sprites/ranged-attack/attack2-throw.png', { frameWidth: 220, frameHeight: 230 });
 
         // Load all enemy spritesheets
+        // Stage 1
+        this.load.spritesheet('raptor', 'assets/sprites/velociraptor.png', { frameWidth: 390, frameHeight: 195 });
+
+        // Stage 5
         this.load.spritesheet('enemy1', 'assets/sprites/robot1.png', { frameWidth: 167, frameHeight: 280 });
         this.load.spritesheet('enemy2', 'assets/sprites/robot2.png', { frameWidth: 133, frameHeight: 195 });
         this.load.spritesheet('enemy3', 'assets/sprites/drone.png', { frameWidth: 110, frameHeight: 75 });
@@ -25,11 +29,19 @@ class Preload extends Phaser.Scene {
 
     create() {
         console.log("PRELOADING ASSETS");
+
+        // Player Animations
         this.createPlayerAnims();
+
+        // Stage 1 Animations
+        this.createRaptorAnims();
+
+        // Stage 5 Animations
         this.createEnemy1Anims();
         this.createEnemy2Anims();
         this.createEnemy3Anims();
         this.createBossAnims();
+
         this.scene.stop('Preload');
         this.scene.start('Menu');
     }
@@ -133,6 +145,28 @@ class Preload extends Phaser.Scene {
             frameRate: 5,
             repeat: -1
          });
+    }
+
+    // Creates stage 1 animations
+    createRaptorAnims() {
+        this.anims.create({
+            key: 'raptorLeft',
+            frames: this.anims.generateFrameNumbers('raptor', { start: 0, end: 6}),
+            frameRate: 10,
+            repeat: -1
+        })
+        this.anims.create({
+            key: 'raptorRight',
+            frames: this.anims.generateFrameNumbers('raptor', { start: 7, end: 13}),
+            frameRate: 10,
+            repeat: -1
+        })
+        this.anims.create({
+            key: 'raptorStatic',
+            frames: [ { key: 'raptor', frame: 6 } ],
+            frameRate: 10,
+            repeat: -1
+        })
     }
 
     // Creates enemy animations
