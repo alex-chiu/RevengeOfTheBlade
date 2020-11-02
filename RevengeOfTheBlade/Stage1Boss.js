@@ -173,7 +173,8 @@ class Stage1Boss extends Phaser.Scene {
         // SCENE SPECIFIC GAME OBJECTS
 
         // Reset Values
-        playerLife = Math.floor(playerLife);
+        //playerLife = Math.floor(playerLife);
+        playerLife = 100;
         trexLife = 200;
         playerAlive = true;
         trexAlive = true;
