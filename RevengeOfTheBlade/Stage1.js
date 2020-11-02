@@ -1,6 +1,6 @@
 /*  STAGE 1 SCENE
 
-    1st stage of game. 
+    1st stage of game.
     Prehistoric era
 */
 
@@ -17,7 +17,6 @@ var daggerGroup;
 
 // SCENE SPECIFIC VARIABLES
 var button1;
-var playButton;
 
 var raptor;
 var raptorLife = 80;
@@ -203,12 +202,6 @@ class Stage1 extends Phaser.Scene {
           this.scene.start('Stage1Boss');
         });
 
-        playButton = this.add.text(310, 100, 'menu', { fontSize: '75px', fill: '#8db9d9' });
-        playButton.setInteractive();
-        playButton.on('pointerdown', () => {
-          this.scene.stop('Stage1');
-          this.scene.start('MenuStage1C');
-        });
     }
 
     // Constantly Updating Game Loop

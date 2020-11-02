@@ -16,7 +16,6 @@ var daggerGroup;
 
 // SCENE SPECIFIC VARIABLES
 var button1B;
-var playButton;
 
 var trex, trexAlive = true, trexLife = 100, trexLifeText, trexDmg;
 var healthLoot;
@@ -168,13 +167,6 @@ class Stage1Boss extends Phaser.Scene {
           //soundtrack5.stop();
           this.scene.stop('Stage1Boss');
           this.scene.start('Stage5');
-        });
-
-        playButton = this.add.text(310, 100, 'menu', { fontSize: '75px', fill: '#8db9d9' });
-        playButton.setInteractive();
-        playButton.on('pointerdown', () => {
-          this.scene.stop('Stage1Boss');
-          this.scene.start('MenuBoss1C');
         });
 
         // SCENE SPECIFIC GAME OBJECTS
