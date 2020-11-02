@@ -1,0 +1,9 @@
+Stage 4 background elements
+
+0sky.png
+1clouds.png
+2far.png
+3back.png
+4mid.png
+5front.png
+ground.png
