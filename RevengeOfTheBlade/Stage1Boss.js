@@ -18,6 +18,8 @@ var daggerGroup;
 var button1B;
 var playButton;
 
+var trex, trexAlive = true, trexLife = 200, trexLifeText, trexDmg;
+
 // DEBUG PARAMETERS
 var debug = false;
 var graphics, testLine;
@@ -46,6 +48,9 @@ class Stage1Boss extends Phaser.Scene {
         this.load.image('front51', 'assets/backgrounds/stage1/5front1.png');
         this.load.image('ground11', 'assets/backgrounds/stage1/6platform1.png');
 
+        // Boss Spritesheet
+        this.load.spritesheet('trex', 'assets/sprites/trex.png', { frameWidth: 470, frameHeight: 245 });
+
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
         this.load.image('platformH', 'assets/platforms/platformH.png');
@@ -53,17 +58,36 @@ class Stage1Boss extends Phaser.Scene {
         // Dagger
         this.load.image('dagger', 'assets/daggers.png');
 
-        // soundeffects
+        // Sound Effects
+        // Melee
         this.load.audio('preattack1', ['assets/audio/soundeffects/player/preattack1.mp3']);
+        this.load.audio('attack1_metal', ['assets/audio/soundeffects/player/attack1_metal.mp3']);
+        this.load.audio('attack1_object', ['assets/audio/soundeffects/player/attack1_object.mp3']);
+        this.load.audio('attack1_platform', ['assets/audio/soundeffects/player/attack1_platform.mp3']);
+        // Range
         this.load.audio('preattack2', ['assets/audio/soundeffects/player/preattack2.mp3']);
+        this.load.audio('attack2_throw', ['assets/audio/soundeffects/player/preattack2.mp3']);
+        this.load.audio('attack2_metal', ['assets/audio/soundeffects/player/preattack2.mp3']);
+        // Both
+        this.load.audio('attack_noenemy', ['assets/audio/soundeffects/player/attack1_noenemy.mp3']);
+
+        // Loot
+        this.load.image('healthLoot', 'assets/healthLoot.png');
     }
 
     // Create all the Sprites/Images/Platforms
     create() {
         this.cameras.main.setBackgroundColor('#828b99');
 
+        // Player attack sound effects
         preattack1 = this.sound.add('preattack1', {volume: 0.15});
+        attack1_metal = this.sound.add('attack1_metal', {volume: 0.15});
+        attack1_object = this.sound.add('attack1_object', {volume: 0.15});
+        attack1_platform = this.sound.add('attack1_platform', {volume: 0.15});
         preattack2 = this.sound.add('preattack2', {volume: 0.15});
+        attack2_throw = this.sound.add('attack2_throw', {volume: 0.15});
+        attack2_metal = this.sound.add('attack2_metal', {volume: 0.15});
+        attack_noenemy = this.sound.add('attack_noenemy', {volume: 0.15});
 
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky01');
@@ -77,7 +101,7 @@ class Stage1Boss extends Phaser.Scene {
         sky.fixedToCamera = true;
 
         // Player Life Text
-        lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
+        lifeText = this.add.text(15, 15, 'Life: ' + playerLife, { fontSize: '25px', fill: '#ffffff' });
 
         // Platforms
         platforms = this.physics.add.staticGroup();
@@ -150,16 +174,42 @@ class Stage1Boss extends Phaser.Scene {
 
         // Reset Values
         playerLife = Math.floor(playerLife);
+        trexLife = 200;
+        playerAlive = true;
+        trexAlive = true;
+        trexLifeText = 200;
+        lootCounter1 = 0;
+        playerDetected = false;
+        attackAnimPlaying = false;
 
-        // Obstacles
+        // Create Enemies
+        trex = this.physics.add.sprite(650, 400, 'trex')
+        trex.setBounce(0);
+        trex.setCollideWorldBounds(true);
+        trex.displayWidth = game.config.width * 0.4;
+        trex.scaleY = trex.scaleX;
+        trex.body.setGravityY(300);
 
-        // Obstacle Colliders
+        // Enemy Life Text
+        trexLifeText = this.add.text(590, 20, 'T-Rex Life: 200', { fontSize: '15px', fill: '#ffffff' });
 
+        // Enemy Overlap
+        this.physics.add.collider(trex, platforms);
+        this.physics.add.overlap(player, trex);
+        this.physics.add.overlap(playerMeleeAtk, trex);
     }
 
     // Constantly Updating Game Loop
     update() {
         // Scene End Condition
+        if (!trexAlive) {
+            this.scene.pause('Stage1Boss');
+            this.scene.launch('Stage1BossWin');
+        }
+        else if (!playerAlive) {
+            this.scene.pause('Stage1Boss');
+            this.scene.launch('Stage1BossDie')
+        }
 
         // Implement Parallax Background
         clouds.tilePositionX -= 0.5;
@@ -216,14 +266,90 @@ class Stage1Boss extends Phaser.Scene {
         this.updatePlayerPos();
         this.updateVel();
 
-        // Draws test line for determining center of player sprite
-        if (debug) {
-            testLine.setTo(player.body.x + 27, player.body.y - 50, player.body.x + 27, player.body.y + 50);
-            graphics.strokeLineShape(testLine);
+        this.resetTints();
+
+        // Enemy Movement
+        if (!playerDetected) {
+            trex.anims.play('trexStatic');
+        }
+        else {
+            if (player.body.position.x < trex.body.position.x - 5) {
+                trex.anims.play('trexLeft', true);
+                trex.setVelocityX(-70);
+            }
+            else if (player.body.position.x > trex.body.position.x + 5) {
+                trex.anims.play('trexRight', true);
+                trex.setVelocityX(70);
+            }
+            else {
+                trex.anims.play('trexStatic');
+                trex.setVelocityX(0);
+            }
+        }
+
+        if (Math.abs(player.body.position.x - trex.body.position.x) <= 150) {
+            playerDetected = true;
+        }
+
+        var boundsPl = player.getBounds();
+        var boundsV = trex.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsV)) && playerAlive && trexAlive) {
+            playerLife -= 0.15;
+            if (playerLife <= 0) {
+                player.disableBody(true, true);
+                player.setActive(false);
+                player.setVisible(false);
+                playerAlive = false;
+            }
+            this.updatePlayerLifeText()
+            player.setTint('0xff0000');
+            this.time.addEvent({
+                delay: 300,
+                callback: () => {
+                    player.clearTint();
+                }
+            })
         }
 
         // Update Life Text
         this.updatePlayerLifeText();
+    }
+
+    // Function that clears the tints on each object (player and enemies) each loop.
+    // Necessary because Events/Callbacks not allowed in Dagger/Laser detection
+    resetTints() {
+        // Clear Tint
+        if (trexDmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    trex.clearTint();
+                    trexDmg = false;
+                }
+            })
+        }
+
+        if (playerDmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    player.clearTint();
+                    playerDmg = false;
+                }
+            })
+        }
+    }
+
+    pickupLoot(player, healthLoot) {
+        healthLoot.disableBody(true, true);
+        if (playerLife < 90){
+          playerLife += 10;
+        }
+        else {
+          playerLife = 100
+        }
+        this.updatePlayerLifeText()
     }
 
     // Makes sure each sprite is in the same position.
@@ -305,6 +431,7 @@ class Stage1Boss extends Phaser.Scene {
                         player.visible = false;
                         playerMeleeAtk.visible = true;
                         // Check damage against targets
+                        this.updateTRexLife();
                         playerMeleeAtk.anims.play('playerMeleeAtkR');
                         this.time.addEvent({
                             delay: 400,
@@ -328,6 +455,7 @@ class Stage1Boss extends Phaser.Scene {
                         player.visible = false;
                         playerMeleeAtk.visible = true;
                         // Check damage against targets
+                        this.updateTRexLife();
                         playerMeleeAtk.anims.play('playerMeleeAtkL');
                         this.time.addEvent({
                             delay: 400,
@@ -443,9 +571,35 @@ class Stage1Boss extends Phaser.Scene {
         }
     }
 
+    updateTRexLife() {
+        var boundsA = playerMeleeAtk.getBounds();
+        var boundsB = trex.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && trexAlive) {
+            if (trexLife < 10) {
+              trexLife = 0
+            }
+            else {
+              trexLife -= 10
+            }
+            trexLifeText.setText('T-Rex Life: ' + trexLife);
+            trex.setTint('0xff0000');
+            attack2_metal.play();
+            trexDmg = true;
+        }
+        if (trexLife == 0 && lootCounter1 == 0) {
+            var hLoot = healthLoot.create(trex.body.x, trex.body.y, 'healthLoot');
+            hLoot.setBounce(0.5);
+            hLoot.setCollideWorldBounds(true);
+            trex.disableBody(true, true);
+            trexAlive = false;
+            lootCounter1 += 1
+        }
+    }
+
     // Function that updates the player's life text
     updatePlayerLifeText() {
-        lifeText.setText('Life: ' + playerLife);
+        lifeText.setText('Life: ' + Math.floor(playerLife));
     }
 
     // Throws Dagger
@@ -494,8 +648,26 @@ class DaggerS1B extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
         }
         // Check dagger overlap with enemies
-
+        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), trex.getBounds())) && trexAlive) {
+            this.setActive(false);
+            this.setVisible(false);
+            trexLife -= 5;
+            if (!playerDetected) {
+                playerDetected = true;
+            }
+            trexLifeText.setText('T-Rex Life: ' + trexLife);
+            trex.setTint('0xff0000')
+            trexDmg = true;
+        }
         // Disable enemies if their health reaches 0
+        if (trexLife == 0 && lootCounter1 == 0) {
+            var hLoot = healthLoot.create(trex.body.x, trex.body.y, 'healthLoot');
+            hLoot.setBounce(0.5);
+            hLoot.setCollideWorldBounds(true);
+            trex.disableBody(true, true);
+            trexAlive = false;
+            lootCounter1 += 1
+        }
     }
 
     throw (x, y, aimX, aimY) {

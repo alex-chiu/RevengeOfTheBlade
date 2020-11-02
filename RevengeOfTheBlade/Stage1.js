@@ -278,12 +278,6 @@ class Stage1 extends Phaser.Scene {
         this.updatePlayerPos();
         this.updateVel();
 
-        // Draws test line for determining center of player sprite
-        if (debug) {
-            testLine.setTo(player.body.x + 27, player.body.y - 50, player.body.x + 27, player.body.y + 50);
-            graphics.strokeLineShape(testLine);
-        }
-
         // Resets tints on game objects.
         this.resetTints();
 
@@ -293,11 +287,11 @@ class Stage1 extends Phaser.Scene {
         }
         else {
             if (player.body.position.x < raptor.body.position.x - 5) {
-                raptor.anims.play('raptorLeft');
+                raptor.anims.play('raptorLeft', true);
                 raptor.setVelocityX(-70);
             }
             else if (player.body.position.x > raptor.body.position.x + 5) {
-                raptor.anims.play('raptorRight');
+                raptor.anims.play('raptorRight', true);
                 raptor.setVelocityX(70);
             }
             else {
@@ -314,7 +308,7 @@ class Stage1 extends Phaser.Scene {
         var boundsV = raptor.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsV)) && playerAlive && raptorAlive) {
-            playerLife -= 0.1;
+            playerLife -= 0.25;
             if (playerLife <= 0) {
                 player.disableBody(true, true);
                 player.setActive(false);
@@ -618,7 +612,7 @@ class Stage1 extends Phaser.Scene {
 
     // Updates player's life text
     updatePlayerLifeText() {
-        lifeText.setText('Life: ' + Math.round(playerLife));
+        lifeText.setText('Life: ' + Math.floor(playerLife));
     }
 
     // Throws Dagger
