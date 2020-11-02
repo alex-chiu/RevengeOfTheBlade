@@ -18,7 +18,8 @@ var daggerGroup;
 var button1B;
 var playButton;
 
-var trex, trexAlive = true, trexLife = 200, trexLifeText, trexDmg;
+var trex, trexAlive = true, trexLife = 100, trexLifeText, trexDmg;
+var healthLoot;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -140,6 +141,12 @@ class Stage1Boss extends Phaser.Scene {
             callRangedAttack = true;
         })
 
+        // Create Loot
+        healthLoot = this.physics.add.group();
+        this.physics.add.overlap(player, healthLoot, this.pickupLoot, null, this);
+        this.physics.add.overlap(playerMeleeAtk, healthLoot, this.pickupLoot, null, this);
+        this.physics.add.collider(healthLoot, platforms);
+
         // Graphics for drawing debug line
         graphics = this.add.graphics();
         if (debug) {
@@ -175,10 +182,10 @@ class Stage1Boss extends Phaser.Scene {
         // Reset Values
         //playerLife = Math.floor(playerLife);
         playerLife = 100;
-        trexLife = 200;
+        trexLife = 100;
         playerAlive = true;
         trexAlive = true;
-        trexLifeText = 200;
+        trexLifeText = 100;
         lootCounter1 = 0;
         playerDetected = false;
         attackAnimPlaying = false;
@@ -192,7 +199,7 @@ class Stage1Boss extends Phaser.Scene {
         trex.body.setGravityY(300);
 
         // Enemy Life Text
-        trexLifeText = this.add.text(590, 20, 'T-Rex Life: 200', { fontSize: '15px', fill: '#ffffff' });
+        trexLifeText = this.add.text(590, 20, 'T-Rex Life: 100', { fontSize: '15px', fill: '#ffffff' });
 
         // Enemy Overlap
         this.physics.add.collider(trex, platforms);
@@ -589,9 +596,9 @@ class Stage1Boss extends Phaser.Scene {
             trexDmg = true;
         }
         if (trexLife == 0 && lootCounter1 == 0) {
-            var hLoot = healthLoot.create(trex.body.x, trex.body.y, 'healthLoot');
-            hLoot.setBounce(0.5);
-            hLoot.setCollideWorldBounds(true);
+            var hLootB1 = healthLoot.create(trex.body.x, trex.body.y, 'healthLoot');
+            hLootB1.setBounce(0.5);
+            hLootB1.setCollideWorldBounds(true);
             trex.disableBody(true, true);
             trexAlive = false;
             lootCounter1 += 1
