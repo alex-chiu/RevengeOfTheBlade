@@ -607,7 +607,7 @@ class Stage1Boss extends Phaser.Scene {
 
     // Function that updates the player's life text
     updatePlayerLifeText() {
-        lifeText.setText('Life: ' + Math.floor(playerLife));
+        lifeText.setText('Life: ' + Math.round(playerLife));
     }
 
     // Throws Dagger
