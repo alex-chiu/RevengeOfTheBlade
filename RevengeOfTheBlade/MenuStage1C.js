@@ -38,7 +38,7 @@ class MenuStage1C extends Phaser.Scene {
       tutorialButton.on('pointerdown', () => {
         this.soundtrack.stop();
         this.scene.stop('MenuStage1C');
-        this.scene.start('Instructions');
+        this.scene.start('InstructionsS1C');
       });
       tutorialButton.on('pointerover', () => { this.buttonOver(tutorialButton); });
       tutorialButton.on('pointerout', () => { this.buttonNotOver(tutorialButton); });

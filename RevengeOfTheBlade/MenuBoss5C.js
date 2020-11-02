@@ -6,9 +6,9 @@
 var ironlevelButton, tutorialButton, audioButton;
 var soundState = 'off';
 
-class MenuBoss1C extends Phaser.Scene {
+class MenuBoss5C extends Phaser.Scene {
     constructor() {
-        super({ key: 'MenuBoss1C' });
+        super({ key: 'MenuBoss5C' });
     }
 
     preload() {
@@ -32,28 +32,17 @@ class MenuBoss1C extends Phaser.Scene {
       this.add.text(80,90,'Revenge of The', { fontSize: '75px', fill: '#ffffff' });
       this.add.text(280,170,'Blade', { fontSize: '75px', fill: '#ffffff' });
 
-      // Play tutorial
-      tutorialButton = this.add.text(350, 270, 'TUTORIAL', { fontSize: '20px', fill: '#b5dbf7' });
-      tutorialButton.setInteractive();
-      tutorialButton.on('pointerdown', () => {
-        this.soundtrack.stop();
-        this.scene.stop('MenuBoss1C');
-        this.scene.start('InstructionsB1C');
-      });
-      tutorialButton.on('pointerover', () => { this.buttonOver(tutorialButton); });
-      tutorialButton.on('pointerout', () => { this.buttonNotOver(tutorialButton); });
-
       this.add.image(315, 345, 'check');
-      this.add.image(310, 435, 'cross');
-      this.add.image(735, 435, 'cross');
-      this.add.image(582, 525, 'cross');
+      this.add.image(310, 435, 'check');
+      this.add.image(735, 435, 'check');
+      this.add.image(582, 525, 'check');
 
       // boss crosses/checks
       this.add.image(245, 370, 'check');
-      this.add.image(646, 370, 'cross');
-      this.add.image(245, 460, 'cross');
-      this.add.image(646, 460, 'cross');
-      this.add.image(439, 548, 'cross');
+      this.add.image(646, 370, 'check');
+      this.add.image(245, 460, 'check');
+      this.add.image(646, 460, 'check');
+      this.add.image(439, 548, 'check');
 
 
       this.add.text(100,330,'Stone Level', { fontSize: '30px', fill: '#02a3d9' });
@@ -65,16 +54,7 @@ class MenuBoss1C extends Phaser.Scene {
       this.add.text(560,450,'BOSS 4', { fontSize: '20px', fill: '#8db9d9' });
       this.add.text(210,508,'Chromium Allow Level', { fontSize: '30px', fill: '#02a3d9' });
       this.add.text(355,538,'BOSS 5', { fontSize: '20px', fill: '#8db9d9' });
-
-      ironlevelButton = this.add.text(500,330,'Iron Level', { fontSize: '30px', fill: '#02a3d9' });
-      ironlevelButton.setInteractive();
-      ironlevelButton.on('pointerdown', () => {
-        this.soundtrack.stop();
-        this.scene.stop('MenuBoss1C');
-        this.scene.start('Stage5'); // change to Stage2 when available
-      });
-      ironlevelButton.on('pointerover', () => { this.buttonOver(ironlevelButton); });
-      ironlevelButton.on('pointerout', () => { this.buttonNotOver(ironlevelButton); });
+      this.add.text(500,330,'Iron Level', { fontSize: '30px', fill: '#02a3d9' });
 
       audioButton = this.add.text(5, 570, 'audio', { fontSize: '30px', fill: '#8db9d9' });
       audioButton.setInteractive();
