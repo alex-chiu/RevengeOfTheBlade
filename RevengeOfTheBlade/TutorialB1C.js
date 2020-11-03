@@ -82,6 +82,9 @@ class TutorialB1C extends Phaser.Scene {
         this.add.existing(ground);
         sky.fixedToCamera = true;
 
+        this.label = this.add.text(100, 70, '', { fontSize: '25px' }).setWordWrapWidth(350);
+        this.typewriteText('Destroy both targets by using your sword and daggers!');
+
         // soundeffects
         preattack1 = this.sound.add('preattack1', {volume: 0.25});
         preattack2 = this.sound.add('preattack2', {volume: 0.25});
@@ -177,6 +180,19 @@ class TutorialB1C extends Phaser.Scene {
         this.physics.add.collider(playerWalkNA, obstacles);
         this.physics.add.collider(playerArm, obstacles);
         this.physics.add.collider(playerArmFinal, obstacles);
+    }
+
+    typewriteText(text){
+      const length = text.length
+      let i = 0
+      this.time.addEvent({
+        callback: () => {
+          this.label.text += text[i]
+          ++i
+        },
+        repeat: length -1,
+        delay: 100
+      })
     }
 
     // Constantly Updating Game Loop

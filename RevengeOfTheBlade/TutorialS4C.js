@@ -1,6 +1,6 @@
 /*  TUTORIAL SCENE
 
-    Scene that appears when the player wishes to enter the tutorial: when stage5 completed
+    Scene that appears when the player wishes to enter the tutorial.
     Has basic platforms to jump around on and targets to attack.
 */
 
@@ -29,9 +29,9 @@ var graphics, testLine;
 var preattack1, preattack2, attack1_metal, attack1_object, attack1_platform;
 
 // SCENE CLASS
-class TutorialS5C extends Phaser.Scene {
+class TutorialS4C extends Phaser.Scene {
     constructor() {
-        super({ key: 'TutorialS5C' });
+        super({ key: 'TutorialS4C' });
     }
 
     // Preload Images and Sprites
@@ -69,7 +69,7 @@ class TutorialS5C extends Phaser.Scene {
 
     // Create all the Sprites/Images/Platforms
     create() {
-        this.cameras.main.setBackgroundColor('#828b99')
+        this.cameras.main.setBackgroundColor('#828b99');
 
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky01');
@@ -81,6 +81,9 @@ class TutorialS5C extends Phaser.Scene {
         ground = this.add.tileSprite(400, 300, 800, 600, 'ground11');
         this.add.existing(ground);
         sky.fixedToCamera = true;
+
+        this.label = this.add.text(100, 70, '', { fontSize: '25px' }).setWordWrapWidth(350);
+        this.typewriteText('Destroy both targets by using your sword and daggers!');
 
         // soundeffects
         preattack1 = this.sound.add('preattack1', {volume: 0.25});
@@ -96,7 +99,7 @@ class TutorialS5C extends Phaser.Scene {
         }
 
         // Create Dagger Group
-        daggerGroup = new DaggerGroupTS5(this);
+        daggerGroup = new DaggerGroupTS4(this);
 
         // Create Player
         this.createPlayerSprites();
@@ -179,12 +182,25 @@ class TutorialS5C extends Phaser.Scene {
         this.physics.add.collider(playerArmFinal, obstacles);
     }
 
+    typewriteText(text){
+      const length = text.length
+      let i = 0
+      this.time.addEvent({
+        callback: () => {
+          this.label.text += text[i]
+          ++i
+        },
+        repeat: length -1,
+        delay: 100
+      })
+    }
+
     // Constantly Updating Game Loop
     update() {
         // Scene End Condition
         if (target1Alive == false && target2Alive == false) {
-          this.scene.pause('TutorialS5C')
-          this.scene.launch('TutorialCompletedS5C');
+          this.scene.pause('TutorialS4C');
+          this.scene.launch('TutorialCompletedS4C');
         }
 
         // Implement Parallax Background
@@ -540,12 +556,12 @@ class TutorialS5C extends Phaser.Scene {
 }
 
 // Dagger Group Class
-class DaggerGroupTS5 extends Phaser.Physics.Arcade.Group {
+class DaggerGroupTS4 extends Phaser.Physics.Arcade.Group {
     constructor(scene) {
         super(scene.physics.world, scene);
 
         this.createMultiple({
-            classType: DaggerTS5,
+            classType: DaggerTS4,
             frameQuantity: 1,
             active: false,
             visible: false,
@@ -564,7 +580,7 @@ class DaggerGroupTS5 extends Phaser.Physics.Arcade.Group {
 }
 
 // Dagger Class
-class DaggerTS5 extends Phaser.Physics.Arcade.Sprite {
+class DaggerTS4 extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
         super(scene, x, y, 'dagger');
     }
