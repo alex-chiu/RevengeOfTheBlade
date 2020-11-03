@@ -455,7 +455,7 @@ class Stage1 extends Phaser.Scene {
                 player.setActive(false);
                 player.setVisible(false);
                 playerAlive = false;
-                soundtrack5.stop();
+                //soundtrack5.stop();
             }
             this.updatePlayerLifeText()
             player.setTint('0xff0000');

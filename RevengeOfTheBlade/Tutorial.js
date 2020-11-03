@@ -69,7 +69,7 @@ class Tutorial extends Phaser.Scene {
 
     // Create all the Sprites/Images/Platforms
     create() {
-        this.cameras.main.setBackgroundColor('#828b99')
+        this.cameras.main.setBackgroundColor('#828b99');
 
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky01');
@@ -81,6 +81,9 @@ class Tutorial extends Phaser.Scene {
         ground = this.add.tileSprite(400, 300, 800, 600, 'ground11');
         this.add.existing(ground);
         sky.fixedToCamera = true;
+
+        this.label = this.add.text(100, 70, '', { fontSize: '25px' }).setWordWrapWidth(350);
+        this.typewriteText('Destroy both targets by using your sword and daggers!');
 
         // soundeffects
         preattack1 = this.sound.add('preattack1', {volume: 0.25});
@@ -177,6 +180,19 @@ class Tutorial extends Phaser.Scene {
         this.physics.add.collider(playerWalkNA, obstacles);
         this.physics.add.collider(playerArm, obstacles);
         this.physics.add.collider(playerArmFinal, obstacles);
+    }
+
+    typewriteText(text){
+      const length = text.length
+      let i = 0
+      this.time.addEvent({
+        callback: () => {
+          this.label.text += text[i]
+          ++i
+        },
+        repeat: length -1,
+        delay: 100
+      })
     }
 
     // Constantly Updating Game Loop

@@ -237,7 +237,7 @@ class Stage5 extends Phaser.Scene {
         // Enemy Life Text
         enemy1LifeText = this.add.text(590, 20, 'Enemy 1 Life: 50', { fontSize: '15px', fill: '#ffffff' });
         enemy2LifeText = this.add.text(390, 20, 'Enemy 2 Life: 50', { fontSize: '15px', fill: '#ffffff' });
-        enemy3LifeText = this.add.text(190, 20, 'Enemy 3 Life: 40', { fontSize: '15px', fill: '#ffffff' });
+        enemy3LifeText = this.add.text(190, 20, 'Drone Life: 40', { fontSize: '15px', fill: '#ffffff' });
 
         // Enemy Overlap
         this.physics.add.collider(enemy1, platforms);
@@ -775,7 +775,7 @@ class Stage5 extends Phaser.Scene {
             else {
               enemy3Life -= 5
             }
-            enemy3LifeText.setText('Enemy 3 Life: ' + enemy3Life);
+            enemy3LifeText.setText('Drone Life: ' + enemy3Life);
             enemy3.setTint('0xff0000');
             attack2_metal.play();
             this.time.addEvent({
@@ -1114,7 +1114,7 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
             if (!playerDetected) {
                 playerDetected = true;
             }
-            enemy3LifeText.setText('Enemy 3 Life: ' + enemy3Life);
+            enemy3LifeText.setText('Drone Life: ' + enemy3Life);
             enemy3.setTint('0xff0000')
             enemy3Dmg = true;
         }
