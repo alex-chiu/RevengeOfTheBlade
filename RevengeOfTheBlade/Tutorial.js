@@ -183,7 +183,7 @@ class Tutorial extends Phaser.Scene {
     update() {
         // Scene End Condition
         if (target1Alive == false && target2Alive == false) {
-          this.scene.pause('Tutorial')
+          this.scene.pause('Tutorial');
           this.scene.launch('TutorialCompleted');
         }
 
