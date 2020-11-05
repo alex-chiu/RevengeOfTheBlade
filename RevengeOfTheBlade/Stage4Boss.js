@@ -217,7 +217,7 @@ class Stage4Boss extends Phaser.Scene {
         cloud = this.physics.add.image(650, 100, 'cloud')
         cloud1 = this.physics.add.image(400, 200, 'cloud')
         cloud2 = this.physics.add.image(150, 300, 'cloud')
-        daggerLoot = this.physics.add.image(640, 70, 'daggers')
+        daggerLoot = this.physics.add.image(640, 70, 'dagger')
 
         // Enemy Life Text
         trexLifeText = this.add.text(590, 20, 'T-Rex Life: 100', { fontSize: '15px', fill: '#ffffff' });
@@ -410,27 +410,6 @@ class Stage4Boss extends Phaser.Scene {
         this.updatePlayerLifeText();
     }
 
-    /*cloudLife(cloudName){
-      if (cloudName == 'cloud'){
-        cloudLife0 -= 1/10
-        console.log(cloudLife0)
-      }
-      if (cloudName == 'cloud1'){
-        cloud1Life -= 1/10
-      }
-      if (cloudName == 'cloud2'){
-        cloud2Life -= 1/10
-      }
-      if (cloudLife0 <= 0){
-        cloud.disableBody(true, true)
-      }
-      if (cloud1Life <= 0){
-        cloud1.disableBody(true, true)
-      }
-      if (cloud2Life <= 0){
-        cloud2.disableBody(true, true)
-      }
-    }*/
 
     // Function that clears the tints on each object (player and enemies) each loop.
     // Necessary because Events/Callbacks not allowed in Dagger/Laser detection
@@ -703,7 +682,7 @@ class Stage4Boss extends Phaser.Scene {
             trexDmg = true;
         }
         if (trexLife == 0 && lootCounter1 == 0) {
-            var hLootB1 = swordLoot.create(trex.body.x, 200, 'swordLoot');
+            var hLootB1 = swordLoot.create(game.config.width/2, 200, 'swordLoot');
             hLootB1.setBounce(0.5);
             hLootB1.setCollideWorldBounds(true);
             trex.disableBody(true, true);

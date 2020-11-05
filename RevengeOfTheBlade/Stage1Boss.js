@@ -20,6 +20,14 @@ var button1B;
 var trex, trexAlive = true, trexLife = 100, trexLifeText, trexDmg;
 var healthLoot;
 
+var balloon;
+var balloonLife = 5;
+var balloonDmg;
+var balloonAlive = true;
+var dirB = 1, dirDa = 1;
+var dags, dagsAlive = true;
+var swordLoot, swordAlive = true;
+
 // DEBUG PARAMETERS
 var debug = false;
 var graphics, testLine;
@@ -57,6 +65,8 @@ class Stage1Boss extends Phaser.Scene {
 
         // Dagger
         this.load.image('dagger', 'assets/daggers.png');
+        this.load.image('daggerB', 'assets/daggersBalloon.png');
+        this.load.image('balloon', 'assets/balloon2.png');
 
         // Sound Effects
         // Melee
@@ -73,6 +83,7 @@ class Stage1Boss extends Phaser.Scene {
 
         // Loot
         this.load.image('healthLoot', 'assets/healthLoot.png');
+        this.load.image('swordLoot', 'assets/swordLoot.png');
     }
 
     // Create all the Sprites/Images/Platforms
@@ -141,10 +152,10 @@ class Stage1Boss extends Phaser.Scene {
         })
 
         // Create Loot
-        healthLoot = this.physics.add.group();
-        this.physics.add.overlap(player, healthLoot, this.pickupLoot, null, this);
-        this.physics.add.overlap(playerMeleeAtk, healthLoot, this.pickupLoot, null, this);
-        this.physics.add.collider(healthLoot, platforms);
+        swordLoot = this.physics.add.group();
+        this.physics.add.overlap(player, swordLoot, this.pickupLoot, null, this);
+        this.physics.add.overlap(playerMeleeAtk, swordLoot, this.pickupLoot, null, this);
+        this.physics.add.collider(swordLoot, platforms);
 
         // Graphics for drawing debug line
         graphics = this.add.graphics();
@@ -181,6 +192,10 @@ class Stage1Boss extends Phaser.Scene {
         lootCounter1 = 0;
         playerDetected = false;
         attackAnimPlaying = false;
+        dirB = 1;
+        dirDa = 1;
+        balloonLife = 10;
+        balloonAlive = true;
 
         // Create Enemies
         trex = this.physics.add.sprite(650, 400, 'trex')
@@ -193,16 +208,24 @@ class Stage1Boss extends Phaser.Scene {
         // Enemy Life Text
         trexLifeText = this.add.text(590, 20, 'T-Rex Life: 100', { fontSize: '15px', fill: '#ffffff' });
 
+        balloon = this.physics.add.image(150, 100, 'balloon')
+        balloon.body.setAllowGravity(false)
+        dags = this.physics.add.image(150, 155, 'daggerB')
+        dags.body.setAllowGravity(false)
+
         // Enemy Overlap
         this.physics.add.collider(trex, platforms);
         this.physics.add.overlap(player, trex);
         this.physics.add.overlap(playerMeleeAtk, trex);
+        this.physics.add.collider(dags, platforms);
+        this.physics.add.overlap(player, dags, this.pickupDag, null, this);
+        this.physics.add.overlap(playerMeleeAtk, dags, this.pickupDag, null, this);
     }
 
     // Constantly Updating Game Loop
     update() {
         // Scene End Condition
-        if (!trexAlive) {
+        if (!swordAlive && !dagsAlive) {
             this.scene.pause('Stage1Boss');
             this.scene.launch('Stage1BossWin');
         }
@@ -312,6 +335,30 @@ class Stage1Boss extends Phaser.Scene {
             })
         }
 
+
+        balloon.setVelocityX(dirB*70);
+        if (balloon.body.position.x >= 650){
+          dirB = -1;
+        }
+        if (balloon.body.position.x <= 10){
+          dirB = 1;
+        }
+
+        if (balloonAlive){
+          dags.setVelocityX(dirDa*70);
+          if (dags.body.position.x >= 650){
+            dirDa = -1;
+          }
+          if (dags.body.position.x <= 10){
+            dirDa = 1;
+          }
+        }
+        else{
+          dags.setVelocityX(0);
+        }
+
+
+
         // Update Life Text
         this.updatePlayerLifeText();
     }
@@ -330,6 +377,16 @@ class Stage1Boss extends Phaser.Scene {
             })
         }
 
+        if (balloonDmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    balloon.clearTint();
+                    balloonDmg = false;
+                }
+            })
+        }
+
         if (playerDmg) {
             this.time.addEvent({
                 delay: 200,
@@ -341,15 +398,14 @@ class Stage1Boss extends Phaser.Scene {
         }
     }
 
-    pickupLoot(player, healthLoot) {
-        healthLoot.disableBody(true, true);
-        if (playerLife < 90){
-          playerLife += 10;
-        }
-        else {
-          playerLife = 100
-        }
-        this.updatePlayerLifeText()
+    pickupLoot(player, swordLoot) {
+        swordLoot.disableBody(true, true);
+        swordAlive = false;
+    }
+
+    pickupDag(player, dags) {
+        dags.disableBody(true, true);
+        dagsAlive = false
     }
 
     // Makes sure each sprite is in the same position.
@@ -588,7 +644,7 @@ class Stage1Boss extends Phaser.Scene {
             trexDmg = true;
         }
         if (trexLife == 0 && lootCounter1 == 0) {
-            var hLootB1 = healthLoot.create(trex.body.x, trex.body.y, 'healthLoot');
+            var hLootB1 = swordLoot.create(game.config.width/2, 200, 'swordLoot');
             hLootB1.setBounce(0.5);
             hLootB1.setCollideWorldBounds(true);
             trex.disableBody(true, true);
@@ -659,15 +715,32 @@ class DaggerS1B extends Phaser.Physics.Arcade.Sprite {
             trex.setTint('0xff0000')
             trexDmg = true;
         }
+
+        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), balloon.getBounds())) && balloonAlive) {
+            balloonLife -= 5;
+            balloon.setTint('0xff0000')
+            balloonDmg = true;
+        }
+
         // Disable enemies if their health reaches 0
         if (trexLife == 0 && lootCounter1 == 0) {
-            var hLoot = healthLoot.create(trex.body.x, trex.body.y, 'healthLoot');
+            var hLoot = swordLoot.create(game.config.width/2, 200, 'swordLoot');
             hLoot.setBounce(0.5);
             hLoot.setCollideWorldBounds(true);
             trex.disableBody(true, true);
             trexAlive = false;
             lootCounter1 += 1
         }
+
+        if (balloonLife == 0) {
+            balloon.disableBody(true, true);
+            balloonAlive = false;
+            dags.body.setAllowGravity(true);
+            dags.setCollideWorldBounds(true);
+
+        }
+
+
     }
 
     throw (x, y, aimX, aimY) {
