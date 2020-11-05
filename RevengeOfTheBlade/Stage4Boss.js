@@ -23,12 +23,14 @@ var cloud2;
 var dir = 1;
 var dir1 = 1;
 var dir2 = 1;
+var dirC = 1;
 var cloudLife0 = 10;
 var cloud1Life = 10;
-var cloud2Life = 10;
+var cloud2Life = 20;
 
 var trex, trexAlive = true, trexLife = 100, trexLifeText, trexDmg;
 var healthLoot;
+var daggerLoot;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -193,6 +195,13 @@ class Stage4Boss extends Phaser.Scene {
         lootCounter1 = 0;
         playerDetected = false;
         attackAnimPlaying = false;
+        dir = 1;
+        dir1 = 1;
+        dir2 = 1;
+        dirC = 1;
+        cloudLife0 = 10;
+        cloud1Life = 10;
+        cloud2Life = 20;
 
         // Create Enemies
         trex = this.physics.add.sprite(650, 400, 'trex')
@@ -205,6 +214,7 @@ class Stage4Boss extends Phaser.Scene {
         cloud = this.physics.add.image(650, 100, 'cloud')
         cloud1 = this.physics.add.image(400, 200, 'cloud')
         cloud2 = this.physics.add.image(150, 300, 'cloud')
+        daggerLoot = this.physics.add.image(640, 70, 'daggers')
 
         // Enemy Life Text
         trexLifeText = this.add.text(590, 20, 'T-Rex Life: 100', { fontSize: '15px', fill: '#ffffff' });
@@ -220,6 +230,8 @@ class Stage4Boss extends Phaser.Scene {
         this.physics.add.overlap(playerMeleeAtk, cloud1);
         this.physics.add.overlap(player, cloud2);
         this.physics.add.overlap(playerMeleeAtk, cloud2);
+        this.physics.add.overlap(player, daggerLoot, this.pickupDag, null, this);
+        this.physics.add.overlap(playerMeleeAtk, daggerLoot, this.pickupDag, null, this);
     }
 
     // Constantly Updating Game Loop
@@ -313,6 +325,14 @@ class Stage4Boss extends Phaser.Scene {
         }
         if (cloud2.body.position.y <= 250){
           dir2 = 1;
+        }
+
+        daggerLoot.setVelocityY(dir*70);
+        if (daggerLoot.body.position.y >= 100){
+          dirC = -1;
+        }
+        if (daggerLoot.body.position.y <= 10){
+          dirC = 1;
         }
 
         // Enemy Movement
@@ -443,6 +463,10 @@ class Stage4Boss extends Phaser.Scene {
           playerLife = 100
         }
         this.updatePlayerLifeText()
+    }
+
+    pickupDag(player, daggerLoot) {
+        daggerLoot.disableBody(true, true);
     }
 
     // Makes sure each sprite is in the same position.
