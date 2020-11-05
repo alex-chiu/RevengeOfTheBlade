@@ -26,7 +26,7 @@ var dir2 = 1;
 var dirC = 1;
 var cloudLife0 = 10;
 var cloud1Life = 10;
-var cloud2Life = 20;
+var cloud2Life = 70;
 var daggersAlive = true, swordAlive = true;
 
 var trex, trexAlive = true, trexLife = 100, trexLifeText, trexDmg;
