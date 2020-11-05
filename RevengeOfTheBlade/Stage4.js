@@ -55,6 +55,7 @@ class Stage4 extends Phaser.Scene {
         this.load.image('platformV', 'assets/platforms/platformV1.png');
         this.load.image('platformH', 'assets/platforms/platformH.png');
 
+
         // Dagger
         this.load.image('dagger', 'assets/daggers.png');
 
@@ -190,6 +191,7 @@ class Stage4 extends Phaser.Scene {
         trex.scaleY = trex.scaleX;
         trex.body.setGravityY(300);
 
+
         // Enemy Life Text
         trexLifeText = this.add.text(590, 20, 'T-Rex Life: 100', { fontSize: '15px', fill: '#ffffff' });
 
@@ -197,6 +199,10 @@ class Stage4 extends Phaser.Scene {
         this.physics.add.collider(trex, platforms);
         this.physics.add.overlap(player, trex);
         this.physics.add.overlap(playerMeleeAtk, trex);
+        this.physics.add.overlap(player, cloud);
+        this.physics.add.overlap(playerMeleeAtk, cloud);
+
+
     }
 
     // Constantly Updating Game Loop
@@ -268,7 +274,6 @@ class Stage4 extends Phaser.Scene {
 
         this.resetTints();
 
-        // Enemy Movement
         if (!playerDetected) {
             trex.anims.play('trexStatic');
         }

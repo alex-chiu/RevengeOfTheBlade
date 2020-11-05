@@ -17,6 +17,13 @@ var daggerGroup;
 // SCENE SPECIFIC VARIABLES
 var buttonB4;
 
+var cloud;
+var cloud1;
+var cloud2;
+var dir = 1;
+var dir1 = 1;
+var dir2 = 1;
+
 var trex, trexAlive = true, trexLife = 100, trexLifeText, trexDmg;
 var healthLoot;
 
@@ -50,6 +57,8 @@ class Stage4Boss extends Phaser.Scene {
 
         // Boss Spritesheet
         this.load.spritesheet('trex', 'assets/sprites/trex.png', { frameWidth: 470, frameHeight: 245 });
+
+        this.load.image('cloud', 'assets/cloud.png');
 
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
@@ -190,6 +199,10 @@ class Stage4Boss extends Phaser.Scene {
         trex.scaleY = trex.scaleX;
         trex.body.setGravityY(300);
 
+        cloud = this.physics.add.image(650, 100, 'cloud')
+        cloud1 = this.physics.add.image(400, 200, 'cloud')
+        cloud2 = this.physics.add.image(150, 300, 'cloud')
+
         // Enemy Life Text
         trexLifeText = this.add.text(590, 20, 'T-Rex Life: 100', { fontSize: '15px', fill: '#ffffff' });
 
@@ -197,6 +210,13 @@ class Stage4Boss extends Phaser.Scene {
         this.physics.add.collider(trex, platforms);
         this.physics.add.overlap(player, trex);
         this.physics.add.overlap(playerMeleeAtk, trex);
+
+        this.physics.add.overlap(player, cloud);
+        this.physics.add.overlap(playerMeleeAtk, cloud);
+        this.physics.add.overlap(player, cloud1);
+        this.physics.add.overlap(playerMeleeAtk, cloud1);
+        this.physics.add.overlap(player, cloud2);
+        this.physics.add.overlap(playerMeleeAtk, cloud2);
     }
 
     // Constantly Updating Game Loop
@@ -267,6 +287,30 @@ class Stage4Boss extends Phaser.Scene {
         this.updateVel();
 
         this.resetTints();
+
+        cloud.setVelocityY(dir*70);
+        if (cloud.body.position.y >= 100){
+          dir = -1;
+        }
+        if (cloud.body.position.y <= 10){
+          dir = 1;
+        }
+
+        cloud1.setVelocityY(dir1*70);
+        if (cloud1.body.position.y >= 200){
+          dir1 = -1;
+        }
+        if (cloud1.body.position.y <= 100){
+          dir1 = 1;
+        }
+
+        cloud2.setVelocityY(dir2*70);
+        if (cloud2.body.position.y >= 350){
+          dir2 = -1;
+        }
+        if (cloud2.body.position.y <= 250){
+          dir2 = 1;
+        }
 
         // Enemy Movement
         if (!playerDetected) {
