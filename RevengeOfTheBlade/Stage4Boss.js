@@ -27,9 +27,10 @@ var dirC = 1;
 var cloudLife0 = 10;
 var cloud1Life = 10;
 var cloud2Life = 20;
+var daggersAlive = true, swordAlive = true;
 
 var trex, trexAlive = true, trexLife = 100, trexLifeText, trexDmg;
-var healthLoot;
+var swordLoot;
 var daggerLoot;
 
 // DEBUG PARAMETERS
@@ -86,7 +87,7 @@ class Stage4Boss extends Phaser.Scene {
         this.load.audio('attack_noenemy', ['assets/audio/soundeffects/player/attack1_noenemy.mp3']);
 
         // Loot
-        this.load.image('healthLoot', 'assets/healthLoot.png');
+        this.load.image('swordLoot', 'assets/swordLoot.png');
     }
 
     // Create all the Sprites/Images/Platforms
@@ -155,10 +156,10 @@ class Stage4Boss extends Phaser.Scene {
         })
 
         // Create Loot
-        healthLoot = this.physics.add.group();
-        this.physics.add.overlap(player, healthLoot, this.pickupLoot, null, this);
-        this.physics.add.overlap(playerMeleeAtk, healthLoot, this.pickupLoot, null, this);
-        this.physics.add.collider(healthLoot, platforms);
+        swordLoot= this.physics.add.group();
+        this.physics.add.overlap(player, swordLoot, this.pickupLoot, null, this);
+        this.physics.add.overlap(playerMeleeAtk, swordLoot, this.pickupLoot, null, this);
+        this.physics.add.collider(swordLoot, platforms);
 
         // Graphics for drawing debug line
         graphics = this.add.graphics();
@@ -191,6 +192,8 @@ class Stage4Boss extends Phaser.Scene {
         trexLife = 100;
         playerAlive = true;
         trexAlive = true;
+        daggersAlive = true;
+        swordAlive = true;
         trexLifeText = 100;
         lootCounter1 = 0;
         playerDetected = false;
@@ -237,7 +240,7 @@ class Stage4Boss extends Phaser.Scene {
     // Constantly Updating Game Loop
     update() {
         // Scene End Condition
-        if (!trexAlive) {
+        if (!swordAlive && !daggersAlive) {
             this.scene.pause('Stage4Boss');
             this.scene.launch('Stage4BossWin');
         }
@@ -454,19 +457,14 @@ class Stage4Boss extends Phaser.Scene {
         }
     }
 
-    pickupLoot(player, healthLoot) {
-        healthLoot.disableBody(true, true);
-        if (playerLife < 90){
-          playerLife += 10;
-        }
-        else {
-          playerLife = 100
-        }
-        this.updatePlayerLifeText()
+    pickupLoot(player, swordLoot) {
+        swordLoot.disableBody(true, true);
+        swordAlive = false
     }
 
     pickupDag(player, daggerLoot) {
         daggerLoot.disableBody(true, true);
+        daggersAlive = false
     }
 
     // Makes sure each sprite is in the same position.
@@ -705,7 +703,7 @@ class Stage4Boss extends Phaser.Scene {
             trexDmg = true;
         }
         if (trexLife == 0 && lootCounter1 == 0) {
-            var hLootB1 = healthLoot.create(trex.body.x, trex.body.y, 'healthLoot');
+            var hLootB1 = swordLoot.create(trex.body.x, 200, 'swordLoot');
             hLootB1.setBounce(0.5);
             hLootB1.setCollideWorldBounds(true);
             trex.disableBody(true, true);
@@ -778,7 +776,7 @@ class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
         }
         // Disable enemies if their health reaches 0
         if (trexLife == 0 && lootCounter1 == 0) {
-            var hLoot = healthLoot.create(trex.body.x, trex.body.y, 'healthLoot');
+            var hLoot = swordLoot.create(game.config.width/2, 200, 'swordLoot');
             hLoot.setBounce(0.5);
             hLoot.setCollideWorldBounds(true);
             trex.disableBody(true, true);
