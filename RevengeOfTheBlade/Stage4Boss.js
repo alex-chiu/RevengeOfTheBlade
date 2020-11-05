@@ -26,7 +26,7 @@ var dir2 = 1;
 var dirC = 1;
 var cloudLife0 = 10;
 var cloud1Life = 10;
-var cloud2Life = 70;
+var cloud2Life = 100;
 var daggersAlive = true, swordAlive = true;
 
 var trex, trexAlive = true, trexLife = 100, trexLifeText, trexDmg;
@@ -204,7 +204,7 @@ class Stage4Boss extends Phaser.Scene {
         dirC = 1;
         cloudLife0 = 10;
         cloud1Life = 10;
-        cloud2Life = 20;
+        cloud2Life = 100;
 
         // Create Enemies
         trex = this.physics.add.sprite(650, 400, 'trex')

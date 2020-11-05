@@ -16,7 +16,7 @@ var delX, atkDir, callAttack;
 var laserGroup;
 var cursors, spaceBar;
 var W, A, S, D;
-var life = 100, bossLife = 100;
+var life = 100, bossLife = 200;
 var lifeText, bossLifeText;
 var attackAnimPlaying = false;
 var sky, clouds;
@@ -25,6 +25,9 @@ var ground, platforms;
 var soundtrack5;
 var bombs;
 var bossDmg = false;
+var swordLoot;
+var swordAlive  = true;
+var lootCounterSw = 0;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -64,6 +67,8 @@ class RobotBossFight extends Phaser.Scene {
         // Dagger
         this.load.image('dagger', 'assets/dagger.png');
 
+        this.load.image('swordLoot', 'assets/swordLoot.png');
+
         // soundeffects
         this.load.audio('preattack1', ['assets/audio/soundeffects/player/preattack1.mp3']);
         this.load.audio('preattack2', ['assets/audio/soundeffects/player/preattack2.mp3']);
@@ -81,11 +86,13 @@ class RobotBossFight extends Phaser.Scene {
 
         // Reset Values
         life = 100;
-        bossLife = 100;
+        bossLife = 200;
         playerAlive = true;
         bossAlive = true;
         playerDetected = false;
         attackAnimPlaying = false;
+        swordAlive = true;
+        lootCounterSw = 0;
 
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky0');
@@ -100,7 +107,7 @@ class RobotBossFight extends Phaser.Scene {
 
         // Text
         lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
-        bossLifeText = this.add.text(580, 15, 'Boss Life: 100', { fontSize: '25px', fill: '#ffffff' });
+        bossLifeText = this.add.text(580, 15, 'Boss Life: 200', { fontSize: '25px', fill: '#ffffff' });
 
         // Platforms
         platforms = this.physics.add.staticGroup();
@@ -157,6 +164,12 @@ class RobotBossFight extends Phaser.Scene {
             testLine = new Phaser.Geom.Line(this, player.body.x, player.body.y - 50, player.body.x, player.body.y + 50);
         }
 
+        // Create Loot
+        swordLoot= this.physics.add.group();
+        this.physics.add.overlap(player, swordLoot, this.pickupLoot, null, this);
+        this.physics.add.overlap(playerMeleeAtk, swordLoot, this.pickupLoot, null, this);
+        this.physics.add.collider(swordLoot, platforms);
+
         bombs = this.physics.add.group();
         this.physics.add.collider(bombs, platforms);
         this.physics.add.collider(player, bombs, this.bombAttack, null, this);
@@ -181,7 +194,7 @@ class RobotBossFight extends Phaser.Scene {
             this.scene.pause('RobotBossFight')
             this.scene.launch('GameOver');
         }
-        if (bossAlive == false) {
+        if (!swordAlive) {
             soundtrack5.stop();
             this.scene.pause('RobotBossFight')
             this.scene.launch('GameCompleted');
@@ -315,6 +328,11 @@ class RobotBossFight extends Phaser.Scene {
         }
     }
 
+    pickupLoot(player, swordLoot) {
+        swordLoot.disableBody(true, true);
+        swordAlive = false
+    }
+
     // Makes sure each sprite is in the same position.
     updatePlayerPos() {
         playerMeleeAtk.body.x = player.body.x - 25;
@@ -430,9 +448,13 @@ class RobotBossFight extends Phaser.Scene {
             bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
             //bomb.allowGravity = false;
         }
-        if (bossLife == 0) {
+        if (bossLife == 0 && lootCounterSw == 0) {
+            var hLootB1 = swordLoot.create(700, 200, 'swordLoot');
+            hLootB1.setBounce(0.5);
+            hLootB1.setCollideWorldBounds(true);
             boss.disableBody(true, true);
             bossAlive = false;
+            lootCounterSw += 1
         }
     }
 
@@ -746,9 +768,13 @@ class Dagger1 extends Phaser.Physics.Arcade.Sprite {
             bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
         }
 
-        if (bossLife == 0) {
+        if (bossLife == 0 && lootCounterSw == 0) {
+            var hLoot = swordLoot.create(700, 200, 'swordLoot');
+            hLoot.setBounce(0.5);
+            hLoot.setCollideWorldBounds(true);
             bossAlive = false;
             boss.disableBody(true, true);
+            lootCounterSw += 1
         }
     }
 

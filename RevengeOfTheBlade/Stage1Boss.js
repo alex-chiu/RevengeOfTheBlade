@@ -737,6 +737,7 @@ class DaggerS1B extends Phaser.Physics.Arcade.Sprite {
             balloonAlive = false;
             dags.body.setAllowGravity(true);
             dags.setCollideWorldBounds(true);
+            dags.setBounce(0.3);
 
         }
 
