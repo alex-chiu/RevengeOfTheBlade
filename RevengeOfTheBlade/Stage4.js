@@ -17,7 +17,7 @@ var daggerGroup;
 // SCENE SPECIFIC VARIABLES
 var buttonS4;
 
-var trex, trexAlive = true, trexLife = 100, trexLifeText, trexDmg;
+var police, policeAlive = true, policeLife = 100, policeLifeText, policeDmg;
 var healthLoot;
 
 // DEBUG PARAMETERS
@@ -49,7 +49,8 @@ class Stage4 extends Phaser.Scene {
         this.load.image('4ground11', 'assets/backgrounds/stage4/ground4.png');
 
         // Boss Spritesheet
-        this.load.spritesheet('trex', 'assets/sprites/trex.png', { frameWidth: 470, frameHeight: 245 });
+        //this.load.spritesheet('trex', 'assets/sprites/trex.png', { frameWidth: 470, frameHeight: 245 });
+        this.load.spritesheet('police', 'assets/sprites/police.png', { frameWidth: 110, frameHeight: 150 });
 
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
@@ -175,30 +176,30 @@ class Stage4 extends Phaser.Scene {
         // Reset Values
         //playerLife = Math.floor(playerLife);
         playerLife = 100;
-        trexLife = 100;
+        policeLife = 100;
         playerAlive = true;
-        trexAlive = true;
-        trexLifeText = 100;
+        policeAlive = true;
+        policeLifeText = 100;
         lootCounter1 = 0;
         playerDetected = false;
         attackAnimPlaying = false;
 
         // Create Enemies
-        trex = this.physics.add.sprite(650, 400, 'trex')
-        trex.setBounce(0);
-        trex.setCollideWorldBounds(true);
-        trex.displayWidth = game.config.width * 0.4;
-        trex.scaleY = trex.scaleX;
-        trex.body.setGravityY(300);
+        police = this.physics.add.sprite(650, 400, 'police')
+        police.setBounce(0);
+        police.setCollideWorldBounds(true);
+        police.displayWidth = game.config.width * 0.1;
+        police.scaleY = police.scaleX;
+        police.body.setGravityY(300);
 
 
         // Enemy Life Text
-        trexLifeText = this.add.text(590, 20, 'T-Rex Life: 100', { fontSize: '15px', fill: '#ffffff' });
+        policeLifeText = this.add.text(590, 20, 'T-Rex Life: 100', { fontSize: '15px', fill: '#ffffff' });
 
         // Enemy Overlap
-        this.physics.add.collider(trex, platforms);
-        this.physics.add.overlap(player, trex);
-        this.physics.add.overlap(playerMeleeAtk, trex);
+        this.physics.add.collider(police, platforms);
+        this.physics.add.overlap(player, police);
+        this.physics.add.overlap(playerMeleeAtk, police);
         this.physics.add.overlap(player, cloud);
         this.physics.add.overlap(playerMeleeAtk, cloud);
 
@@ -208,7 +209,7 @@ class Stage4 extends Phaser.Scene {
     // Constantly Updating Game Loop
     update() {
         // Scene End Condition
-        if (!trexAlive) {
+        if (!policeAlive) {
             this.scene.pause('Stage4');
             this.scene.launch('Stage4Win');
         }
@@ -275,31 +276,31 @@ class Stage4 extends Phaser.Scene {
         this.resetTints();
 
         if (!playerDetected) {
-            trex.anims.play('trexStatic');
+            police.anims.play('policeStatic');
         }
         else {
-            if (player.body.position.x < trex.body.position.x - 5) {
-                trex.anims.play('trexLeft', true);
-                trex.setVelocityX(-70);
+            if (player.body.position.x < police.body.position.x - 5) {
+                police.anims.play('policeLeft', true);
+                police.setVelocityX(-70);
             }
-            else if (player.body.position.x > trex.body.position.x + 5) {
-                trex.anims.play('trexRight', true);
-                trex.setVelocityX(70);
+            else if (player.body.position.x > police.body.position.x + 5) {
+                police.anims.play('policeRight', true);
+                police.setVelocityX(70);
             }
             else {
-                trex.anims.play('trexStatic');
-                trex.setVelocityX(0);
+                police.anims.play('policeStatic');
+                police.setVelocityX(0);
             }
         }
 
-        if (Math.abs(player.body.position.x - trex.body.position.x) <= 150) {
+        if (Math.abs(player.body.position.x - police.body.position.x) <= 150) {
             playerDetected = true;
         }
 
         var boundsPl = player.getBounds();
-        var boundsV = trex.getBounds();
+        var boundsV = police.getBounds();
 
-        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsV)) && playerAlive && trexAlive) {
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsV)) && playerAlive && policeAlive) {
             playerLife -= 0.15;
             if (playerLife <= 0) {
                 player.disableBody(true, true);
@@ -325,12 +326,12 @@ class Stage4 extends Phaser.Scene {
     // Necessary because Events/Callbacks not allowed in Dagger/Laser detection
     resetTints() {
         // Clear Tint
-        if (trexDmg) {
+        if (policeDmg) {
             this.time.addEvent({
                 delay: 200,
                 callback: () => {
-                    trex.clearTint();
-                    trexDmg = false;
+                    police.clearTint();
+                    policeDmg = false;
                 }
             })
         }
@@ -436,7 +437,7 @@ class Stage4 extends Phaser.Scene {
                         player.visible = false;
                         playerMeleeAtk.visible = true;
                         // Check damage against targets
-                        this.updateTRexLife();
+                        this.updatePoliceLife();
                         playerMeleeAtk.anims.play('playerMeleeAtkR');
                         this.time.addEvent({
                             delay: 400,
@@ -460,7 +461,7 @@ class Stage4 extends Phaser.Scene {
                         player.visible = false;
                         playerMeleeAtk.visible = true;
                         // Check damage against targets
-                        this.updateTRexLife();
+                        this.updatePoliceLife();
                         playerMeleeAtk.anims.play('playerMeleeAtkL');
                         this.time.addEvent({
                             delay: 400,
@@ -576,28 +577,28 @@ class Stage4 extends Phaser.Scene {
         }
     }
 
-    updateTRexLife() {
+    updatePoliceLife() {
         var boundsA = playerMeleeAtk.getBounds();
-        var boundsB = trex.getBounds();
+        var boundsB = police.getBounds();
 
-        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && trexAlive) {
-            if (trexLife < 10) {
-              trexLife = 0
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && policeAlive) {
+            if (policeLife < 10) {
+              policeLife = 0
             }
             else {
-              trexLife -= 10
+              policeLife -= 10
             }
-            trexLifeText.setText('T-Rex Life: ' + trexLife);
-            trex.setTint('0xff0000');
+            policeLifeText.setText('T-Rex Life: ' + policeLife);
+            police.setTint('0xff0000');
             attack2_metal.play();
-            trexDmg = true;
+            policeDmg = true;
         }
-        if (trexLife == 0 && lootCounter1 == 0) {
-            var hLootB1 = healthLoot.create(trex.body.x, trex.body.y, 'healthLoot');
+        if (policeLife == 0 && lootCounter1 == 0) {
+            var hLootB1 = healthLoot.create(police.body.x, police.body.y, 'healthLoot');
             hLootB1.setBounce(0.5);
             hLootB1.setCollideWorldBounds(true);
-            trex.disableBody(true, true);
-            trexAlive = false;
+            police.disableBody(true, true);
+            policeAlive = false;
             lootCounter1 += 1
         }
     }
@@ -653,24 +654,24 @@ class DaggerS4 extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
         }
         // Check dagger overlap with enemies
-        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), trex.getBounds())) && trexAlive) {
+        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), police.getBounds())) && policeAlive) {
             this.setActive(false);
             this.setVisible(false);
-            trexLife -= 5;
+            policeLife -= 5;
             if (!playerDetected) {
                 playerDetected = true;
             }
-            trexLifeText.setText('T-Rex Life: ' + trexLife);
-            trex.setTint('0xff0000')
-            trexDmg = true;
+            policeLifeText.setText('Police Life: ' + policeLife);
+            police.setTint('0xff0000')
+            policeDmg = true;
         }
         // Disable enemies if their health reaches 0
-        if (trexLife == 0 && lootCounter1 == 0) {
-            var hLoot = healthLoot.create(trex.body.x, trex.body.y, 'healthLoot');
+        if (policeLife == 0 && lootCounter1 == 0) {
+            var hLoot = healthLoot.create(police.body.x, police.body.y, 'healthLoot');
             hLoot.setBounce(0.5);
             hLoot.setCollideWorldBounds(true);
-            trex.disableBody(true, true);
-            trexAlive = false;
+            police.disableBody(true, true);
+            policeAlive = false;
             lootCounter1 += 1
         }
     }

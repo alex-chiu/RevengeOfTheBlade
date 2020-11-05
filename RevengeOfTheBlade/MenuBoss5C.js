@@ -33,6 +33,7 @@ class MenuBoss5C extends Phaser.Scene {
       this.add.text(280,170,'Blade', { fontSize: '75px', fill: '#ffffff' });
 
       this.add.image(315, 345, 'check');
+      this.add.image(690, 345, 'check');
       this.add.image(310, 435, 'check');
       this.add.image(735, 435, 'check');
       this.add.image(582, 525, 'check');
