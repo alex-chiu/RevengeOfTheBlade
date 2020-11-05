@@ -23,6 +23,9 @@ var cloud2;
 var dir = 1;
 var dir1 = 1;
 var dir2 = 1;
+var cloudLife0 = 10;
+var cloud1Life = 10;
+var cloud2Life = 10;
 
 var trex, trexAlive = true, trexLife = 100, trexLifeText, trexDmg;
 var healthLoot;
@@ -356,9 +359,55 @@ class Stage4Boss extends Phaser.Scene {
             })
         }
 
+        var boundsC = cloud.getBounds();
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsC)) && playerAlive && cloudLife0 > 0) {
+            cloudLife0 -= 0.05;
+            if (cloudLife0 <= 0) {
+                cloud.disableBody(true, true);
+            }
+        }
+
+        var boundsC1 = cloud1.getBounds();
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsC1)) && playerAlive && cloud1Life > 0) {
+            cloud1Life -= 0.05;
+            if (cloud1Life <= 0) {
+                cloud1.disableBody(true, true);
+            }
+        }
+
+        var boundsC2 = cloud2.getBounds();
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsC2)) && playerAlive && cloud2Life > 0) {
+            cloud2Life -= 0.05;
+            if (cloud2Life <= 0) {
+                cloud2.disableBody(true, true);
+            }
+        }
+
         // Update Life Text
         this.updatePlayerLifeText();
     }
+
+    /*cloudLife(cloudName){
+      if (cloudName == 'cloud'){
+        cloudLife0 -= 1/10
+        console.log(cloudLife0)
+      }
+      if (cloudName == 'cloud1'){
+        cloud1Life -= 1/10
+      }
+      if (cloudName == 'cloud2'){
+        cloud2Life -= 1/10
+      }
+      if (cloudLife0 <= 0){
+        cloud.disableBody(true, true)
+      }
+      if (cloud1Life <= 0){
+        cloud1.disableBody(true, true)
+      }
+      if (cloud2Life <= 0){
+        cloud2.disableBody(true, true)
+      }
+    }*/
 
     // Function that clears the tints on each object (player and enemies) each loop.
     // Necessary because Events/Callbacks not allowed in Dagger/Laser detection
