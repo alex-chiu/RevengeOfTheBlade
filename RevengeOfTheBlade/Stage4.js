@@ -194,7 +194,7 @@ class Stage4 extends Phaser.Scene {
 
 
         // Enemy Life Text
-        policeLifeText = this.add.text(590, 20, 'T-Rex Life: 100', { fontSize: '15px', fill: '#ffffff' });
+        policeLifeText = this.add.text(590, 20, 'Police Life: 100', { fontSize: '15px', fill: '#ffffff' });
 
         // Enemy Overlap
         this.physics.add.collider(police, platforms);
@@ -588,7 +588,7 @@ class Stage4 extends Phaser.Scene {
             else {
               policeLife -= 10
             }
-            policeLifeText.setText('T-Rex Life: ' + policeLife);
+            policeLifeText.setText('Police Life: ' + policeLife);
             police.setTint('0xff0000');
             attack2_metal.play();
             policeDmg = true;
