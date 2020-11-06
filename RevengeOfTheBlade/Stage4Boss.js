@@ -25,13 +25,15 @@ var dir1 = 1;
 var dir2 = 1;
 var dirC = 1;
 var cloudLife0 = 10;
-var cloud1Life = 10;
+var cloud1Life = 8;
 var cloud2Life = 100;
 var daggersAlive = true, swordAlive = true;
+var textAlive5 = true;
 
 var trex, trexAlive = true, trexLife = 100, trexLifeText, trexDmg;
 var swordLoot;
 var daggerLoot;
+var spike, spike1, spike2;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -88,6 +90,7 @@ class Stage4Boss extends Phaser.Scene {
 
         // Loot
         this.load.image('swordLoot', 'assets/swordLoot.png');
+        this.load.image('spikes', 'assets/spikes1.png');
     }
 
     // Create all the Sprites/Images/Platforms
@@ -203,8 +206,10 @@ class Stage4Boss extends Phaser.Scene {
         dir2 = 1;
         dirC = 1;
         cloudLife0 = 10;
-        cloud1Life = 10;
+        cloud1Life = 8;
         cloud2Life = 100;
+        textAlive5 = true;
+
 
         // Create Enemies
         trex = this.physics.add.sprite(650, 400, 'trex')
@@ -217,7 +222,7 @@ class Stage4Boss extends Phaser.Scene {
         cloud = this.physics.add.image(650, 100, 'cloud')
         cloud1 = this.physics.add.image(400, 200, 'cloud')
         cloud2 = this.physics.add.image(150, 300, 'cloud')
-        daggerLoot = this.physics.add.image(640, 70, 'dagger')
+        daggerLoot = this.physics.add.image(650, 70, 'dagger')
 
         // Enemy Life Text
         trexLifeText = this.add.text(590, 20, 'T-Rex Life: 100', { fontSize: '15px', fill: '#ffffff' });
@@ -235,6 +240,24 @@ class Stage4Boss extends Phaser.Scene {
         this.physics.add.overlap(playerMeleeAtk, cloud2);
         this.physics.add.overlap(player, daggerLoot, this.pickupDag, null, this);
         this.physics.add.overlap(playerMeleeAtk, daggerLoot, this.pickupDag, null, this);
+
+        spike = this.physics.add.image(250, 500, 'spikes');
+        spike.displayWidth = 50
+        spike.displayHeight = 20
+        spike1 = this.physics.add.image(400, 500, 'spikes');
+        spike1.displayWidth = 50
+        spike1.displayHeight = 20
+        spike2 = this.physics.add.image(700, 500, 'spikes');
+        spike2.displayWidth = 50
+        spike2.displayHeight = 20
+
+        this.physics.add.collider(spike, platforms);
+        this.physics.add.collider(spike1, platforms);
+        this.physics.add.collider(spike2, platforms);
+
+
+        this.label = this.add.text(13, 570, '', { fontSize: '20px' }).setWordWrapWidth(800);
+        this.typewriteText('Jump on the clouds to collect the daggers! If you fail, try again');
     }
 
     // Constantly Updating Game Loop
@@ -406,8 +429,86 @@ class Stage4Boss extends Phaser.Scene {
             }
         }
 
+        var boundsSp = spike.getBounds();
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsSp)) && playerAlive) {
+            playerLife -= 0.2;
+            if (playerLife <= 0) {
+                player.disableBody(true, true);
+                player.setActive(false);
+                player.setVisible(false);
+                playerAlive = false;
+            }
+            this.updatePlayerLifeText()
+            player.setTint('0xff0000');
+            this.time.addEvent({
+                delay: 300,
+                callback: () => {
+                    player.clearTint();
+                }
+            })
+        }
+
+        var boundsSp1 = spike1.getBounds();
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsSp1)) && playerAlive) {
+            playerLife -= 0.2;
+            if (playerLife <= 0) {
+                player.disableBody(true, true);
+                player.setActive(false);
+                player.setVisible(false);
+                playerAlive = false;
+            }
+            this.updatePlayerLifeText()
+            player.setTint('0xff0000');
+            this.time.addEvent({
+                delay: 300,
+                callback: () => {
+                    player.clearTint();
+                }
+            })
+        }
+
+        var boundsSp2 = spike2.getBounds();
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsSp2)) && playerAlive) {
+            playerLife -= 0.2;
+            if (playerLife <= 0) {
+                player.disableBody(true, true);
+                player.setActive(false);
+                player.setVisible(false);
+                playerAlive = false;
+            }
+            this.updatePlayerLifeText()
+            player.setTint('0xff0000');
+            this.time.addEvent({
+                delay: 300,
+                callback: () => {
+                    player.clearTint();
+                }
+            })
+        }
+
+        if (D.isDown && this.label.text.length == 65){
+          this.label.destroy();
+          textAlive5 = false;
+        }
+
         // Update Life Text
         this.updatePlayerLifeText();
+    }
+
+    typewriteText(text){
+      const length = text.length
+      let i = 0
+      this.time.addEvent({
+        callback: () => {
+          if (textAlive5){
+            this.label.text += text[i]
+            ++i
+          }
+
+        },
+        repeat: length -1,
+        delay: 100
+      })
     }
 
 
