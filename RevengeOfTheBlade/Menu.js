@@ -6,6 +6,7 @@
 
 var playButton, tutorialButton, audioButton;
 var soundState = 'off';
+var buttonSound;
 
 class Menu extends Phaser.Scene {
     constructor() {
@@ -17,11 +18,16 @@ class Menu extends Phaser.Scene {
       this.load.audio('menuMusic', ['assets/audio/soundtrack/intro.wav'])
       this.load.image('sky0', 'assets/backgrounds/stage5/0sky.png');
       this.load.image('clouds1', 'assets/backgrounds/stage5/1clouds.png');
+
+      this.load.audio('buttonSound', ['assets/audio/soundeffects/button1.mp3']);
+      
     }
 
     create() {
       // Background music
       this.soundtrack = this.sound.add('menuMusic', {volume: 0.05, loop: true});
+
+      buttonSound = this.sound.add('buttonSound', {volume: 0.50});
 
       // Background
       this.add.tileSprite(400, 300, 800, 600, 'sky0');
@@ -35,6 +41,7 @@ class Menu extends Phaser.Scene {
       tutorialButton = this.add.text(350, 300, 'TUTORIAL', { fontSize: '20px', fill: '#b5dbf7' });
       tutorialButton.setInteractive();
       tutorialButton.on('pointerdown', () => {
+        buttonSound.play();
         this.soundtrack.stop();
         this.scene.stop('Menu');
         this.scene.start('Instructions');
@@ -46,6 +53,7 @@ class Menu extends Phaser.Scene {
       playButton = this.add.text(310, 375, 'PLAY', { fontSize: '75px', fill: '#8db9d9' });
       playButton.setInteractive();
       playButton.on('pointerdown', () => {
+        buttonSound.play();
         this.soundtrack.stop();
         this.scene.stop('Menu');
         this.scene.start('Stage1');
@@ -55,7 +63,10 @@ class Menu extends Phaser.Scene {
 
       audioButton = this.add.text(5, 570, 'audio', { fontSize: '30px', fill: '#8db9d9' });
       audioButton.setInteractive();
-      audioButton.on('pointerdown', () => { this.switchSound(); });
+      audioButton.on('pointerdown', () => {
+        this.switchSound();
+        buttonSound.play();
+      });
       audioButton.on('pointerover', () => { this.buttonOver(audioButton); });
       audioButton.on('pointerout', () => { this.buttonNotOver(audioButton); });
     }

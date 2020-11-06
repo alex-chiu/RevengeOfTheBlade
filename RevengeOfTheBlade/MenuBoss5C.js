@@ -18,11 +18,15 @@ class MenuBoss5C extends Phaser.Scene {
       this.load.image('clouds1', 'assets/backgrounds/stage5/1clouds.png');
       this.load.image('check', 'assets/checkmark.png');
       this.load.image('cross', 'assets/crossmark.png');
+
+      this.load.audio('buttonSound', ['assets/audio/soundeffects/button1.mp3']);
     }
 
     create() {
       // Background music
       this.soundtrack = this.sound.add('menuMusic', {volume: 0.05, loop: true});
+
+      buttonSound = this.sound.add('buttonSound', {volume: 0.50});
 
       // Background
       this.add.tileSprite(400, 300, 800, 600, 'sky0');
@@ -59,7 +63,10 @@ class MenuBoss5C extends Phaser.Scene {
 
       audioButton = this.add.text(5, 570, 'audio', { fontSize: '30px', fill: '#8db9d9' });
       audioButton.setInteractive();
-      audioButton.on('pointerdown', () => { this.switchSound(); });
+      audioButton.on('pointerdown', () => {
+        this.switchSound();
+        buttonSound.play();
+      });
       audioButton.on('pointerover', () => { this.buttonOver(audioButton); });
       audioButton.on('pointerout', () => { this.buttonNotOver(audioButton); });
     }

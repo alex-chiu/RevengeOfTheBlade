@@ -18,11 +18,16 @@ class MenuBoss3C extends Phaser.Scene {
       this.load.image('clouds1', 'assets/backgrounds/stage5/1clouds.png');
       this.load.image('check', 'assets/checkmark.png');
       this.load.image('cross', 'assets/crossmark.png');
+
+      this.load.audio('buttonSound', ['assets/audio/soundeffects/button1.mp3']);
+
     }
 
     create() {
       // Background music
       this.soundtrack = this.sound.add('menuMusic', {volume: 0.05, loop: true});
+
+      buttonSound = this.sound.add('buttonSound', {volume: 0.50});
 
       // Background
       this.add.tileSprite(400, 300, 800, 600, 'sky0');
@@ -36,6 +41,7 @@ class MenuBoss3C extends Phaser.Scene {
       tutorialButton = this.add.text(350, 270, 'TUTORIAL', { fontSize: '20px', fill: '#b5dbf7' });
       tutorialButton.setInteractive();
       tutorialButton.on('pointerdown', () => {
+        buttonSound.play();
         this.soundtrack.stop();
         this.scene.stop('MenuBoss3C');
         this.scene.start('InstructionsB3C');
@@ -68,6 +74,7 @@ class MenuBoss3C extends Phaser.Scene {
       stage4Button = this.add.text(470,420,'Titanium Level', { fontSize: '30px', fill: '#02a3d9' });
       stage4Button.setInteractive();
       stage4Button.on('pointerdown', () => {
+        buttonSound.play();
         this.soundtrack.stop();
         this.scene.stop('MenuBoss3C');
         this.scene.start('Stage4');
@@ -77,7 +84,10 @@ class MenuBoss3C extends Phaser.Scene {
 
       audioButton = this.add.text(5, 570, 'audio', { fontSize: '30px', fill: '#8db9d9' });
       audioButton.setInteractive();
-      audioButton.on('pointerdown', () => { this.switchSound(); });
+      audioButton.on('pointerdown', () => {
+        this.switchSound();
+        buttonSound.play();
+      });
       audioButton.on('pointerover', () => { this.buttonOver(audioButton); });
       audioButton.on('pointerout', () => { this.buttonNotOver(audioButton); });
     }

@@ -15,6 +15,8 @@ class Instructions extends Phaser.Scene {
     preload() {
       this.add.text(game.config.width/2, 45, 'INSTRUCTIONS', { fontSize: '75px', fill: '#6543b5' }).setOrigin(0.5);
 
+      this.load.audio('buttonSound', ['assets/audio/soundeffects/button1.mp3']);
+
       this.add.text(50, 150, 'W - Jump', { fontSize: '40px', fill: '#d2c4f5' });
       this.add.text(50, 200, 'A - Move Left', { fontSize: '40px', fill: '#d2c4f5' });
       this.add.text(50, 250, 'D - Move Right', { fontSize: '40px', fill: '#d2c4f5' });
@@ -32,20 +34,24 @@ class Instructions extends Phaser.Scene {
       heroStatic = this.physics.add.staticGroup();
       heroStatic.create(660, 280, 'heroStatic');
 
+      buttonSound = this.sound.add('buttonSound', {volume: 0.50});
+
       playButton = this.add.image(750, 550, 'arrowR');
       playButton.setInteractive();
-      playButton.on('pointerdown', () => { 
+      playButton.on('pointerdown', () => {
+        buttonSound.play();
         this.scene.stop('Instructions');
-        this.scene.start('Tutorial'); 
+        this.scene.start('Tutorial');
       });
       playButton.on('pointerover', () => { this.buttonOver(playButton); });
       playButton.on('pointerout', () => { this.buttonNotOver(playButton); });
 
       backButton = this.add.image(50, 550, 'arrowL');
       backButton.setInteractive();
-      backButton.on('pointerdown', () => { 
+      backButton.on('pointerdown', () => {
+        buttonSound.play();
         this.scene.stop('Instructions');
-        this.scene.start('Menu'); 
+        this.scene.start('Menu');
       });
       backButton.on('pointerover', () => { this.buttonOver(backButton); });
       backButton.on('pointerout', () => { this.buttonNotOver(backButton); });
