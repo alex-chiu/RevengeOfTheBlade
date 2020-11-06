@@ -33,7 +33,7 @@ class Stage5Die extends Phaser.Scene {
       menuButton.on('pointerdown', () => {
         this.scene.stop('Stage5');
         this.scene.stop('Stage5Die');
-        this.scene.start('Menu');
+        this.scene.start('MenuBoss4C');
       });
     }
 

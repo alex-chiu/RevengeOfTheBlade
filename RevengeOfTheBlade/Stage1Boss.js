@@ -395,16 +395,6 @@ class Stage1Boss extends Phaser.Scene {
         repeat: length -1,
         delay: 100
       })
-
-
-      /*if (text.length == 50) {
-          this.time.addEvent({
-              delay: 200,
-              callback: () => {
-                  text.destroy();
-              }
-          })
-      }*/
     }
 
     // Function that clears the tints on each object (player and enemies) each loop.
