@@ -31,7 +31,7 @@ class GameOver extends Phaser.Scene {
       menuButton.setInteractive();
       menuButton.on('pointerdown', () => {
         this.scene.stop('RobotBossFight');
-        this.scene.start('Menu');
+        this.scene.start('MenuStage5C');
       });
     }
 
