@@ -16,6 +16,7 @@ var daggerGroup;
 
 // SCENE SPECIFIC VARIABLES
 var button1B;
+var textAlive = true;
 
 var trex, trexAlive = true, trexLife = 100, trexLifeText, trexDmg;
 var healthLoot;
@@ -196,6 +197,7 @@ class Stage1Boss extends Phaser.Scene {
         dirDa = 1;
         balloonLife = 10;
         balloonAlive = true;
+        textAlive = true;
 
         // Create Enemies
         trex = this.physics.add.sprite(650, 400, 'trex')
@@ -220,6 +222,15 @@ class Stage1Boss extends Phaser.Scene {
         this.physics.add.collider(dags, platforms);
         this.physics.add.overlap(player, dags, this.pickupDag, null, this);
         this.physics.add.overlap(playerMeleeAtk, dags, this.pickupDag, null, this);
+
+        this.label = this.add.text(13, 570, '', { fontSize: '20px' }).setWordWrapWidth(800);
+        this.typewriteText('In boss fights collect both the daggers and sword to win the era!');
+
+        //game.input.onDown.addOnce(this.label.destroy());
+        /*this.label.on('pointerdown', () => {
+          //soundtrack5.stop();
+          this.label.destroy();
+        });*/
     }
 
     // Constantly Updating Game Loop
@@ -357,10 +368,43 @@ class Stage1Boss extends Phaser.Scene {
           dags.setVelocityX(0);
         }
 
-
+        if (D.isDown && this.label.text.length == 65){
+          this.label.destroy();
+          textAlive = false;
+        }
 
         // Update Life Text
         this.updatePlayerLifeText();
+    }
+
+    removeText(){
+      this.label.destroy();
+    }
+
+    typewriteText(text){
+      const length = text.length
+      let i = 0
+      this.time.addEvent({
+        callback: () => {
+          if (textAlive){
+            this.label.text += text[i]
+            ++i
+          }
+
+        },
+        repeat: length -1,
+        delay: 100
+      })
+
+
+      /*if (text.length == 50) {
+          this.time.addEvent({
+              delay: 200,
+              callback: () => {
+                  text.destroy();
+              }
+          })
+      }*/
     }
 
     // Function that clears the tints on each object (player and enemies) each loop.
