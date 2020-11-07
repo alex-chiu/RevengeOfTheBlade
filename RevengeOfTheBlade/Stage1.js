@@ -50,7 +50,7 @@ class Stage1 extends Phaser.Scene {
 
         // enemy spritesheet
         this.load.spritesheet('raptor', 'assets/sprites/velociraptor.png', { frameWidth: 312, frameHeight: 250 });
-        this.load.spritesheet('ptero', 'assets/sprites/pterodactyl-sprite.png', { frameWidth: 310, frameHeight: 195 });
+        this.load.spritesheet('ptero', 'assets/sprites/pterodactyl.png', { frameWidth: 310, frameHeight: 195 });
 
         // Background Images
         this.load.image('sky01', 'assets/backgrounds/stage1/0sky1.png');

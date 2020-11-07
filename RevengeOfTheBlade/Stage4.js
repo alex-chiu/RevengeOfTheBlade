@@ -195,7 +195,6 @@ class Stage4 extends Phaser.Scene {
         // SCENE SPECIFIC GAME OBJECTS
 
         // Reset Values
-        //playerLife = Math.floor(playerLife);
         playerLife = 100;
 
         policeLife = 180;
@@ -242,7 +241,7 @@ class Stage4 extends Phaser.Scene {
         // Enemy Life Text
         policeLifeText = this.add.text(590, 20, 'Police Life: 180', { fontSize: '15px', fill: '#ffffff' });
         carLifeText = this.add.text(190, 20, 'Car Battery: 200', { fontSize: '15px', fill: '#ffffff' });
-        poliicianLifeText = this.add.text(390, 20, 'Politician Life: 150', { fontSize: '15px', fill: '#ffffff' });
+        politicianLifeText = this.add.text(390, 20, 'Politician Life: 150', { fontSize: '15px', fill: '#ffffff' });
 
 
         // Enemy Overlap
@@ -251,8 +250,6 @@ class Stage4 extends Phaser.Scene {
         this.physics.add.overlap(playerMeleeAtk, police);
         this.physics.add.overlap(player, cloud);
         this.physics.add.overlap(playerMeleeAtk, cloud);
-
-
     }
 
     // Constantly Updating Game Loop
@@ -290,6 +287,7 @@ class Stage4 extends Phaser.Scene {
           dir1 = 1;
         }
 
+        /*
         pf3.setVelocityY(dir2*70);
         if (cloud2.body.position.y >= 350){
           dir2 = -1;
@@ -313,7 +311,7 @@ class Stage4 extends Phaser.Scene {
         if (cloud2.body.position.y <= 250){
           dir2 = 1;
         }
-
+        */
 
 
         // Player Movement

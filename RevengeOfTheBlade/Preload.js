@@ -19,7 +19,7 @@ class Preload extends Phaser.Scene {
         // Load all enemy spritesheets
         // Stage 1
         this.load.spritesheet('raptor', 'assets/sprites/velociraptor.png', { frameWidth: 390, frameHeight: 195 });
-        this.load.spritesheet('ptero', 'assets/sprites/pterodactyl-sprite.png', { frameWidth: 312, frameHeight: 250 });
+        this.load.spritesheet('ptero', 'assets/sprites/pterodactyl.png', { frameWidth: 312, frameHeight: 250 });
         this.load.spritesheet('trex', 'assets/sprites/trex.png', { frameWidth: 470, frameHeight: 245 });
 
         // Stage 4
