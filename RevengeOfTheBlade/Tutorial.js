@@ -191,7 +191,7 @@ class Tutorial extends Phaser.Scene {
           ++i
         },
         repeat: length -1,
-        delay: 100
+        delay: 30
       })
     }
 
