@@ -224,7 +224,7 @@ class Stage1Boss extends Phaser.Scene {
         this.physics.add.overlap(playerMeleeAtk, dags, this.pickupDag, null, this);
 
         this.label = this.add.text(13, 570, '', { fontSize: '20px' }).setWordWrapWidth(800);
-        this.typewriteText('In boss fights collect both the daggers and sword to win the era!');
+        this.typewriteText('In boss fights, collect both the daggers and sword to win!');
 
         //game.input.onDown.addOnce(this.label.destroy());
         /*this.label.on('pointerdown', () => {
@@ -393,7 +393,7 @@ class Stage1Boss extends Phaser.Scene {
 
         },
         repeat: length -1,
-        delay: 100
+        delay: 30
       })
     }
 
