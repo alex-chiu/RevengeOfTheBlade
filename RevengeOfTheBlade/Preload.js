@@ -22,6 +22,9 @@ class Preload extends Phaser.Scene {
         this.load.spritesheet('ptero', 'assets/sprites/pterodactyl.png', { frameWidth: 312, frameHeight: 250 });
         this.load.spritesheet('trex', 'assets/sprites/trex.png', { frameWidth: 470, frameHeight: 245 });
 
+        // Stage 4
+        this.load.spritesheet('police', 'assets/sprites/police.png', { frameWidth: 110, frameHeight: 150 });
+
         // Stage 5
         this.load.spritesheet('enemy1', 'assets/sprites/robot1.png', { frameWidth: 167, frameHeight: 280 });
         this.load.spritesheet('enemy2', 'assets/sprites/robot2.png', { frameWidth: 133, frameHeight: 195 });
@@ -39,6 +42,9 @@ class Preload extends Phaser.Scene {
         this.createRaptorAnims();
         this.createPteroAnims();
         this.createTRexAnims();
+
+        // Stage 4 Animations
+        this.createPoliceAnims();
 
         // Stage 5 Animations
         this.createEnemy1Anims();
@@ -210,6 +216,27 @@ class Preload extends Phaser.Scene {
         this.anims.create({
             key: 'trexStatic',
             frames: [ { key: 'trex', frame: 7 } ],
+            frameRate: 10,
+            repeat: -1
+        })
+    }
+
+    createPoliceAnims() {
+        this.anims.create({
+            key: 'policeLeft',
+            frames: this.anims.generateFrameNumbers('police', { start: 0, end: 6}),
+            frameRate: 10,
+            repeat: -1
+        })
+        this.anims.create({
+            key: 'policeRight',
+            frames: this.anims.generateFrameNumbers('police', { start: 7, end: 13}),
+            frameRate: 10,
+            repeat: -1
+        })
+        this.anims.create({
+            key: 'policeStatic',
+            frames: [ { key: 'police', frame: 6 } ],
             frameRate: 10,
             repeat: -1
         })

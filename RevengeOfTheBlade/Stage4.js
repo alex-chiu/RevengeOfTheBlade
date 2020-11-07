@@ -1,4 +1,4 @@
-/*  Satge 4 SCENE
+/*  Stage 4 SCENE
 
     4th stage
 
@@ -49,7 +49,6 @@ class Stage4 extends Phaser.Scene {
         this.load.image('4ground11', 'assets/backgrounds/stage4/ground4.png');
 
         // Boss Spritesheet
-        //this.load.spritesheet('trex', 'assets/sprites/trex.png', { frameWidth: 470, frameHeight: 245 });
         this.load.spritesheet('police', 'assets/sprites/police.png', { frameWidth: 110, frameHeight: 150 });
 
         // Platforms
