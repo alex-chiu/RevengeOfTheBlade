@@ -19,6 +19,7 @@ class Preload extends Phaser.Scene {
         // Load all enemy spritesheets
         // Stage 1
         this.load.spritesheet('raptor', 'assets/sprites/velociraptor.png', { frameWidth: 390, frameHeight: 195 });
+        this.load.spritesheet('ptero', 'assets/sprites/pterodactyl.png', { frameWidth: 312, frameHeight: 250 });
         this.load.spritesheet('trex', 'assets/sprites/trex.png', { frameWidth: 470, frameHeight: 245 });
 
         // Stage 5
@@ -36,6 +37,7 @@ class Preload extends Phaser.Scene {
 
         // Stage 1 Animations
         this.createRaptorAnims();
+        this.createPteroAnims();
         this.createTRexAnims();
 
         // Stage 5 Animations
@@ -166,6 +168,27 @@ class Preload extends Phaser.Scene {
         this.anims.create({
             key: 'raptorStatic',
             frames: [ { key: 'raptor', frame: 6 } ],
+            frameRate: 10,
+            repeat: -1
+        })
+    }
+
+    createPteroAnims() {
+        this.anims.create({
+            key: 'pteroLeft',
+            frames: this.anims.generateFrameNumbers('ptero', { start: 0, end: 6}),
+            frameRate: 10,
+            repeat: -1
+        })
+        this.anims.create({
+            key: 'pteroRight',
+            frames: this.anims.generateFrameNumbers('ptero', { start: 7, end: 13}),
+            frameRate: 10,
+            repeat: -1
+        })
+        this.anims.create({
+            key: 'pteroStatic',
+            frames: [ { key: 'ptero', frame: 6 } ],
             frameRate: 10,
             repeat: -1
         })
