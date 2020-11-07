@@ -68,7 +68,7 @@ class Stage5 extends Phaser.Scene {
         // Enemy Spritesheets
         this.load.spritesheet('enemy1', 'assets/sprites/robot1.png', { frameWidth: 167, frameHeight: 280 });
         this.load.spritesheet('enemy2', 'assets/sprites/robot2.png', { frameWidth: 133, frameHeight: 195 });
-        this.load.spritesheet('enemy3', 'assets/sprites/drone.png', { frameWidth: 110, frameHeight: 75 });
+        this.load.spritesheet('drone', 'assets/sprites/drone.png', { frameWidth: 110, frameHeight: 75 });
 
         // Hero Spritesheets
         this.load.spritesheet('hero', 'assets/sprites/hero-walk-preattack-sprite.png', { frameWidth: 150, frameHeight: 230 });
@@ -226,7 +226,7 @@ class Stage5 extends Phaser.Scene {
         enemy2.scaleY = enemy2.scaleX;
         enemy2.body.setGravityY(300);
 
-        enemy3 = this.physics.add.sprite(600, 400, 'enemy3')
+        enemy3 = this.physics.add.sprite(600, 400, 'drone')
         enemy3.setCollideWorldBounds(true);
         enemy3.displayWidth = game.config.width * 0.10;
         enemy3.scaleY = enemy3.scaleX;
@@ -235,8 +235,8 @@ class Stage5 extends Phaser.Scene {
         laserGroup = new LaserGroup5(this);
 
         // Enemy Life Text
-        enemy1LifeText = this.add.text(590, 20, 'Enemy 1 Life: 50', { fontSize: '15px', fill: '#ffffff' });
-        enemy2LifeText = this.add.text(390, 20, 'Enemy 2 Life: 50', { fontSize: '15px', fill: '#ffffff' });
+        enemy1LifeText = this.add.text(590, 20, 'Robot Life: 50', { fontSize: '15px', fill: '#ffffff' });
+        enemy2LifeText = this.add.text(390, 20, 'Spy Bot Life: 50', { fontSize: '15px', fill: '#ffffff' });
         enemy3LifeText = this.add.text(190, 20, 'Drone Life: 40', { fontSize: '15px', fill: '#ffffff' });
 
         // Enemy Overlap
@@ -712,7 +712,7 @@ class Stage5 extends Phaser.Scene {
             else {
               enemy1Life -= 10
             }
-            enemy1LifeText.setText('Enemy 1 Life: ' + enemy1Life);
+            enemy1LifeText.setText('Robot Life: ' + enemy1Life);
             enemy1.setTint('0xff0000');
             attack2_metal.play();
             this.time.addEvent({
@@ -743,7 +743,7 @@ class Stage5 extends Phaser.Scene {
             else {
               enemy2Life -= 10
             }
-            enemy2LifeText.setText('Enemy 2 Life: ' + enemy2Life);
+            enemy2LifeText.setText('Spy Bot Life: ' + enemy2Life);
             enemy2.setTint('0xff0000');
             attack2_metal.play();
             this.time.addEvent({
@@ -1092,7 +1092,7 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
             if (!playerDetected) {
                 playerDetected = true;
             }
-            enemy1LifeText.setText('Enemy 1 Life: ' + enemy1Life);
+            enemy1LifeText.setText('Robot Life: ' + enemy1Life);
             enemy1.setTint('0xff0000')
             enemy1Dmg = true;
         }
@@ -1103,7 +1103,7 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
             if (!playerDetected) {
                 playerDetected = true;
             }
-            enemy2LifeText.setText('Enemy 2 Life: ' + enemy2Life);
+            enemy2LifeText.setText('Spy Bot Life: ' + enemy2Life);
             enemy2.setTint('0xff0000')
             enemy2Dmg = true;
         }

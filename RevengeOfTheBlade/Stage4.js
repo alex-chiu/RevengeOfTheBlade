@@ -16,9 +16,24 @@ var daggerGroup;
 
 // SCENE SPECIFIC VARIABLES
 var buttonS4;
-
+// enemies
 var police, policeAlive = true, policeLife = 100, policeLifeText, policeDmg;
+var car, carAlive = true, carLife = 100, carLifeText, carDmg;
+var politician, politicianAlive = true, politicianLife = 100, politicianLifeText, politicianDmg;
 var healthLoot;
+
+// PLATFORMS
+var pf1, pf2, pf3, pf4, pf5;
+var dir1 = 1;
+var dir2 = 1;
+var dir3 = 1;
+var dir4 = 1;
+var dir5 = 1;
+var pf1Appear = 100;
+var pf2Appear = 50;
+var pf3Appear = 100;
+var pf4Appear = 50;
+var pf5Appear = 100;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -53,7 +68,7 @@ class Stage4 extends Phaser.Scene {
 
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
-        this.load.image('platformH', 'assets/platforms/platformH.png');
+        this.load.image('platformH', 'assets/platforms/platform-s4.png');
 
 
         // Dagger
@@ -113,6 +128,13 @@ class Stage4 extends Phaser.Scene {
             platforms.setVisible(false);
         }
 
+        // Moving platforms
+        pf1 = this.physics.add.image(100, 50, 'platformH');
+        pf2 = this.physics.add.image(150, 150, 'platformH');
+        pf3 = this.physics.add.image(200, 300, 'platformH');
+        pf4 = this.physics.add.image(350, 200, 'platformH');
+        pf5 = this.physics.add.image(400, 500, 'platformH')
+        
         // Create Dagger Group
         daggerGroup = new DaggerGroupS4(this);
 
@@ -175,10 +197,22 @@ class Stage4 extends Phaser.Scene {
         // Reset Values
         //playerLife = Math.floor(playerLife);
         playerLife = 100;
-        policeLife = 100;
+
+        policeLife = 180;
         playerAlive = true;
         policeAlive = true;
-        policeLifeText = 100;
+        policeLifeText = 180;
+
+        carLife = 200;
+        carAlive = true;
+        carAlive = true;
+        carLifeText = 200;
+
+        politicianLife = 150;
+        politicianAlive = true;
+        politicianAlive = true;
+        politicianLifeText = 150;
+
         lootCounter1 = 0;
         playerDetected = false;
         attackAnimPlaying = false;
@@ -191,9 +225,25 @@ class Stage4 extends Phaser.Scene {
         police.scaleY = police.scaleX;
         police.body.setGravityY(300);
 
+        car = this.physics.add.sprite(650, 400, 'car')
+        car.setBounce(0);
+        car.setCollideWorldBounds(true);
+        car.displayWidth = game.config.width * 0.1;
+        car.scaleY = car.scaleX;
+        car.body.setGravityY(300);
+
+        politician = this.physics.add.sprite(650, 400, 'politician')
+        politician.setBounce(0);
+        politician.setCollideWorldBounds(true);
+        politician.displayWidth = game.config.width * 0.1;
+        politician.scaleY = politician.scaleX;
+        politician.body.setGravityY(300);
 
         // Enemy Life Text
-        policeLifeText = this.add.text(590, 20, 'Police Life: 100', { fontSize: '15px', fill: '#ffffff' });
+        policeLifeText = this.add.text(590, 20, 'Police Life: 180', { fontSize: '15px', fill: '#ffffff' });
+        carLifeText = this.add.text(190, 20, 'Car Battery: 200', { fontSize: '15px', fill: '#ffffff' });
+        poliicianLifeText = this.add.text(390, 20, 'Politician Life: 150', { fontSize: '15px', fill: '#ffffff' });
+
 
         // Enemy Overlap
         this.physics.add.collider(police, platforms);
@@ -222,6 +272,49 @@ class Stage4 extends Phaser.Scene {
         far.tilePositionX += 0.3;
         back.tilePositionX -= 0.2;
         mid.tilePositionX += 0.1;
+
+        // Platform movement
+        pf1.setVelocityY(dir*50);
+        if (pf1.body.position.y >= 100){
+          dir = -1;
+        }
+        if (pf1.body.position.y <= 10){
+          dir = 1;
+        }
+
+        pf2.setVelocityY(dir1*60);
+        if (pf2.body.position.y >= 200){
+          dir1 = -1;
+        }
+        if (pf2.body.position.y <= 100){
+          dir1 = 1;
+        }
+
+        pf3.setVelocityY(dir2*70);
+        if (cloud2.body.position.y >= 350){
+          dir2 = -1;
+        }
+        if (cloud2.body.position.y <= 250){
+          dir2 = 1;
+        }
+
+        pf4.setVelocityY(dir2*60);
+        if (cloud2.body.position.y >= 350){
+          dir2 = -1;
+        }
+        if (cloud2.body.position.y <= 250){
+          dir2 = 1;
+        }
+
+        pf5.setVelocityY(dir2*50);
+        if (cloud2.body.position.y >= 350){
+          dir2 = -1;
+        }
+        if (cloud2.body.position.y <= 250){
+          dir2 = 1;
+        }
+
+
 
         // Player Movement
         if (A.isDown) {
@@ -589,7 +682,7 @@ class Stage4 extends Phaser.Scene {
             }
             policeLifeText.setText('Police Life: ' + policeLife);
             police.setTint('0xff0000');
-            attack2_metal.play();
+            attack1_creature.play();
             policeDmg = true;
         }
         if (policeLife == 0 && lootCounter1 == 0) {
@@ -598,6 +691,58 @@ class Stage4 extends Phaser.Scene {
             hLootB1.setCollideWorldBounds(true);
             police.disableBody(true, true);
             policeAlive = false;
+            lootCounter1 += 1
+        }
+    }
+
+    updateCarLife() {
+        var boundsA = playerMeleeAtk.getBounds();
+        var boundsB = car.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && carAlive) {
+            if (carLife < 10) {
+                carLife = 0
+            }
+            else {
+                carLife -= 10
+            }
+            carLifeText.setText('Car Battery: ' + carLife);
+            car.setTint('0xff0000');
+            attack2_metal.play();
+            carDmg = true;
+        }
+        if (carLife == 0 && lootCounter1 == 0) {
+            var hLootB1 = healthLoot.create(car.body.x, car.body.y, 'healthLoot');
+            hLootB1.setBounce(0.5);
+            hLootB1.setCollideWorldBounds(true);
+            car.disableBody(true, true);
+            carAlive = false;
+            lootCounter1 += 1
+        }
+    }
+
+    updatePoliticianLife() {
+        var boundsA = playerMeleeAtk.getBounds();
+        var boundsB = politician.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && politicianAlive) {
+            if (politicianLife < 10) {
+                politicianLife = 0
+            }
+            else {
+                politicianLife -= 10
+            }
+            politicianLifeText.setText('Politician Life: ' + politicianLife);
+            politician.setTint('0xff0000');
+            attack1_creature1.play();
+            politicianDmg = true;
+        }
+        if (politicianLife == 0 && lootCounter1 == 0) {
+            var hLootB1 = healthLoot.create(politician.body.x, politician.body.y, 'healthLoot');
+            hLootB1.setBounce(0.5);
+            hLootB1.setCollideWorldBounds(true);
+            politician.disableBody(true, true);
+            politicianAlive = false;
             lootCounter1 += 1
         }
     }

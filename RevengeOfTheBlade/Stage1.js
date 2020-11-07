@@ -50,7 +50,7 @@ class Stage1 extends Phaser.Scene {
 
         // enemy spritesheet
         this.load.spritesheet('raptor', 'assets/sprites/velociraptor.png', { frameWidth: 312, frameHeight: 250 });
-        this.load.spritesheet('pterodactyl', 'assets/sprites/pterodactyl.png', { frameWidth: 310, frameHeight: 195 });
+        this.load.spritesheet('ptero', 'assets/sprites/pterodactyl-sprite.png', { frameWidth: 310, frameHeight: 195 });
 
         // Background Images
         this.load.image('sky01', 'assets/backgrounds/stage1/0sky1.png');
@@ -63,7 +63,7 @@ class Stage1 extends Phaser.Scene {
 
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
-        this.load.image('platformH', 'assets/platforms/platformH.png');
+        this.load.image('platformH', 'assets/platforms/platform-s1.png');
 
         // Dagger
         this.load.image('dagger', 'assets/daggers.png');
@@ -192,7 +192,7 @@ class Stage1 extends Phaser.Scene {
         raptor.scaleY = raptor.scaleX;
         raptor.body.setGravityY(300);
 
-        ptero = this.physics.add.sprite(600, 400, 'pterodactyl')
+        ptero = this.physics.add.sprite(600, 400, 'ptero')
         ptero.setCollideWorldBounds(true);
         ptero.displayWidth = game.config.width * 0.15;
         ptero.scaleY = ptero.scaleX;

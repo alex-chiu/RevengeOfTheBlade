@@ -19,16 +19,18 @@ class Preload extends Phaser.Scene {
         // Load all enemy spritesheets
         // Stage 1
         this.load.spritesheet('raptor', 'assets/sprites/velociraptor.png', { frameWidth: 390, frameHeight: 195 });
-        this.load.spritesheet('ptero', 'assets/sprites/pterodactyl.png', { frameWidth: 312, frameHeight: 250 });
+        this.load.spritesheet('ptero', 'assets/sprites/pterodactyl-sprite.png', { frameWidth: 312, frameHeight: 250 });
         this.load.spritesheet('trex', 'assets/sprites/trex.png', { frameWidth: 470, frameHeight: 245 });
 
         // Stage 4
         this.load.spritesheet('police', 'assets/sprites/police.png', { frameWidth: 110, frameHeight: 150 });
+        this.load.spritesheet('car', 'assets/sprites/policecar.png', { frameWidth: 365, frameHeight: 120 });
+        this.load.spritesheet('politician', 'assets/sprites/politician.png', { frameWidth: 105, frameHeight: 150 });
 
         // Stage 5
         this.load.spritesheet('enemy1', 'assets/sprites/robot1.png', { frameWidth: 167, frameHeight: 280 });
         this.load.spritesheet('enemy2', 'assets/sprites/robot2.png', { frameWidth: 133, frameHeight: 195 });
-        this.load.spritesheet('enemy3', 'assets/sprites/drone.png', { frameWidth: 110, frameHeight: 75 });
+        this.load.spritesheet('drone', 'assets/sprites/drone.png', { frameWidth: 110, frameHeight: 75 });
         this.load.spritesheet('robotBoss', 'assets/sprites/robot-boss-sprite.png', { frameWidth: 390, frameHeight: 500 });
     }
 
@@ -42,6 +44,12 @@ class Preload extends Phaser.Scene {
         this.createRaptorAnims();
         this.createPteroAnims();
         this.createTRexAnims();
+        this.createPteroAnims();
+
+        // Stage 4 Animations
+        this.createPoliceAnims();
+        this.createCarAnims();
+        this.createPoliticianAnims();
 
         // Stage 4 Animations
         this.createPoliceAnims();
@@ -49,7 +57,7 @@ class Preload extends Phaser.Scene {
         // Stage 5 Animations
         this.createEnemy1Anims();
         this.createEnemy2Anims();
-        this.createEnemy3Anims();
+        this.createDroneAnims();
         this.createBossAnims();
 
         this.scene.stop('Preload');
@@ -286,13 +294,81 @@ class Preload extends Phaser.Scene {
         });
     }
 
-    // flying enemy [no specific orientation]
-    createEnemy3Anims() {
+
+    // Stage 4 enemy animations
+    createPoliceAnims() {
         this.anims.create({
-            key:'enemy3Default',
-            frames: this.anims.generateFrameNumbers('enemy3', { start: 0, end: 3}),
+            key:'policeLeft',
+            frames: this.anims.generateFrameNumbers('police', { start: 0, end: 6}),
             frameRate: 10,
-            repeat: 1
+            repeat: -1
+        });
+        this.anims.create({
+            key:'policeRight',
+            frames: this.anims.generateFrameNumbers('police', { start: 7, end: 13}),
+            frameRate: 10,
+            repeat: -1
+        });
+    }
+
+    createCarAnims() {
+        this.anims.create({
+            key:'carLeft',
+            frames: this.anims.generateFrameNumbers('car', { start: 0, end: 1}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'carRight',
+            frames: this.anims.generateFrameNumbers('car', { start: 2, end: 3}),
+            frameRate: 10,
+            repeat: -1
+        });
+    }
+
+    createPoliticianAnims() {
+        this.anims.create({
+            key:'polLeft',
+            frames: this.anims.generateFrameNumbers('politician', { start: 0, end: 5}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'polRight',
+            frames: this.anims.generateFrameNumbers('politician', { start: 6, end: 11}),
+            frameRate: 10,
+            repeat: -1
+        });
+    }
+
+    // flying enemy [no specific orientation]
+    createDroneAnims() {
+        this.anims.create({
+            key:'droneDefault',
+            frames: this.anims.generateFrameNumbers('drone', { start: 0, end: 3}),
+            frameRate: 10,
+            repeat: -1
+        });
+    }
+    // flying enemy [with orientation]
+    createPteroAnims() {
+        this.anims.create({
+            key:'pteroLeft',
+            frames: this.anims.generateFrameNumbers('ptero', { start: 0, end: 6}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'pteroRight',
+            frames: this.anims.generateFrameNumbers('ptero', { start: 7, end: 13}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'pteroDefault',
+            frames: this.anims.generateFrameNumbers('ptero', { start: 5, end: 6}),
+            frameRate: 10,
+            repeat: -1
         });
     }
 

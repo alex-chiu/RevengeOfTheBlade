@@ -70,7 +70,7 @@ class Stage4Boss extends Phaser.Scene {
 
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
-        this.load.image('platformH', 'assets/platforms/platformH.png');
+        this.load.image('platformH', 'assets/platforms/platform-s4.png');
 
         // Dagger
         this.load.image('dagger', 'assets/daggers.png');
