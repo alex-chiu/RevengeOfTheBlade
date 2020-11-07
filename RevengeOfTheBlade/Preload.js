@@ -19,6 +19,7 @@ class Preload extends Phaser.Scene {
         // Load all enemy spritesheets
         // Stage 1
         this.load.spritesheet('raptor', 'assets/sprites/velociraptor.png', { frameWidth: 390, frameHeight: 195 });
+        this.load.spritesheet('ptero', 'assets/sprites/pterodactyl-sprite.png', { frameWidth: 312, frameHeight: 250 });
         this.load.spritesheet('trex', 'assets/sprites/trex.png', { frameWidth: 470, frameHeight: 245 });
 
         // Stage 4
@@ -42,11 +43,17 @@ class Preload extends Phaser.Scene {
         // Stage 1 Animations
         this.createRaptorAnims();
         this.createTRexAnims();
+        this.createPteroAnims();
+
+        // Stage 4 Animations
+        this.createPoliceAnims();
+        this.createCarAnims();
+        this.createPoliticianAnims();
 
         // Stage 5 Animations
         this.createEnemy1Anims();
         this.createEnemy2Anims();
-        this.createEnemy3Anims();
+        this.createDroneAnims();
         this.createBossAnims();
 
         this.scene.stop('Preload');
@@ -258,7 +265,7 @@ class Preload extends Phaser.Scene {
         });
     }
 
-    createPoliceCarAnims() {
+    createCarAnims() {
         this.anims.create({
             key:'carLeft',
             frames: this.anims.generateFrameNumbers('car', { start: 0, end: 1}),
@@ -294,7 +301,28 @@ class Preload extends Phaser.Scene {
             key:'droneDefault',
             frames: this.anims.generateFrameNumbers('drone', { start: 0, end: 3}),
             frameRate: 10,
-            repeat: 1
+            repeat: -1
+        });
+    }
+    // flying enemy [with orientation]
+    createPteroAnims() {
+        this.anims.create({
+            key:'pteroLeft',
+            frames: this.anims.generateFrameNumbers('ptero', { start: 0, end: 6}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'pteroRight',
+            frames: this.anims.generateFrameNumbers('ptero', { start: 7, end: 13}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'pteroDefault',
+            frames: this.anims.generateFrameNumbers('ptero', { start: 5, end: 6}),
+            frameRate: 10,
+            repeat: -1
         });
     }
 

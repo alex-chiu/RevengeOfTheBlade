@@ -50,7 +50,7 @@ class Stage1 extends Phaser.Scene {
 
         // enemy spritesheet
         this.load.spritesheet('raptor', 'assets/sprites/velociraptor.png', { frameWidth: 312, frameHeight: 250 });
-        this.load.spritesheet('pterodactyl', 'assets/sprites/pterodactyl-sprite.png', { frameWidth: 310, frameHeight: 195 });
+        this.load.spritesheet('ptero', 'assets/sprites/pterodactyl-sprite.png', { frameWidth: 310, frameHeight: 195 });
 
         // Background Images
         this.load.image('sky01', 'assets/backgrounds/stage1/0sky1.png');
@@ -63,7 +63,7 @@ class Stage1 extends Phaser.Scene {
 
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
-        this.load.image('platformH', 'assets/platforms/platformH.png');
+        this.load.image('platformH', 'assets/platforms/platform-s1.png');
 
         // Dagger
         this.load.image('dagger', 'assets/daggers.png');
@@ -192,7 +192,7 @@ class Stage1 extends Phaser.Scene {
         raptor.scaleY = raptor.scaleX;
         raptor.body.setGravityY(300);
 
-        ptero = this.physics.add.sprite(600, 400, 'pterodactyl')
+        ptero = this.physics.add.sprite(600, 400, 'ptero')
         ptero.setCollideWorldBounds(true);
         ptero.displayWidth = game.config.width * 0.15;
         ptero.scaleY = ptero.scaleX;
@@ -313,7 +313,7 @@ class Stage1 extends Phaser.Scene {
             }
 
             if (player.body.position.x < ptero.body.position.x && player.body.position.y < ptero.body.position.y) {
-                ptero.anims.play('pteroDefault');
+                ptero.anims.play('pteroLeft');
                 if (delX > 10 && delY > 10) {
                     ptero.setVelocityX(-60);
                     ptero.setVelocityY(-5);
@@ -325,7 +325,7 @@ class Stage1 extends Phaser.Scene {
             }
             // ptero is upper left
             else if (player.body.position.x > ptero.body.position.x && player.body.position.y < ptero.body.position.y) {
-                ptero.anims.play('pteroDefault');
+                ptero.anims.play('pteroRight');
                 if (delX > 10 && delY > 10) {
                     ptero.setVelocityX(60);
                     ptero.setVelocityY(-50);
@@ -337,7 +337,7 @@ class Stage1 extends Phaser.Scene {
             }
             // ptero lower right
             else if (player.body.position.x < ptero.body.position.x && player.body.position.y > ptero.body.position.y) {
-                ptero.anims.play('pteroDefault');
+                ptero.anims.play('pteroLeft');
                 if (delX > 10 && delY > 10) {
                     ptero.setVelocityX(-60);
                     ptero.setVelocityY(5);
@@ -349,7 +349,7 @@ class Stage1 extends Phaser.Scene {
             }
             // ptero lower left
             else if (player.body.position.x > ptero.body.position.x && player.body.position.y > ptero.body.position.y) {
-                ptero.anims.play('pteroDefault');
+                ptero.anims.play('pteroRight');
                 if (delX > 10 && delY > 10) {
                     ptero.setVelocityX(-60);
                     ptero.setVelocityY(-40);
@@ -362,7 +362,7 @@ class Stage1 extends Phaser.Scene {
 
             // ptero directly above
             else if (player.body.position.x == ptero.body.position.x && player.body.position.y < ptero.body.position.y) {
-                ptero.anims.play('pteroDefault');
+                ptero.anims.play('pteroLeft');
                 if (delY > 10) {
                     ptero.setVelocityX(10);
                     ptero.setVelocityY(10);
@@ -375,7 +375,7 @@ class Stage1 extends Phaser.Scene {
 
             // ptero directly below
             else if (player.body.position.x == ptero.body.position.x && player.body.position.y > ptero.body.position.y) {
-                ptero.anims.play('pteroDefault');
+                ptero.anims.play('pteroRight');
                 if (delY > 10) {
                     ptero.setVelocityX(10);
                     ptero.setVelocityY(10);
@@ -388,7 +388,7 @@ class Stage1 extends Phaser.Scene {
 
             // ptero directly left
             else if (player.body.position.x > ptero.body.position.x && player.body.position.y == ptero.body.position.y) {
-                ptero.anims.play('pteroDefault');
+                ptero.anims.play('pteroRight');
                 if (delX > 10) {
                     ptero.setVelocityX(10);
                     ptero.setVelocityY(10);
@@ -401,7 +401,7 @@ class Stage1 extends Phaser.Scene {
 
             // ptero directly right
             else if (player.body.position.x < ptero.body.position.x && player.body.position.y == ptero.body.position.y) {
-                ptero.anims.play('pteroDefault');
+                ptero.anims.play('pteroLeft');
                 if (delX > 200) {
                     ptero.setVelocityX(10);
                     ptero.setVelocityY(10);
