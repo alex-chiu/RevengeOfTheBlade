@@ -29,6 +29,14 @@ var healthLoot;
 var lootCounter1S = 0;
 var lootCounter2S = 0;
 
+// PLATFORMS
+var pf1, pf2, pf3, pf4, pf5;
+var dir1 = 1;
+var dir2 = 1;
+var dir3 = 1;
+var dir4 = 1;
+var dir5 = 1;
+
 // DEBUG PARAMETERS
 var debug = false;
 var graphics, testLine;
@@ -122,6 +130,23 @@ class Stage1 extends Phaser.Scene {
             platforms.setVisible(false);
         }
 
+        // Moving platforms
+        pf1 = this.physics.add.image(50, 400, 'platformH')
+            .setImmovable(true);
+
+        pf2 = this.physics.add.image(300, 350, 'platformH')
+            .setImmovable(true);
+
+        pf3 = this.physics.add.image(150, 150, 'platformH')
+            .setImmovable(true);
+
+        pf4 = this.physics.add.image(700, 250, 'platformH')
+            .setImmovable(true);
+
+        pf5 = this.physics.add.image(600, 200, 'platformH')
+            .setImmovable(true);
+        
+
         // Create Dagger Group
         daggerGroup = new DaggerGroupS1(this);
 
@@ -170,7 +195,7 @@ class Stage1 extends Phaser.Scene {
         this.physics.add.collider(playerArm, platforms);
         this.physics.add.collider(playerArmFinal, platforms);
 
-        // Reset Values
+        
         playerLife = 100;
         raptorLife = 80;
         playerAlive = true;
@@ -186,15 +211,15 @@ class Stage1 extends Phaser.Scene {
 
         // Create Enemies
         raptor = this.physics.add.sprite(650, 400, 'raptor')
-        raptor.setBounce(0);
+        raptor.setBounce(0.01);
         raptor.setCollideWorldBounds(true);
-        raptor.displayWidth = game.config.width * 0.2;
+        raptor.displayWidth = game.config.width * 0.32;
         raptor.scaleY = raptor.scaleX;
         raptor.body.setGravityY(300);
 
         ptero = this.physics.add.sprite(600, 400, 'ptero')
         ptero.setCollideWorldBounds(true);
-        ptero.displayWidth = game.config.width * 0.15;
+        ptero.displayWidth = game.config.width * 0.18;
         ptero.scaleY = ptero.scaleX;
         ptero.body.setGravityY(5);
 
@@ -210,15 +235,30 @@ class Stage1 extends Phaser.Scene {
         this.physics.add.overlap(player, ptero);
         this.physics.add.overlap(playerMeleeAtk, ptero);
 
+        this.physics.add.overlap(ptero, pf1);
+        this.physics.add.overlap(raptor, pf1);
+
+        this.physics.add.overlap(ptero, pf2);
+        this.physics.add.overlap(raptor, pf2);
+
+        this.physics.add.overlap(ptero, pf3);
+        this.physics.add.overlap(raptor, pf3);
+
+        this.physics.add.overlap(ptero, pf4);
+        this.physics.add.overlap(raptor, pf4);
+        
+        this.physics.add.overlap(ptero, pf5);
+        this.physics.add.overlap(raptor, pf5);
+
+
         // temporary buttons
         button1 = this.add.text(50, 50, 'BOSS 1', { fontSize: '20px', fill: '#b5dbf7' });
         button1.setInteractive();
         button1.on('pointerdown', () => {
-          //soundtrack5.stop();
-          this.scene.stop('Stage1');
-          this.scene.start('Stage1Boss');
+            //soundtrack5.stop();
+            this.scene.stop('Stage1');
+            this.scene.start('Stage1Boss');
         });
-
     }
 
     // Constantly Updating Game Loop
@@ -238,6 +278,80 @@ class Stage1 extends Phaser.Scene {
         far.tilePositionX += 0.3;
         back.tilePositionX -= 0.2;
         mid.tilePositionX += 0.1;
+
+        // Platform movement
+        // 50 150
+        pf1.setVelocityX(dir1*50);
+        pf1.setVelocityY(0);
+        if (pf1.body.position.x >= 30){
+            dir1 = 1;
+        }
+        if (pf1.body.position.x <= 300){
+            dir1 = -1;
+        }
+
+        pf2.setVelocityY(dir2*60);
+        if (pf2.body.position.y >= 300){
+            dir2 = -1;
+        }
+        if (pf2.body.position.y <= 100){
+            dir2 = 1;
+        }
+        /// 150 600
+        pf3.setVelocityX(dir3*70);
+        pf3.setVelocityY(0);
+        if (pf3.body.position.x >= 100){
+            dir3 = 1;
+        }
+        if (pf3.body.position.x <= 500){
+            dir3 = -1;
+        }
+
+        pf4.setVelocityY(dir4*40);
+        if (pf4.body.position.y >= 400){
+            dir4 = -1;
+        }
+        if (pf4.body.position.y <= 200){
+            dir4 = 1;
+        }
+        
+        // 600 800
+        pf5.setVelocityX(dir5*50);
+        pf5.setVelocityY(0);
+        if (pf5.body.position.x >= 500){
+            dir5 = 1;
+        }
+        if (pf5.body.position.x <= 800){
+            dir5 = -1;
+        }
+
+        this.physics.world.collide(pf1, player, function () {
+            pf1.setVelocityX(0);
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf2, player, function () {
+            pf2.setVelocityX(0);
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf3, player, function () {
+            pf3.setVelocityX(0);
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf4, player, function () {
+            pf4.setVelocityX(0);
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf5, player, function () {
+            pf5.setVelocityX(0);
+            player.setVelocityX(0);
+        });
+
+
+
 
         // Player Movement
         if (A.isDown) {

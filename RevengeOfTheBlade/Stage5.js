@@ -18,6 +18,14 @@ var daggerGroup;
 // SCENE SPECIFIC VARIABLES
 var button;
 
+// PLATFORMS
+var pf1, pf2, pf3, pf4, pf5;
+var dir1 = 1;
+var dir2 = 1;
+var dir3 = 1;
+var dir4 = 1;
+var dir5 = 1;
+
 // Enemies
 var enemy1, enemy2, enemy3;
 var delX1, delX2, dronePos, delX3, delY3;
@@ -88,7 +96,7 @@ class Stage5 extends Phaser.Scene {
 
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
-        this.load.image('platformH', 'assets/platforms/platformH.png');
+        this.load.image('platform5', 'assets/platforms/platform-s5.png');
 
         // Laser
         this.load.image('laser', 'assets/laser.png');
@@ -128,6 +136,23 @@ class Stage5 extends Phaser.Scene {
         ground = this.add.tileSprite(400, 300, 800, 600, 'ground');
         this.add.existing(ground);
         sky.fixedToCamera = true;
+
+        // Moving platforms
+        pf1 = this.physics.add.image(50, 400, 'platform5')
+            .setImmovable(true);
+
+        pf2 = this.physics.add.image(300, 350, 'platform5')
+            .setImmovable(true);
+
+        pf3 = this.physics.add.image(150, 150, 'platform5')
+            .setImmovable(true);
+
+        pf4 = this.physics.add.image(700, 250, 'platform5')
+            .setImmovable(true);
+
+        pf5 = this.physics.add.image(600, 200, 'platform5')
+            .setImmovable(true);
+        
 
         // Player Life Text
         lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
@@ -249,6 +274,22 @@ class Stage5 extends Phaser.Scene {
         this.physics.add.overlap(player, enemy3);
         this.physics.add.overlap(playerMeleeAtk, enemy3);
 
+        // Enemy and Platform Overlap
+        this.physics.add.overlap(enemy1, pf1);
+        this.physics.add.overlap(enemy2, pf1);
+
+        this.physics.add.overlap(enemy1, pf2);
+        this.physics.add.overlap(enemy2, pf2);
+
+        this.physics.add.overlap(enemy1, pf3);
+        this.physics.add.overlap(enemy2, pf3);
+
+        this.physics.add.overlap(enemy1, pf4);
+        this.physics.add.overlap(enemy2, pf4);
+        
+        this.physics.add.overlap(enemy1, pf5);
+        this.physics.add.overlap(enemy2, pf5);
+
 
         // temporary button
         button = this.add.text(50, 50, 'BOSS', { fontSize: '20px', fill: '#b5dbf7' });
@@ -280,6 +321,77 @@ class Stage5 extends Phaser.Scene {
         back.tilePositionX -= 0.2;
         mid.tilePositionX += 0.1;
 
+        // Platform movement
+        // 50 150
+        pf1.setVelocityX(dir1*50);
+        pf1.setVelocityY(0);
+        if (pf1.body.position.x >= 30){
+            dir1 = 1;
+        }
+        if (pf1.body.position.x <= 300){
+            dir1 = -1;
+        }
+
+        pf2.setVelocityY(dir2*60);
+        if (pf2.body.position.y >= 300){
+            dir2 = -1;
+        }
+        if (pf2.body.position.y <= 100){
+            dir2 = 1;
+        }
+        /// 150 600
+        pf3.setVelocityX(dir3*70);
+        pf3.setVelocityY(0);
+        if (pf3.body.position.x >= 100){
+            dir3 = 1;
+        }
+        if (pf3.body.position.x <= 500){
+            dir3 = -1;
+        }
+
+        pf4.setVelocityY(dir4*40);
+        if (pf4.body.position.y >= 400){
+            dir4 = -1;
+        }
+        if (pf4.body.position.y <= 200){
+            dir4 = 1;
+        }
+        
+        // 600 800
+        pf5.setVelocityX(dir5*50);
+        pf5.setVelocityY(0);
+        if (pf5.body.position.x >= 500){
+            dir5 = 1;
+        }
+        if (pf5.body.position.x <= 800){
+            dir5 = -1;
+        }
+
+        this.physics.world.collide(pf1, player, function () {
+            pf1.setVelocityX(0);
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf2, player, function () {
+            pf2.setVelocityX(0);
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf3, player, function () {
+            pf3.setVelocityX(0);
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf4, player, function () {
+            pf4.setVelocityX(0);
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf5, player, function () {
+            pf5.setVelocityX(0);
+            player.setVelocityX(0);
+        });
+        
         // Player Movement
         if (A.isDown) {
             player.setVelocityX(-160);
@@ -342,7 +454,7 @@ class Stage5 extends Phaser.Scene {
         if (!playerDetected) {
             enemy1.anims.play('enemy1Default');
             enemy2.anims.play('enemy2Default');
-            enemy3.anims.play('enemy3Default');
+            enemy3.anims.play('droneDefault');
 
         }
         else {
@@ -405,7 +517,7 @@ class Stage5 extends Phaser.Scene {
             // enemy3 - flying (x and y dependent)
             // enemy3 is upper right of player
             if (player.body.position.x < enemy3.body.position.x && player.body.position.y < enemy3.body.position.y) {
-                enemy3.anims.play('enemy3Default');
+                enemy3.anims.play('droneDefault');
                 if (delX3 > 10 && delY3 > 10) {
                     enemy3.setVelocityX(-60);
                     enemy3.setVelocityY(-5);
@@ -417,7 +529,7 @@ class Stage5 extends Phaser.Scene {
             }
             // enemy3 is upper left
             else if (player.body.position.x > enemy3.body.position.x && player.body.position.y < enemy3.body.position.y) {
-                enemy3.anims.play('enemy3Default');
+                enemy3.anims.play('droneDefault');
                 if (delX3 > 10 && delY3 > 10) {
                     enemy3.setVelocityX(60);
                     enemy3.setVelocityY(-50);
@@ -429,7 +541,7 @@ class Stage5 extends Phaser.Scene {
             }
             // enemy3 lower right
             else if (player.body.position.x < enemy3.body.position.x && player.body.position.y > enemy3.body.position.y) {
-                enemy3.anims.play('enemy3Default');
+                enemy3.anims.play('droneDefault');
                 if (delX3 > 10 && delY3 > 10) {
                     enemy3.setVelocityX(-60);
                     enemy3.setVelocityY(5);
@@ -441,7 +553,7 @@ class Stage5 extends Phaser.Scene {
             }
             // enemy3 lower left
             else if (player.body.position.x > enemy3.body.position.x && player.body.position.y > enemy3.body.position.y) {
-                enemy3.anims.play('enemy3Default');
+                enemy3.anims.play('droneDefault');
                 if (delX3 > 10 && delY3 > 10) {
                     enemy3.setVelocityX(-60);
                     enemy3.setVelocityY(-40);
@@ -454,7 +566,7 @@ class Stage5 extends Phaser.Scene {
 
             // enemy3 directly above
             else if (player.body.position.x == enemy3.body.position.x && player.body.position.y < enemy3.body.position.y) {
-                enemy3.anims.play('enemy3Default');
+                enemy3.anims.play('droneDefault');
                 if (delY3 > 10) {
                     enemy3.setVelocityX(10);
                     enemy3.setVelocityY(10);
@@ -467,7 +579,7 @@ class Stage5 extends Phaser.Scene {
 
             // enemy3 directly below
             else if (player.body.position.x == enemy3.body.position.x && player.body.position.y > enemy3.body.position.y) {
-                enemy3.anims.play('enemy3Default');
+                enemy3.anims.play('droneDefault');
                 if (delY3 > 10) {
                     enemy3.setVelocityX(10);
                     enemy3.setVelocityY(10);
@@ -480,7 +592,7 @@ class Stage5 extends Phaser.Scene {
 
             // enemy3 directly left
             else if (player.body.position.x > enemy3.body.position.x && player.body.position.y == enemy3.body.position.y) {
-                enemy3.anims.play('enemy3Default');
+                enemy3.anims.play('droneDefault');
                 if (delX3 > 10) {
                     enemy3.setVelocityX(10);
                     enemy3.setVelocityY(10);
@@ -493,7 +605,7 @@ class Stage5 extends Phaser.Scene {
 
             // enemy3 directly right
             else if (player.body.position.x < enemy3.body.position.x && player.body.position.y == enemy3.body.position.y) {
-                enemy3.anims.play('enemy3Default');
+                enemy3.anims.play('droneDefault');
                 if (delX3 > 200) {
                     enemy3.setVelocityX(10);
                     enemy3.setVelocityY(10);

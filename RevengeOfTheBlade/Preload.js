@@ -365,7 +365,7 @@ class Preload extends Phaser.Scene {
             repeat: -1
         });
         this.anims.create({
-            key:'pteroDefault',
+            key:'pteroStatic',
             frames: this.anims.generateFrameNumbers('ptero', { start: 5, end: 6}),
             frameRate: 10,
             repeat: -1

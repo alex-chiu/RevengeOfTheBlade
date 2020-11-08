@@ -29,11 +29,6 @@ var dir2 = 1;
 var dir3 = 1;
 var dir4 = 1;
 var dir5 = 1;
-var pf1Appear = 100;
-var pf2Appear = 50;
-var pf3Appear = 100;
-var pf4Appear = 50;
-var pf5Appear = 100;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -68,7 +63,7 @@ class Stage4 extends Phaser.Scene {
 
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
-        this.load.image('platformH', 'assets/platforms/platform-s4.png');
+        this.load.image('platform4', 'assets/platforms/platform-s4.png');
 
 
         // Dagger
@@ -129,11 +124,21 @@ class Stage4 extends Phaser.Scene {
         }
 
         // Moving platforms
-        pf1 = this.physics.add.image(100, 50, 'platformH');
-        pf2 = this.physics.add.image(150, 150, 'platformH');
-        pf3 = this.physics.add.image(200, 300, 'platformH');
-        pf4 = this.physics.add.image(350, 200, 'platformH');
-        pf5 = this.physics.add.image(400, 500, 'platformH')
+        pf1 = this.physics.add.image(50, 400, 'platform4')
+            .setImmovable(true);
+
+        pf2 = this.physics.add.image(300, 350, 'platform4')
+            .setImmovable(true);
+
+        pf3 = this.physics.add.image(150, 150, 'platform4')
+            .setImmovable(true);
+
+        pf4 = this.physics.add.image(700, 250, 'platform4')
+            .setImmovable(true);
+
+        pf5 = this.physics.add.image(600, 200, 'platform4')
+            .setImmovable(true);
+        
         
         // Create Dagger Group
         daggerGroup = new DaggerGroupS4(this);
@@ -227,7 +232,7 @@ class Stage4 extends Phaser.Scene {
         car = this.physics.add.sprite(650, 400, 'car')
         car.setBounce(0);
         car.setCollideWorldBounds(true);
-        car.displayWidth = game.config.width * 0.1;
+        car.displayWidth = game.config.width * 0.2;
         car.scaleY = car.scaleX;
         car.body.setGravityY(300);
 
@@ -248,8 +253,33 @@ class Stage4 extends Phaser.Scene {
         this.physics.add.collider(police, platforms);
         this.physics.add.overlap(player, police);
         this.physics.add.overlap(playerMeleeAtk, police);
-        this.physics.add.overlap(player, cloud);
-        this.physics.add.overlap(playerMeleeAtk, cloud);
+
+        this.physics.add.collider(politician, platforms);
+        this.physics.add.overlap(player, politician);
+        this.physics.add.overlap(playerMeleeAtk, politician);
+
+        this.physics.add.collider(car, platforms);
+        this.physics.add.overlap(player, car);
+        this.physics.add.overlap(playerMeleeAtk, car);
+        
+        
+        // Enemy and Platform Overlap
+
+        this.physics.add.overlap(police, pf1);
+        this.physics.add.overlap(politician, pf1);
+
+        this.physics.add.overlap(police, pf2);
+        this.physics.add.overlap(politician, pf2);
+
+        this.physics.add.overlap(police, pf3);
+        this.physics.add.overlap(politician, pf3);
+
+        this.physics.add.overlap(police, pf4);
+        this.physics.add.overlap(politician, pf4);
+        
+        this.physics.add.overlap(police, pf5);
+        this.physics.add.overlap(politician, pf5);
+
     }
 
     // Constantly Updating Game Loop
@@ -271,47 +301,76 @@ class Stage4 extends Phaser.Scene {
         mid.tilePositionX += 0.1;
 
         // Platform movement
-        pf1.setVelocityY(dir*50);
-        if (pf1.body.position.y >= 100){
-          dir = -1;
+        // 50 150
+        pf1.setVelocityX(dir1*50);
+        pf1.setVelocityY(0);
+        if (pf1.body.position.x >= 30){
+            dir1 = 1;
         }
-        if (pf1.body.position.y <= 10){
-          dir = 1;
+        if (pf1.body.position.x <= 300){
+            dir1 = -1;
         }
 
-        pf2.setVelocityY(dir1*60);
-        if (pf2.body.position.y >= 200){
-          dir1 = -1;
+        pf2.setVelocityY(dir2*60);
+        if (pf2.body.position.y >= 300){
+            dir2 = -1;
         }
         if (pf2.body.position.y <= 100){
-          dir1 = 1;
+            dir2 = 1;
+        }
+        /// 150 600
+        pf3.setVelocityX(dir3*70);
+        pf3.setVelocityY(0);
+        if (pf3.body.position.x >= 100){
+            dir3 = 1;
+        }
+        if (pf3.body.position.x <= 500){
+            dir3 = -1;
         }
 
-        /*
-        pf3.setVelocityY(dir2*70);
-        if (cloud2.body.position.y >= 350){
-          dir2 = -1;
+        pf4.setVelocityY(dir4*40);
+        if (pf4.body.position.y >= 400){
+            dir4 = -1;
         }
-        if (cloud2.body.position.y <= 250){
-          dir2 = 1;
+        if (pf4.body.position.y <= 200){
+            dir4 = 1;
+        }
+        
+        // 600 800
+        pf5.setVelocityX(dir5*50);
+        pf5.setVelocityY(0);
+        if (pf5.body.position.x >= 500){
+            dir5 = 1;
+        }
+        if (pf5.body.position.x <= 800){
+            dir5 = -1;
         }
 
-        pf4.setVelocityY(dir2*60);
-        if (cloud2.body.position.y >= 350){
-          dir2 = -1;
-        }
-        if (cloud2.body.position.y <= 250){
-          dir2 = 1;
-        }
+        this.physics.world.collide(pf1, player, function () {
+            pf1.setVelocityX(0);
+            player.setVelocityX(0);
+        });
 
-        pf5.setVelocityY(dir2*50);
-        if (cloud2.body.position.y >= 350){
-          dir2 = -1;
-        }
-        if (cloud2.body.position.y <= 250){
-          dir2 = 1;
-        }
-        */
+        this.physics.world.collide(pf2, player, function () {
+            pf2.setVelocityX(0);
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf3, player, function () {
+            pf3.setVelocityX(0);
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf4, player, function () {
+            pf4.setVelocityX(0);
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf5, player, function () {
+            pf5.setVelocityX(0);
+            player.setVelocityX(0);
+        });
+        
 
 
         // Player Movement
@@ -366,7 +425,7 @@ class Stage4 extends Phaser.Scene {
         this.resetTints();
 
         if (!playerDetected) {
-            police.anims.play('policeStatic');
+            police.anims.play('policeLeft');
         }
         else {
             if (player.body.position.x < police.body.position.x - 5) {
