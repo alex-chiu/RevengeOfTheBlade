@@ -391,7 +391,7 @@ class Stage5 extends Phaser.Scene {
             pf5.setVelocityX(0);
             player.setVelocityX(0);
         });
-        
+
         // Player Movement
         if (A.isDown) {
             player.setVelocityX(-160);
@@ -616,18 +616,6 @@ class Stage5 extends Phaser.Scene {
                 }
             }
         }
-
-        // dronePos = 700 - enemy3.body.position.x;
-        // enemy3.anims.play('enemy3float')
-        // if (playerAlive){
-        //   if (dronePos > 50){
-        //     enemy3.setVelocityX(50);
-        //   }
-        //   else{
-        //     enemy3.setVelocityX(-50);
-        //   }
-        // }
-
 
 
         // Checks if player is detected

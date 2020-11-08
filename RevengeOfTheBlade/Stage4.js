@@ -21,6 +21,7 @@ var police, policeAlive = true, policeLife = 100, policeLifeText, policeDmg;
 var car, carAlive = true, carLife = 100, carLifeText, carDmg;
 var politician, politicianAlive = true, politicianLife = 100, politicianLifeText, politicianDmg;
 var healthLoot;
+var delX1, delX2, delX3;
 
 // PLATFORMS
 var pf1, pf2, pf3, pf4, pf5;
@@ -425,9 +426,16 @@ class Stage4 extends Phaser.Scene {
         this.resetTints();
 
         if (!playerDetected) {
-            police.anims.play('policeLeft');
+            police.anims.play('policeStatic');
+            politician.anims.play('politicianStatic');
+            car.anims.play('carLeft');
         }
         else {
+            delX1 = police.body.position.x - player.body.position.x;
+            delX2 = politician.body.position.x - player.body.position.x;
+            delX3 = car.body.position.x - player.body.position.x;
+            
+            /*
             if (player.body.position.x < police.body.position.x - 5) {
                 police.anims.play('policeLeft', true);
                 police.setVelocityX(-70);
@@ -440,9 +448,75 @@ class Stage4 extends Phaser.Scene {
                 police.anims.play('policeStatic');
                 police.setVelocityX(0);
             }
+            */
+
+            // Player is left of enemies
+            if (player.body.position.x < police.body.position.x) {
+                police.anims.play('policeLeft');
+                if (delX1 > 160) {
+                    police.setVelocityX(-70);
+                }
+                else if (delX1 < 130) {
+                    police.setVelocityX(70);
+                }
+                else {
+                    police.setVelocityX(0);
+                    police.anims.play('policeStatic');
+                }
+            }
+            // Player is right of enemies
+            else if (player.body.position.x > police.body.position.x) {
+                police.anims.play('policeRight');
+                if (delX1 > -130) {
+                    police.setVelocityX(-75);
+                }
+                else if (delX1 < -160) {
+                    police.setVelocityX(70);
+                }
+                else {
+                    police.setVelocityX(0);
+                    police.anims.play('policeStatic');
+                }
+            }
+
+            // politician
+            if (player.body.position.x < politician.body.position.x) {
+                politician.anims.play('politicianLeft');
+                if (delX2 > 50) {
+                    politician.setVelocityX(-50);
+                }
+                else if (delX2 <= 50) {
+                    politician.setVelocityX(50);
+                }
+                else {
+                    police.setVelocityX(0);
+                    police.anims.play('politicianStatic');
+                }
+            }
+            else if (player.body.position.x > politician.body.position.x) {
+                politician.anims.play('politicianRight');
+                if (delX2 < -50) {
+                    politician.setVelocityX(50);
+                }
+                else if (delX2 > -50) {
+                    politician.setVelocityX(-50);
+                }
+                else {
+                    police.setVelocityX(0);
+                    police.anims.play('politicianStatic');
+                }
+            }
+
         }
 
         if (Math.abs(player.body.position.x - police.body.position.x) <= 150) {
+            playerDetected = true;
+        }
+        if (Math.abs(player.body.position.x - politician.body.position.x) <= 150) {
+            playerDetected = true;
+        }
+
+        if (Math.abs(player.body.position.x - car.body.position.x) <= 800) {
             playerDetected = true;
         }
 
@@ -471,6 +545,7 @@ class Stage4 extends Phaser.Scene {
         this.updatePlayerLifeText();
     }
 
+    
     // Function that clears the tints on each object (player and enemies) each loop.
     // Necessary because Events/Callbacks not allowed in Dagger/Laser detection
     resetTints() {
