@@ -14,6 +14,14 @@ var sky, clouds, far, back, mid, front;
 var ground, platforms, obstacles;
 var daggerGroup;
 
+// PLATFORM CODE
+var pf1, pf2, pf3, pf4, pf5;
+var dir1 = 1;
+var dir2 = 1;
+var dir3 = 1;
+var dir4 = 1;
+var dir5 = 1;
+
 // SCENE SPECIFIC VARIABLES
 var target1, target2;
 var target1life = 50, target2life = 50;
@@ -21,12 +29,14 @@ var target1Alive = true, target2Alive = true;
 var target1LifeText = 50, target2LifeText = 50;
 var target1Dmg = false, target2Dmg = false;
 
+
 // DEBUG PARAMETERS
 var debug = false;
 var graphics, testLine;
 
 // SOUND
 var preattack1, preattack2, attack1_metal, attack1_object, attack1_platform;
+var soundtrack0;
 
 // SCENE CLASS
 class Tutorial extends Phaser.Scene {
@@ -44,6 +54,8 @@ class Tutorial extends Phaser.Scene {
         this.load.spritesheet('hero_ranged_attack_arm_final', 'assets/sprites/ranged-attack/attack2-throw.png', { frameWidth: 220, frameHeight: 230 });
 
         // soundeffects
+        // soundtrack
+        this.load.audio('tutorialMusic', ['assets/audio/soundtrack/tutorial.wav']);
         this.load.audio('preattack1', ['assets/audio/soundeffects/player/preattack1.mp3']);
         this.load.audio('preattack2', ['assets/audio/soundeffects/player/preattack2.mp3']);
 
@@ -59,6 +71,7 @@ class Tutorial extends Phaser.Scene {
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
         this.load.image('platformH', 'assets/platforms/platformH.png');
+        this.load.image('platform1', 'assets/platforms/platform-s1.png');
 
         // Target
         this.load.image('target', 'assets/target.png');
@@ -70,6 +83,9 @@ class Tutorial extends Phaser.Scene {
     // Create all the Sprites/Images/Platforms
     create() {
         this.cameras.main.setBackgroundColor('#828b99');
+        // Play background music
+        soundtrack0 = this.sound.add('tutorialMusic', {volume: 0.15, loop: true});
+        soundtrack0.play();
 
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky01');
@@ -88,6 +104,31 @@ class Tutorial extends Phaser.Scene {
         // soundeffects
         preattack1 = this.sound.add('preattack1', {volume: 0.25});
         preattack2 = this.sound.add('preattack2', {volume: 0.25});
+
+        //Moving platforms
+        pf1 = this.physics.add.image(50, 470, 'platform1')
+            .setImmovable(true);
+        pf1.body.collideWorldBounds = true;
+        pf1.body.bounce.set(1);
+        pf1.body.setAllowGravity(false);
+
+        pf2 = this.physics.add.image(300, 380, 'platform1')
+            .setImmovable(true);
+
+        pf3 = this.physics.add.image(150, 170, 'platform1')
+            .setImmovable(true);
+        pf3.body.collideWorldBounds = true;
+        pf3.body.bounce.set(1);
+        pf3.body.setAllowGravity(false);
+
+        pf4 = this.physics.add.image(700, 270, 'platform1')
+            .setImmovable(true);
+
+        pf5 = this.physics.add.image(600, 280, 'platform1')
+            .setImmovable(true);
+        pf5.body.collideWorldBounds = true;
+        pf5.body.bounce.set(1);
+        pf5.body.setAllowGravity(false);
 
         // Platforms
         platforms = this.physics.add.staticGroup();
@@ -198,9 +239,10 @@ class Tutorial extends Phaser.Scene {
     // Constantly Updating Game Loop
     update() {
         // Scene End Condition
-        if (target1Alive == false && target2Alive == false) {
+        if (!target1Alive && !target2Alive) {
           this.scene.pause('Tutorial');
           this.scene.launch('TutorialCompleted');
+          soundtrack0.stop();
         }
 
         // Implement Parallax Background
@@ -209,6 +251,71 @@ class Tutorial extends Phaser.Scene {
         back.tilePositionX -= 0.2;
         mid.tilePositionX += 0.1;
 
+        // Platform movement
+        pf1.setVelocityX(dir1*70);
+        if (pf1.body.position.x >= 400){
+            dir1 = -1;
+        }
+        if (pf1.body.position.x <= 10){
+            dir1 = 1;
+        }
+
+        pf2.setVelocityY(dir2*60);
+        if (pf2.body.position.y >= 500){
+            dir2 = -1;
+        }
+        if (pf2.body.position.y <= 100){
+            dir2 = 1;
+        }
+
+        pf3.setVelocityX(dir3*70);
+        // pf3.setVelocityY(0);
+        if (pf3.body.position.x >= 600){
+            dir3 = -1;
+        }
+        if (pf3.body.position.x <= 200){
+            dir3 = 1;
+        }
+
+        pf4.setVelocityY(dir4*40);
+        if (pf4.body.position.y >= 600){
+            dir4 = -1;
+        }
+        if (pf4.body.position.y <= 130){
+            dir4 = 1;
+        }
+            
+        pf5.setVelocityX(dir5*70);
+        if (pf5.body.position.x >= 600){
+            dir5 = -1;
+        }
+        if (pf5.body.position.x <= 100){
+            dir5 = 1;
+        }
+
+
+        // allow player to stand on platforms
+        this.physics.world.collide(pf1, player, function () {
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf2, player, function () {
+            pf2.setVelocityX(0);
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf3, player, function () {
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf4, player, function () {
+            pf4.setVelocityX(0);
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf5, player, function () {
+            player.setVelocityX(0);
+        });
         // Player Movement
         if (A.isDown) {
             player.setVelocityX(-160);
