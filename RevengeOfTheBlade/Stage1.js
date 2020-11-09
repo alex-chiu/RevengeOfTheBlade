@@ -28,6 +28,7 @@ var raptorLifeText = 80, pteroLifeText = 50, ptero2LifeText = 50;
 var raptorDmg = false, pteroDmg = false, ptero2Dmg = false;
 
 var healthLoot;
+var lootCounter3S = 0;
 var lootCounter1S = 0;
 var lootCounter2S = 0;
 
@@ -231,6 +232,7 @@ class Stage1 extends Phaser.Scene {
         playerAlive = true;
         raptorAlive = true;
         raptorLifeText = 80;
+        lootCounter3S = 0;
         lootCounter1S = 0;
         pteroLife = 50;
         ptero2Life = 50;
@@ -1035,13 +1037,13 @@ class Stage1 extends Phaser.Scene {
             attack1_creature1.play();
             raptorDmg = true;
         }
-        if (raptorLife == 0 && lootCounter1S == 0) {
+        if (raptorLife == 0 && lootCounter3S == 0) {
             var hLoot = healthLoot.create(raptor.body.x, raptor.body.y, 'healthLoot');
             hLoot.setBounce(0.5);
             hLoot.setCollideWorldBounds(true);
             raptor.disableBody(true, true);
             raptorAlive = false;
-            lootCounter1S += 1
+            lootCounter3S += 1
         }
     }
 
@@ -1066,13 +1068,13 @@ class Stage1 extends Phaser.Scene {
                 }
             })
         }
-        if (pteroLife == 0 && lootCounter3 == 0) {
+        if (pteroLife == 0 && lootCounter1S == 0) {
             var hLoot = healthLoot.create(ptero.body.x, ptero.body.y, 'healthLoot');
             hLoot.setBounce(0.7);
             hLoot.setCollideWorldBounds(true);
             ptero.disableBody(true, true);
             pteroAlive = false;
-            lootCounter3 += 1
+            lootCounter1S += 1
         }
     }
 
@@ -1096,6 +1098,15 @@ class Stage1 extends Phaser.Scene {
                     ptero2.clearTint();
                 }
             })
+        }
+
+        if (ptero2Life == 0 && lootCounter2S == 0) {
+            var hLoot = healthLoot.create(ptero2.body.x, ptero2.body.y, 'healthLoot');
+            hLoot.setBounce(0.7);
+            hLoot.setCollideWorldBounds(true);
+            ptero2.disableBody(true, true);
+            ptero2Alive = false;
+            lootCounter2S += 1
         }
     }
 
@@ -1189,27 +1200,31 @@ class DaggerS1 extends Phaser.Physics.Arcade.Sprite {
             ptero2Dmg = true;
         }
 
-        if (raptorLife == 0 && lootCounter1S == 0) {
+        if (raptorLife == 0 && lootCounter3S == 0) {
             var hLoot = healthLoot.create(raptor.body.x, raptor.body.y, 'healthLoot');
             hLoot.setBounce(0.5);
             hLoot.setCollideWorldBounds(true);
             raptor.disableBody(true, true);
             raptorAlive = false;
-            lootCounter1S += 1
+            lootCounter3S += 1
         }
 
-        if (pteroLife == 0 && lootCounter2S == 0) {
+        if (pteroLife == 0 && lootCounter1S == 0) {
             var hLoot = healthLoot.create(ptero.body.x, ptero.body.y, 'healthLoot');
             hLoot.setBounce(0.5);
             hLoot.setCollideWorldBounds(true);
             ptero.disableBody(true, true);
             pteroAlive = false;
-            lootCounter2S += 1
+            lootCounter1S += 1
         }
 
-        if (ptero2Life <= 4) {
+        if (ptero2Life == 0 && lootCounter2S == 0) {
+            var hLoot = healthLoot.create(ptero2.body.x, ptero2.body.y, 'healthLoot');
+            hLoot.setBounce(0.5);
+            hLoot.setCollideWorldBounds(true);
             ptero2.disableBody(true, true);
             ptero2Alive = false;
+            lootCounter2S += 1
         }
     }
 
