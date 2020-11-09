@@ -29,9 +29,9 @@ var dir5 = 1;
 // Enemies
 var enemy1, enemy2, enemy3;
 var delX1, delX2, dronePos, delX3, delY3;
-var enemy1Life = 50, enemy2Life = 50, enemy3Life = 40;
+var enemy1Life = 50, enemy2Life = 70, enemy3Life = 40;
 var enemy1Alive = true, enemy2Alive = true, enemy3Alive = true;
-var enemy1LifeText = 50, enemy2LifeText = 50, enemy3LifeText = 40;
+var enemy1LifeText = 50, enemy2LifeText = 70, enemy3LifeText = 40;
 var enemy1Dmg = false, enemy2Dmg = false, enemy3Dmg = false;
 
 // Loot
@@ -152,7 +152,7 @@ class Stage5 extends Phaser.Scene {
 
         pf5 = this.physics.add.image(600, 200, 'platform5')
             .setImmovable(true);
-        
+
 
         // Player Life Text
         lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
@@ -221,14 +221,14 @@ class Stage5 extends Phaser.Scene {
         // Reset Values
         playerLife = 100;
         enemy1Life = 50;
-        enemy2Life = 50;
+        enemy2Life = 70;
         enemy3Life = 25;
         playerAlive = true;
         enemy1Alive = true;
         enemy2Alive = true;
         enemy3Alive = true;
         enemy1LifeText = 50;
-        enemy2LifeText = 50;
+        enemy2LifeText = 70;
         enemy3LifeText = 40;
         lootCounter1 = 0;
         lootCounter2 = 0;
@@ -261,7 +261,7 @@ class Stage5 extends Phaser.Scene {
 
         // Enemy Life Text
         enemy1LifeText = this.add.text(590, 20, 'Robot Life: 50', { fontSize: '15px', fill: '#ffffff' });
-        enemy2LifeText = this.add.text(390, 20, 'Spy Bot Life: 50', { fontSize: '15px', fill: '#ffffff' });
+        enemy2LifeText = this.add.text(390, 20, 'Spy Bot Life: 70', { fontSize: '15px', fill: '#ffffff' });
         enemy3LifeText = this.add.text(190, 20, 'Drone Life: 40', { fontSize: '15px', fill: '#ffffff' });
 
         // Enemy Overlap
@@ -286,7 +286,7 @@ class Stage5 extends Phaser.Scene {
 
         this.physics.add.overlap(enemy1, pf4);
         this.physics.add.overlap(enemy2, pf4);
-        
+
         this.physics.add.overlap(enemy1, pf5);
         this.physics.add.overlap(enemy2, pf5);
 
@@ -356,7 +356,7 @@ class Stage5 extends Phaser.Scene {
         if (pf4.body.position.y <= 200){
             dir4 = 1;
         }
-        
+
         // 600 800
         pf5.setVelocityX(dir5*50);
         pf5.setVelocityY(0);
