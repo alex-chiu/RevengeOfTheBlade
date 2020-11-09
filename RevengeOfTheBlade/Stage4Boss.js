@@ -114,7 +114,7 @@ class Stage4Boss extends Phaser.Scene {
         back = this.add.tileSprite(400, 300, 800, 600, '4back31');
         mid = this.add.tileSprite(400, 300, 800, 600, '4mid41');
         front = this.add.tileSprite(400, 300, 800, 600, '4front51');
-        ground = this.add.tileSprite(400, 300, 800, 600, '4ground11');
+        ground = this.add.tileSprite(400, 312, 800, 600, '4ground11');
         this.add.existing(ground);
         sky.fixedToCamera = true;
 

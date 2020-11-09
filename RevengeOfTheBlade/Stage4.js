@@ -108,7 +108,7 @@ class Stage4 extends Phaser.Scene {
         back = this.add.tileSprite(400, 300, 800, 600, '4back31');
         mid = this.add.tileSprite(400, 300, 800, 600, '4mid41');
         front = this.add.tileSprite(400, 300, 800, 600, '4front51');
-        ground = this.add.tileSprite(400, 300, 800, 600, '4ground11');
+        ground = this.add.tileSprite(400, 312, 800, 600, '4ground11');
         this.add.existing(ground);
         sky.fixedToCamera = true;
 
@@ -148,8 +148,8 @@ class Stage4 extends Phaser.Scene {
         pf5.body.collideWorldBounds = true;
         pf5.body.bounce.set(1);
         pf5.body.setAllowGravity(false);
-        
-        
+
+
         // Create Dagger Group
         daggerGroup = new DaggerGroupS4(this);
 
@@ -271,8 +271,8 @@ class Stage4 extends Phaser.Scene {
         this.physics.add.collider(car, platforms);
         this.physics.add.overlap(player, car);
         this.physics.add.overlap(playerMeleeAtk, car);
-        
-        
+
+
         // Enemy and Platform Overlap
 
         this.physics.add.overlap(police, pf1);
@@ -286,7 +286,7 @@ class Stage4 extends Phaser.Scene {
 
         this.physics.add.overlap(police, pf4);
         this.physics.add.overlap(politician, pf4);
-        
+
         this.physics.add.overlap(police, pf5);
         this.physics.add.overlap(politician, pf5);
 
@@ -343,7 +343,7 @@ class Stage4 extends Phaser.Scene {
         if (pf4.body.position.y <= 130){
             dir4 = 1;
         }
-            
+
         pf5.setVelocityX(dir5*70);
         if (pf5.body.position.x >= 600){
             dir5 = -1;
@@ -375,7 +375,7 @@ class Stage4 extends Phaser.Scene {
         this.physics.world.collide(pf5, player, function () {
             player.setVelocityX(0);
         });
-        
+
 
 
         // Player Movement
@@ -438,7 +438,7 @@ class Stage4 extends Phaser.Scene {
             delX1 = police.body.position.x - player.body.position.x;
             delX2 = politician.body.position.x - player.body.position.x;
             delX3 = car.body.position.x - player.body.position.x;
-            
+
             /*
             if (player.body.position.x < police.body.position.x - 5) {
                 police.anims.play('policeLeft', true);
@@ -549,7 +549,7 @@ class Stage4 extends Phaser.Scene {
         this.updatePlayerLifeText();
     }
 
-    
+
     // Function that clears the tints on each object (player and enemies) each loop.
     // Necessary because Events/Callbacks not allowed in Dagger/Laser detection
     resetTints() {
