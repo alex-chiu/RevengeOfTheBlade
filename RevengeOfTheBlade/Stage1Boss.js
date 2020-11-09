@@ -29,6 +29,8 @@ var dirB = 1, dirDa = 1;
 var dags, dagsAlive = true;
 var swordLoot, swordAlive = true;
 
+var soundtrack1;
+
 // DEBUG PARAMETERS
 var debug = false;
 var graphics, testLine;
@@ -70,6 +72,9 @@ class Stage1Boss extends Phaser.Scene {
         this.load.image('balloon', 'assets/balloon2.png');
 
         // Sound Effects
+        // Soundtrack
+        this.load.audio('stage1Music', ['assets/audio/soundtrack/stage1.wav']);
+        
         // Melee
         this.load.audio('preattack1', ['assets/audio/soundeffects/player/preattack1.mp3']);
         this.load.audio('attack1_metal', ['assets/audio/soundeffects/player/attack1_metal.mp3']);
@@ -90,6 +95,8 @@ class Stage1Boss extends Phaser.Scene {
     // Create all the Sprites/Images/Platforms
     create() {
         this.cameras.main.setBackgroundColor('#828b99');
+        soundtrack1 = this.sound.add('stage1Music', {volume: 0.15, loop: true});
+        soundtrack1.play();
 
         // Player attack sound effects
         preattack1 = this.sound.add('preattack1', {volume: 0.15});
@@ -239,6 +246,7 @@ class Stage1Boss extends Phaser.Scene {
         if (!swordAlive && !dagsAlive) {
             this.scene.pause('Stage1Boss');
             this.scene.launch('Stage1BossWin');
+            soundtrack1.stop();
         }
         else if (!playerAlive) {
             this.scene.pause('Stage1Boss');

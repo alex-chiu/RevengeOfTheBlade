@@ -51,9 +51,6 @@ class Preload extends Phaser.Scene {
         this.createCarAnims();
         this.createPoliticianAnims();
 
-        // Stage 4 Animations
-        this.createPoliceAnims();
-
         // Stage 5 Animations
         this.createEnemy1Anims();
         this.createEnemy2Anims();
@@ -229,26 +226,6 @@ class Preload extends Phaser.Scene {
         })
     }
 
-    createPoliceAnims() {
-        this.anims.create({
-            key: 'policeLeft',
-            frames: this.anims.generateFrameNumbers('police', { start: 0, end: 6}),
-            frameRate: 10,
-            repeat: -1
-        })
-        this.anims.create({
-            key: 'policeRight',
-            frames: this.anims.generateFrameNumbers('police', { start: 7, end: 13}),
-            frameRate: 10,
-            repeat: -1
-        })
-        this.anims.create({
-            key: 'policeStatic',
-            frames: [ { key: 'police', frame: 6 } ],
-            frameRate: 10,
-            repeat: -1
-        })
-    }
 
     // Creates enemy animations
     createEnemy1Anims() {
@@ -294,27 +271,31 @@ class Preload extends Phaser.Scene {
         });
     }
 
-
-    // Stage 4 enemy animations
     createPoliceAnims() {
         this.anims.create({
-            key:'policeLeft',
+            key: 'policeLeft',
             frames: this.anims.generateFrameNumbers('police', { start: 0, end: 6}),
             frameRate: 10,
             repeat: -1
-        });
+        })
         this.anims.create({
-            key:'policeRight',
+            key: 'policeRight',
             frames: this.anims.generateFrameNumbers('police', { start: 7, end: 13}),
             frameRate: 10,
             repeat: -1
-        });
+        })
+        this.anims.create({
+            key: 'policeStatic',
+            frames: [ { key: 'police', frame: 6 } ],
+            frameRate: 10,
+            repeat: -1
+        })
     }
 
     createCarAnims() {
         this.anims.create({
             key:'carLeft',
-            frames: this.anims.generateFrameNumbers('car', { start: 0, end: 1}),
+            frames: this.anims.generateFrameNumbers('car', { starddt: 0, end: 1}),
             frameRate: 10,
             repeat: -1
         });
@@ -328,14 +309,20 @@ class Preload extends Phaser.Scene {
 
     createPoliticianAnims() {
         this.anims.create({
-            key:'polLeft',
+            key:'politicianLeft',
             frames: this.anims.generateFrameNumbers('politician', { start: 0, end: 5}),
             frameRate: 10,
             repeat: -1
         });
         this.anims.create({
-            key:'polRight',
+            key:'politicianRight',
             frames: this.anims.generateFrameNumbers('politician', { start: 6, end: 11}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'politicianStatic',
+            frames: this.anims.generateFrameNumbers('politician', { start: 6, end: 7}),
             frameRate: 10,
             repeat: -1
         });
