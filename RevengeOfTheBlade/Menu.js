@@ -4,9 +4,12 @@
     Has options for entering the tutorial or starting the game.
 */
 
+// const { default: WebFontFile } = ("./WebFontFile.js");
+
 var playButton, tutorialButton, audioButton;
 var soundState = 'off';
 var buttonSound;
+var clouds;
 
 class Menu extends Phaser.Scene {
     constructor() {
@@ -20,7 +23,7 @@ class Menu extends Phaser.Scene {
       this.load.image('clouds1', 'assets/backgrounds/stage5/1clouds.png');
 
       this.load.audio('buttonSound', ['assets/audio/soundeffects/button1.mp3']);
-      
+    
     }
 
     create() {
@@ -31,10 +34,10 @@ class Menu extends Phaser.Scene {
 
       // Background
       this.add.tileSprite(400, 300, 800, 600, 'sky0');
-      this.add.tileSprite(400, 300, 800, 600, 'clouds1');
+      clouds = this.add.tileSprite(400, 300, 800, 600, 'clouds1');
 
       // Title
-      this.add.text(80,90,'Revenge of The', { fontSize: '75px', fill: '#ffffff' });
+      this.add.text(80,90,'Revenge of The', { fontSize: '75px', fill: '#ffffff'});
       this.add.text(280,170,'Blade', { fontSize: '75px', fill: '#ffffff' });
 
       // Play tutorial
@@ -84,13 +87,13 @@ class Menu extends Phaser.Scene {
 
     buttonOver(button) {
       if (button == playButton) {
-        playButton.setStyle({fill:'#fffb00'});
+        playButton.setStyle({fill:'#FACF1A'});
       }
       if (button == tutorialButton) {
-        tutorialButton.setStyle({fill:'#fffb00'});
+        tutorialButton.setStyle({fill:'#FACF1A'});
       }
       if (button == audioButton) {
-        audioButton.setStyle({fill:'#fffb00'});
+        audioButton.setStyle({fill:'#FACF1A'});
       }
     }
 
@@ -107,6 +110,6 @@ class Menu extends Phaser.Scene {
     }
 
     update() {
-
+      clouds.tilePositionX += 0.8;
     }
 }

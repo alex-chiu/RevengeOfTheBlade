@@ -58,7 +58,7 @@ class Stage5 extends Phaser.Scene {
     // Preload Images and Sprites
     preload() {
         // Soundtrack
-        this.load.audio('stage5Music', ['assets/audio/soundtrack/stage1.wav']);
+        this.load.audio('stage5Music', ['assets/audio/soundtrack/stage5.wav']);
 
         // Sound Effects
         // Melee

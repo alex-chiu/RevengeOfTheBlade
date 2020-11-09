@@ -21,7 +21,7 @@ class InstructionsS1C extends Phaser.Scene {
       this.add.text(50, 350, 'SPACE - Melee Attack', { fontSize: '40px', fill: '#d2c4f5' });
       this.add.text(50, 400, 'MB1 - Ranged Attack', { fontSize: '40px', fill: '#d2c4f5' });
 
-      this.load.image('heroStatic', 'assets/sprites/hero_static.png');
+      this.load.image('heroStatic', 'assets/sprites/hero.png');
       this.load.image('arrowR', 'assets/arrowR.png');
       this.load.image('arrowL', 'assets/arrowL.png');
       menuTxt = this.add.text(100, 541,'MENU', { fontSize: '20px', fill: '#ffffff' });

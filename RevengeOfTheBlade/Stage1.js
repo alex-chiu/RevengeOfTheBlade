@@ -14,16 +14,18 @@ var lifeText;
 var sky, clouds, far, back, mid, front;
 var ground, platforms, obstacles;
 var daggerGroup;
+var nextAttack;
 
 // SCENE SPECIFIC VARIABLES
 var button1;
+var soundtrack1;
 
-var raptor, ptero;
-var delX, delY;
-var raptorLife = 80, pteroLife = 50;
-var raptorAlive = true, pteroAlive = 50;
-var raptorLifeText = 80, pteroLifeText = 50;
-var raptorDmg = false, pteroDmg = false;
+var raptor, ptero, ptero2;
+var delX, delY, delX2, delY2;
+var raptorLife = 80, pteroLife = 50,  ptero2Life = 50;
+var raptorAlive = true, pteroAlive = 50, ptero2Alive = 50;
+var raptorLifeText = 80, pteroLifeText = 50, ptero2LifeText = 50;
+var raptorDmg = false, pteroDmg = false, ptero2Dmg = false;
 
 var healthLoot;
 var lootCounter1S = 0;
@@ -37,9 +39,13 @@ var dir3 = 1;
 var dir4 = 1;
 var dir5 = 1;
 
+
 // DEBUG PARAMETERS
 var debug = false;
 var graphics, testLine;
+
+// SFX
+var attack1_creature, attack1_creature1, ptero_wingflap;
 
 // SCENE CLASS
 class Stage1 extends Phaser.Scene {
@@ -71,23 +77,31 @@ class Stage1 extends Phaser.Scene {
 
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
-        this.load.image('platformH', 'assets/platforms/platform-s1.png');
-
+        this.load.image('platform1', 'assets/platforms/platform-s1.png');
+        
         // Dagger
         this.load.image('dagger', 'assets/daggers.png');
 
         // Sound Effects
+        // Soundtrack
+        this.load.audio('stage1Music', ['assets/audio/soundtrack/stage1.wav']);
         // Melee
         this.load.audio('preattack1', ['assets/audio/soundeffects/player/preattack1.mp3']);
         this.load.audio('attack1_metal', ['assets/audio/soundeffects/player/attack1_metal.mp3']);
         this.load.audio('attack1_object', ['assets/audio/soundeffects/player/attack1_object.mp3']);
         this.load.audio('attack1_platform', ['assets/audio/soundeffects/player/attack1_platform.mp3']);
+        this.load.audio('attack1_creature', ['assets/audio/soundeffects/player/attack1_creature.mp3']);
+        this.load.audio('attack1_creature1', ['assets/audio/soundeffects/player/attack1_creature1.mp3']);
+
         // Range
         this.load.audio('preattack2', ['assets/audio/soundeffects/player/preattack2.mp3']);
         this.load.audio('attack2_throw', ['assets/audio/soundeffects/player/preattack2.mp3']);
         this.load.audio('attack2_metal', ['assets/audio/soundeffects/player/preattack2.mp3']);
         // Both
         this.load.audio('attack_noenemy', ['assets/audio/soundeffects/player/attack1_noenemy.mp3']);
+        
+        // enemy movement 
+        this.load.audio('ptero_wingflap', ['assets/audio/soundeffects/Stage1/pterodactyl_wingflap.mp3']);
 
         // Loot
         this.load.image('healthLoot', 'assets/healthLoot.png');
@@ -96,6 +110,9 @@ class Stage1 extends Phaser.Scene {
     // Create all the Sprites/Images/Platforms
     create() {
         this.cameras.main.setBackgroundColor('#828b99');
+        soundtrack1 = this.sound.add('stage1Music', {volume: 0.15, loop: true});
+        soundtrack1.play();
+
 
         // Player attack sound effects
         preattack1 = this.sound.add('preattack1', {volume: 0.15});
@@ -106,8 +123,12 @@ class Stage1 extends Phaser.Scene {
         attack2_throw = this.sound.add('attack2_throw', {volume: 0.15});
         attack2_metal = this.sound.add('attack2_metal', {volume: 0.15});
         attack_noenemy = this.sound.add('attack_noenemy', {volume: 0.15});
+        attack1_creature = this.sound.add('attack1_creature', {volume: 0.15});
+        attack1_creature1 = this.sound.add('attack1_creature', {volume: 0.15});
+        ptero_wingflap = this.sound.add('ptero_wingflap', {volume: 0.15});
 
-        // Background
+
+        // Background Tile Sprites (X, Y, W, H)
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky01');
         clouds = this.add.tileSprite(400, 300, 800, 600, 'clouds11');
         far = this.add.tileSprite(400, 300, 800, 600, 'far21');
@@ -131,22 +152,31 @@ class Stage1 extends Phaser.Scene {
         }
 
         // Moving platforms
-        pf1 = this.physics.add.image(50, 400, 'platformH')
+        pf1 = this.physics.add.image(50, 470, 'platform1')
+            .setImmovable(true);
+        pf1.body.collideWorldBounds = true;
+        pf1.body.bounce.set(1);
+        pf1.body.setAllowGravity(false);
+
+        pf2 = this.physics.add.image(300, 380, 'platform1')
             .setImmovable(true);
 
-        pf2 = this.physics.add.image(300, 350, 'platformH')
+        pf3 = this.physics.add.image(150, 170, 'platform1')
+            .setImmovable(true);
+        pf3.body.collideWorldBounds = true;
+        pf3.body.bounce.set(1);
+        pf3.body.setAllowGravity(false);
+
+        pf4 = this.physics.add.image(700, 270, 'platform1')
             .setImmovable(true);
 
-        pf3 = this.physics.add.image(150, 150, 'platformH')
+        pf5 = this.physics.add.image(600, 280, 'platform1')
             .setImmovable(true);
-
-        pf4 = this.physics.add.image(700, 250, 'platformH')
-            .setImmovable(true);
-
-        pf5 = this.physics.add.image(600, 200, 'platformH')
-            .setImmovable(true);
+        pf5.body.collideWorldBounds = true;
+        pf5.body.bounce.set(1);
+        pf5.body.setAllowGravity(false);
         
-
+        
         // Create Dagger Group
         daggerGroup = new DaggerGroupS1(this);
 
@@ -203,8 +233,11 @@ class Stage1 extends Phaser.Scene {
         raptorLifeText = 80;
         lootCounter1S = 0;
         pteroLife = 50;
+        ptero2Life = 50;
         pteroAlive = true;
+        ptero2Alive = true;
         pteroLifeText = 50;
+        ptero2LifeText = 50;
         lootCounter2S = 0;
         playerDetected = false;
         attackAnimPlaying = false;
@@ -217,37 +250,51 @@ class Stage1 extends Phaser.Scene {
         raptor.scaleY = raptor.scaleX;
         raptor.body.setGravityY(300);
 
-        ptero = this.physics.add.sprite(600, 400, 'ptero')
+        ptero = this.physics.add.sprite(300, 200, 'ptero')
         ptero.setCollideWorldBounds(true);
         ptero.displayWidth = game.config.width * 0.18;
         ptero.scaleY = ptero.scaleX;
-        ptero.body.setGravityY(5);
+        ptero.body.setAllowGravity(false);
+
+        ptero2 = this.physics.add.sprite(500, 100, 'ptero')
+        ptero2.setCollideWorldBounds(true);
+        ptero2.displayWidth = game.config.width * 0.18;
+        ptero2.scaleY = ptero2.scaleX;
+        ptero2.body.setAllowGravity(false);
 
 
         // Enemy Life Text
         raptorLifeText = this.add.text(590, 20, 'Raptor Life: 80', { fontSize: '15px', fill: '#ffffff' });
-        pteroLifeText = this.add.text(390, 20, 'Ptero Life: 50', { fontSize: '15px', fill: '#ffffff' });
+        pteroLifeText = this.add.text(200, 20, 'Ptero Life: 50', { fontSize: '15px', fill: '#ffffff' });
+        ptero2LifeText = this.add.text(380, 20, 'Ptero 2 Life: 50', { fontSize: '15px', fill: '#ffffff' });
 
         // Enemy Overlap
         this.physics.add.collider(raptor, platforms);
         this.physics.add.overlap(player, raptor);
         this.physics.add.overlap(playerMeleeAtk, raptor);
         this.physics.add.overlap(player, ptero);
+        this.physics.add.overlap(player, ptero2);
         this.physics.add.overlap(playerMeleeAtk, ptero);
+        this.physics.add.overlap(player, ptero2);
 
         this.physics.add.overlap(ptero, pf1);
+        this.physics.add.overlap(ptero2, pf1);
         this.physics.add.overlap(raptor, pf1);
 
         this.physics.add.overlap(ptero, pf2);
+        this.physics.add.overlap(ptero2, pf2);
         this.physics.add.overlap(raptor, pf2);
 
         this.physics.add.overlap(ptero, pf3);
+        this.physics.add.overlap(ptero2, pf3);
         this.physics.add.overlap(raptor, pf3);
 
         this.physics.add.overlap(ptero, pf4);
+        this.physics.add.overlap(ptero2, pf4);
         this.physics.add.overlap(raptor, pf4);
         
         this.physics.add.overlap(ptero, pf5);
+        this.physics.add.overlap(ptero2, pf5);
         this.physics.add.overlap(raptor, pf5);
 
 
@@ -255,7 +302,7 @@ class Stage1 extends Phaser.Scene {
         button1 = this.add.text(50, 50, 'BOSS 1', { fontSize: '20px', fill: '#b5dbf7' });
         button1.setInteractive();
         button1.on('pointerdown', () => {
-            //soundtrack5.stop();
+            soundtrack1.stop();
             this.scene.stop('Stage1');
             this.scene.start('Stage1Boss');
         });
@@ -264,7 +311,7 @@ class Stage1 extends Phaser.Scene {
     // Constantly Updating Game Loop
     update() {
         // Scene End Condition
-        if (!raptorAlive && !pteroAlive) {
+        if (!raptorAlive && !pteroAlive && !ptero2Alive) {
             this.scene.pause('Stage1');
             this.scene.launch('Stage1Win');
         }
@@ -280,53 +327,52 @@ class Stage1 extends Phaser.Scene {
         mid.tilePositionX += 0.1;
 
         // Platform movement
-        // 50 150
-        pf1.setVelocityX(dir1*50);
-        pf1.setVelocityY(0);
-        if (pf1.body.position.x >= 30){
-            dir1 = 1;
-        }
-        if (pf1.body.position.x <= 300){
+        pf1.setVelocityX(dir1*70);
+        // pf1.setVelocityY(0);
+        if (pf1.body.position.x >= 400){
             dir1 = -1;
+        }
+        if (pf1.body.position.x <= 10){
+            dir1 = 1;
         }
 
         pf2.setVelocityY(dir2*60);
-        if (pf2.body.position.y >= 300){
+        if (pf2.body.position.y >= 500){
             dir2 = -1;
         }
         if (pf2.body.position.y <= 100){
             dir2 = 1;
         }
-        /// 150 600
+
         pf3.setVelocityX(dir3*70);
-        pf3.setVelocityY(0);
-        if (pf3.body.position.x >= 100){
-            dir3 = 1;
-        }
-        if (pf3.body.position.x <= 500){
+        // pf3.setVelocityY(0);
+        if (pf3.body.position.x >= 600){
             dir3 = -1;
+        }
+        if (pf3.body.position.x <= 200){
+            dir3 = 1;
         }
 
         pf4.setVelocityY(dir4*40);
-        if (pf4.body.position.y >= 400){
+        if (pf4.body.position.y >= 600){
             dir4 = -1;
         }
-        if (pf4.body.position.y <= 200){
+        if (pf4.body.position.y <= 130){
             dir4 = 1;
         }
         
-        // 600 800
-        pf5.setVelocityX(dir5*50);
-        pf5.setVelocityY(0);
-        if (pf5.body.position.x >= 500){
-            dir5 = 1;
-        }
-        if (pf5.body.position.x <= 800){
+        pf5.setVelocityX(dir5*70);
+        // pf5.setVelocityY(0);
+        if (pf5.body.position.x >= 600){
             dir5 = -1;
         }
+        if (pf5.body.position.x <= 100){
+            dir5 = 1;
+        }
 
+
+        // allow player to stand on platforms
         this.physics.world.collide(pf1, player, function () {
-            pf1.setVelocityX(0);
             player.setVelocityX(0);
         });
 
@@ -336,7 +382,6 @@ class Stage1 extends Phaser.Scene {
         });
 
         this.physics.world.collide(pf3, player, function () {
-            pf3.setVelocityX(0);
             player.setVelocityX(0);
         });
 
@@ -346,10 +391,8 @@ class Stage1 extends Phaser.Scene {
         });
 
         this.physics.world.collide(pf5, player, function () {
-            pf5.setVelocityX(0);
             player.setVelocityX(0);
         });
-
 
 
 
@@ -409,10 +452,15 @@ class Stage1 extends Phaser.Scene {
         if (!playerDetected) {
             raptor.anims.play('raptorStatic');
             ptero.anims.play('pteroStatic');
+            ptero2.anims.play('pteroStatic');
+            ptero_wingflap.play();
+
         }
         else {
             delX = ptero.body.position.x - player.body.position.x;
+            delX2 = ptero2.body.position.x - player.body.position.x;
             delY = ptero.body.position.y - player.body.position.y;
+            delY2 = ptero2.body.position.y - player.body.position.y;
             if (player.body.position.x < raptor.body.position.x - 5) {
                 raptor.anims.play('raptorLeft', true);
                 raptor.setVelocityX(-70);
@@ -425,36 +473,40 @@ class Stage1 extends Phaser.Scene {
                 raptor.anims.play('raptorStatic');
                 raptor.setVelocityX(0);
             }
-
-            if (player.body.position.x < ptero.body.position.x && player.body.position.y < ptero.body.position.y) {
+            // PTERO 1
+            // upper right or directly above
+            if (player.body.position.x <= ptero.body.position.x && player.body.position.y <= ptero.body.position.y) {
                 ptero.anims.play('pteroLeft', true);
+                ptero_wingflap.play();
                 if (delX > 10 && delY > 10) {
-                    ptero.setVelocityX(-60);
-                    ptero.setVelocityY(-5);
+                    ptero.setVelocityX(-70);
+                    ptero.setVelocityY(-1);
                 }
                 else  {
                     ptero.setVelocityX(-60);
-                    ptero.setVelocityY(-20);
+                    ptero.setVelocityY(-5);
                 }
             }
             // ptero is upper left
             else if (player.body.position.x > ptero.body.position.x && player.body.position.y < ptero.body.position.y) {
                 ptero.anims.play('pteroRight', true);
+                ptero_wingflap.play();
                 if (delX > 10 && delY > 10) {
-                    ptero.setVelocityX(60);
-                    ptero.setVelocityY(-50);
+                    ptero.setVelocityX(70);
+                    ptero.setVelocityY(-5);
                 }
                 else  {
                     ptero.setVelocityX(60);
-                    ptero.setVelocityY(-50);
+                    ptero.setVelocityY(-5);
                 }
             }
-            // ptero lower right
-            else if (player.body.position.x < ptero.body.position.x && player.body.position.y > ptero.body.position.y) {
+            // ptero lower right or directly below
+            else if (player.body.position.x <= ptero.body.position.x && player.body.position.y >= ptero.body.position.y) {
                 ptero.anims.play('pteroLeft', true);
+                ptero_wingflap.play();
                 if (delX > 10 && delY > 10) {
-                    ptero.setVelocityX(-60);
-                    ptero.setVelocityY(5);
+                    ptero.setVelocityX(-70);
+                    ptero.setVelocityY(30);
                 }
                 else  {
                     ptero.setVelocityX(-30);
@@ -464,38 +516,13 @@ class Stage1 extends Phaser.Scene {
             // ptero lower left
             else if (player.body.position.x > ptero.body.position.x && player.body.position.y > ptero.body.position.y) {
                 ptero.anims.play('pteroRight', true);
+                ptero_wingflap.play();
                 if (delX > 10 && delY > 10) {
-                    ptero.setVelocityX(-60);
-                    ptero.setVelocityY(-40);
-                }
-                else  {
-                    ptero.setVelocityX(30);
+                    ptero.setVelocityX(-70);
                     ptero.setVelocityY(30);
                 }
-            }
-
-            // ptero directly above
-            else if (player.body.position.x == ptero.body.position.x && player.body.position.y < ptero.body.position.y) {
-                ptero.anims.play('pteroStatic');
-                if (delY > 10) {
-                    ptero.setVelocityX(10);
-                    ptero.setVelocityY(10);
-                }
                 else  {
-                    ptero.setVelocityX(0);
-                    ptero.setVelocityY(-50);
-                }
-            }
-
-            // ptero directly below
-            else if (player.body.position.x == ptero.body.position.x && player.body.position.y > ptero.body.position.y) {
-                ptero.anims.play('pteroStatic');
-                if (delY > 10) {
-                    ptero.setVelocityX(10);
-                    ptero.setVelocityY(10);
-                }
-                else  {
-                    ptero.setVelocityX(3);
+                    ptero.setVelocityX(40);
                     ptero.setVelocityY(30);
                 }
             }
@@ -503,12 +530,13 @@ class Stage1 extends Phaser.Scene {
             // ptero directly left
             else if (player.body.position.x > ptero.body.position.x && player.body.position.y == ptero.body.position.y) {
                 ptero.anims.play('pteroLeft', true);
+                ptero_wingflap.play();
                 if (delX > 10) {
-                    ptero.setVelocityX(10);
+                    ptero.setVelocityX(70);
                     ptero.setVelocityY(10);
                 }
                 else  {
-                    ptero.setVelocityX(30);
+                    ptero.setVelocityX(70);
                     ptero.setVelocityY(3);
                 }
             }
@@ -516,13 +544,96 @@ class Stage1 extends Phaser.Scene {
             // ptero directly right
             else if (player.body.position.x < ptero.body.position.x && player.body.position.y == ptero.body.position.y) {
                 ptero.anims.play('pteroLeft', true);
+                ptero_wingflap.play();
                 if (delX > 200) {
-                    ptero.setVelocityX(10);
+                    ptero.setVelocityX(70);
                     ptero.setVelocityY(10);
                 }
                 else  {
-                    ptero.setVelocityX(-30);
+                    ptero.setVelocityX(-70);
                     ptero.setVelocityY(3);
+                }
+            }
+
+            // PTERO 2
+            // upper right or directly above
+            if (player.body.position.x <= ptero2.body.position.x && player.body.position.y <= ptero2.body.position.y) {
+                ptero2.anims.play('pteroLeft', true);
+                ptero_wingflap.play();
+                if (delX2 > 10 && delY2 > 10) {
+                    ptero2.setVelocityX(-70);
+                    ptero2.setVelocityY(-1);
+                }
+                else {
+                    ptero2.setVelocityX(-60);
+                    ptero2.setVelocityY(-5);
+                }
+            }
+            // ptero is upper left
+            else if (player.body.position.x > ptero2.body.position.x && player.body.position.y < ptero2.body.position.y) {
+                ptero2.anims.play('pteroRight', true);
+                ptero_wingflap.play();
+                if (delX2 > 10 && delY2 > 10) {
+                    ptero2.setVelocityX(70);
+                    ptero2.setVelocityY(-5);
+                }
+                else  {
+                    ptero2.setVelocityX(60);
+                    ptero2.setVelocityY(-5);
+                }
+            }
+            // ptero lower right or directly below
+            else if (player.body.position.x <= ptero2.body.position.x && player.body.position.y >= ptero2.body.position.y) {
+                ptero2.anims.play('pteroLeft', true);
+                ptero_wingflap.play();
+                if (delX2 > 10 && delY2 > 10) {
+                    ptero2.setVelocityX(-70);
+                    ptero2.setVelocityY(30);
+                }
+                else  {
+                    ptero2.setVelocityX(-30);
+                    ptero2.setVelocityY(30);
+                }
+            }
+            // ptero lower left
+            else if (player.body.position.x > ptero2.body.position.x && player.body.position.y > ptero2.body.position.y) {
+                ptero2.anims.play('pteroRight', true);
+                ptero_wingflap.play();
+                if (delX2 > 10 && delY2 > 10) {
+                    ptero2.setVelocityX(-70);
+                    ptero2.setVelocityY(30);
+                }
+                else  {
+                    ptero2.setVelocityX(40);
+                    ptero2.setVelocityY(30);
+                }
+            }
+
+            // ptero directly left
+            else if (player.body.position.x > ptero2.body.position.x && player.body.position.y == ptero2.body.position.y) {
+                ptero2.anims.play('pteroLeft', true);
+                ptero_wingflap.play();
+                if (delX2 > 10) {
+                    ptero2.setVelocityX(70);
+                    ptero2.setVelocityY(10);
+                }
+                else  {
+                    ptero2.setVelocityX(70);
+                    ptero2.setVelocityY(3);
+                }
+            }
+
+            // ptero directly right
+            else if (player.body.position.x < ptero2.body.position.x && player.body.position.y == ptero2.body.position.y) {
+                ptero2.anims.play('pteroLeft', true);
+                ptero_wingflap.play();
+                if (delX2 > 200) {
+                    ptero2.setVelocityX(70);
+                    ptero2.setVelocityY(10);
+                }
+                else  {
+                    ptero2.setVelocityX(-70);
+                    ptero2.setVelocityY(3);
                 }
             }
         }
@@ -539,6 +650,14 @@ class Stage1 extends Phaser.Scene {
             playerDetected = true;
         }
 
+        if (Math.abs(player.body.position.x - ptero2.body.position.x) <= 800) {
+            playerDetected = true;
+        }
+
+        if (Math.abs(player.body.position.y - ptero2.body.position.y) <= 600) {
+            playerDetected = true;
+        }
+
         var boundsPl = player.getBounds();
         var boundsV = raptor.getBounds();
 
@@ -549,6 +668,7 @@ class Stage1 extends Phaser.Scene {
                 player.setActive(false);
                 player.setVisible(false);
                 playerAlive = false;
+                soundtrack1.stop();
             }
             this.updatePlayerLifeText()
             player.setTint('0xff0000');
@@ -569,7 +689,28 @@ class Stage1 extends Phaser.Scene {
                 player.setActive(false);
                 player.setVisible(false);
                 playerAlive = false;
-                //soundtrack5.stop();
+                soundtrack1.stop();
+            }
+            this.updatePlayerLifeText()
+            player.setTint('0xff0000');
+            this.time.addEvent({
+                delay: 300,
+                callback: () => {
+                    player.clearTint();
+                }
+            })
+        }
+
+        var boundsPt2 = ptero2.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsPt2)) && playerAlive && ptero2Alive) {
+            playerLife -= 0.1
+            if (playerLife <= 0) {
+                player.disableBody(true, true);
+                player.setActive(false);
+                player.setVisible(false);
+                playerAlive = false;
+                //soundtrack1.stop();
             }
             this.updatePlayerLifeText()
             player.setTint('0xff0000');
@@ -609,6 +750,16 @@ class Stage1 extends Phaser.Scene {
             })
         }
 
+        if (ptero2Dmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    ptero2.clearTint();
+                    ptero2Dmg = false;
+                }
+            })
+        }
+
         if (playerDmg) {
             this.time.addEvent({
                 delay: 200,
@@ -621,6 +772,17 @@ class Stage1 extends Phaser.Scene {
 
     }
 
+    // function for range attack delay 
+    rangeDelay(){
+        if(nextAttack>game.time.now) {
+            return;
+        } 
+        // > do range attack
+        
+        // wait at least 2 seconds to 
+        nextAttack = game.time.now + 2000; 
+    }
+    
     pickupLoot(player, healthLoot) {
         healthLoot.disableBody(true, true);
         if (playerLife < 90){
@@ -713,6 +875,7 @@ class Stage1 extends Phaser.Scene {
                         // Check damage against targets
                         this.updateRaptorLife();
                         this.updatePteroLife();
+                        this.updatePtero2Life();
                         playerMeleeAtk.anims.play('playerMeleeAtkR');
                         this.time.addEvent({
                             delay: 400,
@@ -738,6 +901,7 @@ class Stage1 extends Phaser.Scene {
                         // Check damage against targets
                         this.updateRaptorLife();
                         this.updatePteroLife();
+                        this.updatePtero2Life();
                         playerMeleeAtk.anims.play('playerMeleeAtkL');
                         this.time.addEvent({
                             delay: 400,
@@ -866,7 +1030,7 @@ class Stage1 extends Phaser.Scene {
             }
             raptorLifeText.setText('Raptor Life: ' + raptorLife);
             raptor.setTint('0xff0000');
-            attack2_metal.play();
+            attack1_creature1.play();
             raptorDmg = true;
         }
         if (raptorLife == 0 && lootCounter1S == 0) {
@@ -892,7 +1056,7 @@ class Stage1 extends Phaser.Scene {
             }
             pteroLifeText.setText('Ptero Life: ' + pteroLife);
             ptero.setTint('0xff0000');
-            attack2_metal.play();
+            attack1_creature.play();
             this.time.addEvent({
                 delay: 400,
                 callback: () => {
@@ -907,6 +1071,29 @@ class Stage1 extends Phaser.Scene {
             ptero.disableBody(true, true);
             pteroAlive = false;
             lootCounter3 += 1
+        }
+    }
+
+    updatePtero2Life() {
+        var boundsA = playerMeleeAtk.getBounds();
+        var boundsB = ptero2.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && ptero2Alive) {
+            if (ptero2Life < 5) {
+                ptero2Life = 0
+            }
+            else {
+                ptero2Life -= 10
+            }
+            ptero2LifeText.setText('Ptero 2 Life: ' + ptero2Life);
+            ptero2.setTint('0xff0000');
+            attack1_creature.play();
+            this.time.addEvent({
+                delay: 400,
+                callback: () => {
+                    ptero2.clearTint();
+                }
+            })
         }
     }
 
@@ -965,6 +1152,7 @@ class DaggerS1 extends Phaser.Physics.Arcade.Sprite {
             this.setActive(false);
             this.setVisible(false);
             raptorLife -= 5;
+            attack1_creature1.play();
             if (!playerDetected) {
                 playerDetected = true;
             }
@@ -977,12 +1165,26 @@ class DaggerS1 extends Phaser.Physics.Arcade.Sprite {
             this.setActive(false);
             this.setVisible(false);
             pteroLife -= 5;
+            attack1_creature.play();
             if (!playerDetected) {
                 playerDetected = true;
             }
             pteroLifeText.setText('Ptero Life: ' + pteroLife);
             ptero.setTint('0xff0000')
             pteroDmg = true;
+        }
+
+        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), ptero2.getBounds())) && ptero2Alive) {
+            this.setActive(false);
+            this.setVisible(false);
+            ptero2Life -= 5;
+            attack1_creature.play();
+            if (!playerDetected) {
+                playerDetected = true;
+            }
+            ptero2LifeText.setText('Ptero 2 Life: ' + ptero2Life);
+            ptero2.setTint('0xff0000')
+            ptero2Dmg = true;
         }
 
         if (raptorLife == 0 && lootCounter1S == 0) {
@@ -1001,6 +1203,11 @@ class DaggerS1 extends Phaser.Physics.Arcade.Sprite {
             ptero.disableBody(true, true);
             pteroAlive = false;
             lootCounter2S += 1
+        }
+
+        if (ptero2Life <= 4) {
+            ptero2.disableBody(true, true);
+            ptero2Alive = false;
         }
     }
 

@@ -210,10 +210,10 @@ class Stage1Boss extends Phaser.Scene {
         // Enemy Life Text
         trexLifeText = this.add.text(590, 20, 'T-Rex Life: 100', { fontSize: '15px', fill: '#ffffff' });
 
-        balloon = this.physics.add.image(150, 100, 'balloon')
-        balloon.body.setAllowGravity(false)
-        dags = this.physics.add.image(150, 155, 'daggerB')
-        dags.body.setAllowGravity(false)
+        balloon = this.physics.add.image(150, 100, 'balloon');
+        balloon.body.setAllowGravity(false);
+        dags = this.physics.add.image(150, 155, 'daggerB');
+        dags.body.setAllowGravity(false);
 
         // Enemy Overlap
         this.physics.add.collider(trex, platforms);

@@ -125,20 +125,29 @@ class Stage4 extends Phaser.Scene {
         }
 
         // Moving platforms
-        pf1 = this.physics.add.image(50, 400, 'platform4')
+        pf1 = this.physics.add.image(50, 470, 'platform4')
+            .setImmovable(true);
+        pf1.body.collideWorldBounds = true;
+        pf1.body.bounce.set(1);
+        pf1.body.setAllowGravity(false);
+
+        pf2 = this.physics.add.image(300, 380, 'platform4')
             .setImmovable(true);
 
-        pf2 = this.physics.add.image(300, 350, 'platform4')
+        pf3 = this.physics.add.image(150, 170, 'platform4')
+            .setImmovable(true);
+        pf3.body.collideWorldBounds = true;
+        pf3.body.bounce.set(1);
+        pf3.body.setAllowGravity(false);
+
+        pf4 = this.physics.add.image(700, 270, 'platform4')
             .setImmovable(true);
 
-        pf3 = this.physics.add.image(150, 150, 'platform4')
+        pf5 = this.physics.add.image(600, 280, 'platform4')
             .setImmovable(true);
-
-        pf4 = this.physics.add.image(700, 250, 'platform4')
-            .setImmovable(true);
-
-        pf5 = this.physics.add.image(600, 200, 'platform4')
-            .setImmovable(true);
+        pf5.body.collideWorldBounds = true;
+        pf5.body.bounce.set(1);
+        pf5.body.setAllowGravity(false);
         
         
         // Create Dagger Group
@@ -302,53 +311,50 @@ class Stage4 extends Phaser.Scene {
         mid.tilePositionX += 0.1;
 
         // Platform movement
-        // 50 150
-        pf1.setVelocityX(dir1*50);
-        pf1.setVelocityY(0);
-        if (pf1.body.position.x >= 30){
-            dir1 = 1;
-        }
-        if (pf1.body.position.x <= 300){
+        pf1.setVelocityX(dir1*70);
+        if (pf1.body.position.x >= 400){
             dir1 = -1;
+        }
+        if (pf1.body.position.x <= 10){
+            dir1 = 1;
         }
 
         pf2.setVelocityY(dir2*60);
-        if (pf2.body.position.y >= 300){
+        if (pf2.body.position.y >= 500){
             dir2 = -1;
         }
         if (pf2.body.position.y <= 100){
             dir2 = 1;
         }
-        /// 150 600
+
         pf3.setVelocityX(dir3*70);
-        pf3.setVelocityY(0);
-        if (pf3.body.position.x >= 100){
-            dir3 = 1;
-        }
-        if (pf3.body.position.x <= 500){
+        // pf3.setVelocityY(0);
+        if (pf3.body.position.x >= 600){
             dir3 = -1;
+        }
+        if (pf3.body.position.x <= 200){
+            dir3 = 1;
         }
 
         pf4.setVelocityY(dir4*40);
-        if (pf4.body.position.y >= 400){
+        if (pf4.body.position.y >= 600){
             dir4 = -1;
         }
-        if (pf4.body.position.y <= 200){
+        if (pf4.body.position.y <= 130){
             dir4 = 1;
         }
-        
-        // 600 800
-        pf5.setVelocityX(dir5*50);
-        pf5.setVelocityY(0);
-        if (pf5.body.position.x >= 500){
-            dir5 = 1;
-        }
-        if (pf5.body.position.x <= 800){
+            
+        pf5.setVelocityX(dir5*70);
+        if (pf5.body.position.x >= 600){
             dir5 = -1;
         }
+        if (pf5.body.position.x <= 100){
+            dir5 = 1;
+        }
 
+
+        // allow player to stand on platforms
         this.physics.world.collide(pf1, player, function () {
-            pf1.setVelocityX(0);
             player.setVelocityX(0);
         });
 
@@ -358,7 +364,6 @@ class Stage4 extends Phaser.Scene {
         });
 
         this.physics.world.collide(pf3, player, function () {
-            pf3.setVelocityX(0);
             player.setVelocityX(0);
         });
 
@@ -368,7 +373,6 @@ class Stage4 extends Phaser.Scene {
         });
 
         this.physics.world.collide(pf5, player, function () {
-            pf5.setVelocityX(0);
             player.setVelocityX(0);
         });
         
