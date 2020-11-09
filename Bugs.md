@@ -16,3 +16,4 @@ Stage 2
 - Police car sizing wrong
 - Units don't deal damage
 
+Consider adding story/information for player.
