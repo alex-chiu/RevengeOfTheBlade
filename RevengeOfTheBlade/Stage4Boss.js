@@ -507,7 +507,7 @@ class Stage4Boss extends Phaser.Scene {
 
         },
         repeat: length -1,
-        delay: 100
+        delay: 30
       })
     }
 
