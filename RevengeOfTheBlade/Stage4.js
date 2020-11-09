@@ -16,6 +16,8 @@ var daggerGroup;
 
 // SCENE SPECIFIC VARIABLES
 var buttonS4;
+var soundtrack4;
+
 // enemies
 var police, policeAlive = true, policeLife = 100, policeLifeText, policeDmg;
 var car, carAlive = true, carLife = 100, carLifeText, carDmg;
@@ -34,6 +36,9 @@ var dir5 = 1;
 // DEBUG PARAMETERS
 var debug = false;
 var graphics, testLine;
+
+// SFX
+var attack1_creature, attack1_creature1;
 
 // SCENE CLASS
 class Stage4 extends Phaser.Scene {
@@ -71,11 +76,17 @@ class Stage4 extends Phaser.Scene {
         this.load.image('dagger', 'assets/daggers.png');
 
         // Sound Effects
+        // Soundtrack
+        this.load.audio('stage4Music', ['assets/audio/soundtrack/stage4.wav']);
+
         // Melee
         this.load.audio('preattack1', ['assets/audio/soundeffects/player/preattack1.mp3']);
         this.load.audio('attack1_metal', ['assets/audio/soundeffects/player/attack1_metal.mp3']);
         this.load.audio('attack1_object', ['assets/audio/soundeffects/player/attack1_object.mp3']);
         this.load.audio('attack1_platform', ['assets/audio/soundeffects/player/attack1_platform.mp3']);
+        this.load.audio('attack1_creature', ['assets/audio/soundeffects/player/attack1_creature.mp3']);
+        this.load.audio('attack1_creature1', ['assets/audio/soundeffects/player/attack1_creature1.mp3']);
+
         // Range
         this.load.audio('preattack2', ['assets/audio/soundeffects/player/preattack2.mp3']);
         this.load.audio('attack2_throw', ['assets/audio/soundeffects/player/preattack2.mp3']);
@@ -90,6 +101,9 @@ class Stage4 extends Phaser.Scene {
     // Create all the Sprites/Images/Platforms
     create() {
         this.cameras.main.setBackgroundColor('#828b99');
+        // Play background music
+        soundtrack4 = this.sound.add('stage4Music', {volume: 0.15, loop: true});
+        soundtrack4.play();
 
         // Player attack sound effects
         preattack1 = this.sound.add('preattack1', {volume: 0.15});
@@ -202,7 +216,7 @@ class Stage4 extends Phaser.Scene {
         buttonS4 = this.add.text(50, 50, 'BOSS 4', { fontSize: '20px', fill: '#b5dbf7' });
         buttonS4.setInteractive();
         buttonS4.on('pointerdown', () => {
-          //soundtrack5.stop();
+          soundtrack4.stop();
           this.scene.stop('Stage4');
           this.scene.start('Stage4Boss');
         });
@@ -242,7 +256,7 @@ class Stage4 extends Phaser.Scene {
         car = this.physics.add.sprite(650, 400, 'car')
         car.setBounce(0);
         car.setCollideWorldBounds(true);
-        car.displayWidth = game.config.width * 0.2;
+        car.displayWidth = game.config.width * 0.45;
         car.scaleY = car.scaleX;
         car.body.setGravityY(300);
 
@@ -295,9 +309,10 @@ class Stage4 extends Phaser.Scene {
     // Constantly Updating Game Loop
     update() {
         // Scene End Condition
-        if (!policeAlive) {
+        if (!policeAlive && !carAlive && !politicianAlive) {
             this.scene.pause('Stage4');
             this.scene.launch('Stage4Win');
+            soundtrack4.stop();
         }
         else if (!playerAlive) {
             this.scene.pause('Stage4Boss');
@@ -457,6 +472,7 @@ class Stage4 extends Phaser.Scene {
             // Player is left of enemies
             if (player.body.position.x < police.body.position.x) {
                 police.anims.play('policeLeft');
+                // add police run SFX
                 if (delX1 > 160) {
                     police.setVelocityX(-70);
                 }
