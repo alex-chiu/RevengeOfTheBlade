@@ -1,5 +1,8 @@
 Current Bugs in Game:
 
+General
+- Rotate arms with dagger throw
+
 Platforms
 - Push the character when moving left/right
 - Player arm/attack sprites don't move with the platform when a player stands on them
@@ -15,5 +18,12 @@ Stage 2
 - Police man animation doesn't work
 - Police car sizing wrong
 - Units don't deal damage
+- Politician Life Text position
+
+Final Stage
+- Sound for dagger.
 
 Consider adding story/information for player.
+Information about sword/dagger dmg.
+Information about constant jumping/hopping.
+Platforms too complex?
