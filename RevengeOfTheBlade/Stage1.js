@@ -78,7 +78,7 @@ class Stage1 extends Phaser.Scene {
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
         this.load.image('platform1', 'assets/platforms/platform-s1.png');
-        
+
         // Dagger
         this.load.image('dagger', 'assets/daggers.png');
 
@@ -99,8 +99,8 @@ class Stage1 extends Phaser.Scene {
         this.load.audio('attack2_metal', ['assets/audio/soundeffects/player/preattack2.mp3']);
         // Both
         this.load.audio('attack_noenemy', ['assets/audio/soundeffects/player/attack1_noenemy.mp3']);
-        
-        // enemy movement 
+
+        // enemy movement
         this.load.audio('ptero_wingflap', ['assets/audio/soundeffects/Stage1/pterodactyl_wingflap.mp3']);
 
         // Loot
@@ -175,8 +175,8 @@ class Stage1 extends Phaser.Scene {
         pf5.body.collideWorldBounds = true;
         pf5.body.bounce.set(1);
         pf5.body.setAllowGravity(false);
-        
-        
+
+
         // Create Dagger Group
         daggerGroup = new DaggerGroupS1(this);
 
@@ -225,7 +225,7 @@ class Stage1 extends Phaser.Scene {
         this.physics.add.collider(playerArm, platforms);
         this.physics.add.collider(playerArmFinal, platforms);
 
-        
+
         playerLife = 100;
         raptorLife = 80;
         playerAlive = true;
@@ -292,7 +292,7 @@ class Stage1 extends Phaser.Scene {
         this.physics.add.overlap(ptero, pf4);
         this.physics.add.overlap(ptero2, pf4);
         this.physics.add.overlap(raptor, pf4);
-        
+
         this.physics.add.overlap(ptero, pf5);
         this.physics.add.overlap(ptero2, pf5);
         this.physics.add.overlap(raptor, pf5);
@@ -314,10 +314,12 @@ class Stage1 extends Phaser.Scene {
         if (!raptorAlive && !pteroAlive && !ptero2Alive) {
             this.scene.pause('Stage1');
             this.scene.launch('Stage1Win');
+            soundtrack1.stop();
         }
         else if (!playerAlive) {
             this.scene.pause('Stage1');
             this.scene.launch('Stage1Die')
+            soundtrack1.stop();
         }
 
         // Implement Parallax Background
@@ -360,7 +362,7 @@ class Stage1 extends Phaser.Scene {
         if (pf4.body.position.y <= 130){
             dir4 = 1;
         }
-        
+
         pf5.setVelocityX(dir5*70);
         // pf5.setVelocityY(0);
         if (pf5.body.position.x >= 600){
@@ -772,17 +774,17 @@ class Stage1 extends Phaser.Scene {
 
     }
 
-    // function for range attack delay 
+    // function for range attack delay
     rangeDelay(){
         if(nextAttack>game.time.now) {
             return;
-        } 
+        }
         // > do range attack
-        
-        // wait at least 2 seconds to 
-        nextAttack = game.time.now + 2000; 
+
+        // wait at least 2 seconds to
+        nextAttack = game.time.now + 2000;
     }
-    
+
     pickupLoot(player, healthLoot) {
         healthLoot.disableBody(true, true);
         if (playerLife < 90){
