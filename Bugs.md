@@ -2,6 +2,7 @@ Current Bugs in Game:
 
 General
 - Rotate arms with dagger throw
+- Menu Audio Button
 
 Platforms
 - Push the character when moving left/right
@@ -22,6 +23,7 @@ Stage 2
 
 Final Stage
 - Sound for dagger.
+- Music for stage
 
 Consider adding story/information for player.
 Information about sword/dagger dmg.
