@@ -19,9 +19,9 @@ var buttonS4;
 var soundtrack4;
 
 // enemies
-var police, policeAlive = true, policeLife = 100, policeLifeText, policeDmg;
-var car, carAlive = true, carLife = 100, carLifeText, carDmg;
-var politician, politicianAlive = true, politicianLife = 100, politicianLifeText, politicianDmg;
+var police, policeAlive = true, policeLife = 180, policeLifeText, policeDmg;
+var car, carAlive = true, carLife = 200, carLifeText, carDmg;
+var politician, politicianAlive = true, politicianLife = 150, politicianLifeText, politicianDmg;
 var healthLoot;
 var delX1, delX2, delX3;
 
@@ -224,7 +224,7 @@ class Stage4 extends Phaser.Scene {
         // SCENE SPECIFIC GAME OBJECTS
 
         // Reset Values
-        playerLife = 100;
+        playerLife = 150;
 
         policeLife = 180;
         playerAlive = true;
@@ -509,8 +509,8 @@ class Stage4 extends Phaser.Scene {
                     politician.setVelocityX(50);
                 }
                 else {
-                    police.setVelocityX(0);
-                    police.anims.play('politicianStatic');
+                    politician.setVelocityX(0);
+                    politician.anims.play('politicianStatic');
                 }
             }
             else if (player.body.position.x > politician.body.position.x) {
@@ -522,8 +522,36 @@ class Stage4 extends Phaser.Scene {
                     politician.setVelocityX(-50);
                 }
                 else {
-                    police.setVelocityX(0);
-                    police.anims.play('politicianStatic');
+                    politician.setVelocityX(0);
+                    politician.anims.play('politicianStatic');
+                }
+            }
+
+            // car
+            if (player.body.position.x < car.body.position.x) {
+                car.anims.play('carLeft');
+                if (delX3 > 50) {
+                    car.setVelocityX(-50);
+                }
+                else if (delX3 <= 50) {
+                    car.setVelocityX(50);
+                }
+                else {
+                    car.setVelocityX(0);
+                    car.anims.play('carLeft');
+                }
+            }
+            else if (player.body.position.x > car.body.position.x) {
+                car.anims.play('carRight');
+                if (delX3 < -50) {
+                    car.setVelocityX(50);
+                }
+                else if (delX3 > -50) {
+                    car.setVelocityX(-50);
+                }
+                else {
+                    car.setVelocityX(0);
+                    car.anims.play('carRight');
                 }
             }
 
@@ -561,6 +589,45 @@ class Stage4 extends Phaser.Scene {
             })
         }
 
+        var boundsT = politician.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsT)) && playerAlive && politicianAlive) {
+            playerLife -= 0.15;
+            if (playerLife <= 0) {
+                player.disableBody(true, true);
+                player.setActive(false);
+                player.setVisible(false);
+                playerAlive = false;
+            }
+            this.updatePlayerLifeText()
+            player.setTint('0xff0000');
+            this.time.addEvent({
+                delay: 300,
+                callback: () => {
+                    player.clearTint();
+                }
+            })
+        }
+
+        var boundsC = car.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsC)) && playerAlive && carAlive) {
+            playerLife -= 0.15;
+            if (playerLife <= 0) {
+                player.disableBody(true, true);
+                player.setActive(false);
+                player.setVisible(false);
+                playerAlive = false;
+            }
+            this.updatePlayerLifeText()
+            player.setTint('0xff0000');
+            this.time.addEvent({
+                delay: 300,
+                callback: () => {
+                    player.clearTint();
+                }
+            })
+        }
         // Update Life Text
         this.updatePlayerLifeText();
     }
@@ -576,6 +643,26 @@ class Stage4 extends Phaser.Scene {
                 callback: () => {
                     police.clearTint();
                     policeDmg = false;
+                }
+            })
+        }
+
+        if (politicianDmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    politician.clearTint();
+                    politicianDmg = false;
+                }
+            })
+        }
+
+        if (carDmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    car.clearTint();
+                    carDmg = false;
                 }
             })
         }
@@ -830,7 +917,7 @@ class Stage4 extends Phaser.Scene {
               policeLife = 0
             }
             else {
-              policeLife -= 10
+              policeLife -= 15
             }
             policeLifeText.setText('Police Life: ' + policeLife);
             police.setTint('0xff0000');
@@ -856,7 +943,7 @@ class Stage4 extends Phaser.Scene {
                 carLife = 0
             }
             else {
-                carLife -= 10
+                carLife -= 15
             }
             carLifeText.setText('Car Battery: ' + carLife);
             car.setTint('0xff0000');
@@ -882,7 +969,7 @@ class Stage4 extends Phaser.Scene {
                 politicianLife = 0
             }
             else {
-                politicianLife -= 10
+                politicianLife -= 15
             }
             politicianLifeText.setText('Politician Life: ' + politicianLife);
             politician.setTint('0xff0000');
