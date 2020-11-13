@@ -35,6 +35,8 @@ var swordLoot;
 var daggerLoot;
 var spike, spike1, spike2;
 
+var soundtrack4;
+
 // DEBUG PARAMETERS
 var debug = false;
 var graphics, testLine;
@@ -75,6 +77,9 @@ class Stage4Boss extends Phaser.Scene {
         // Dagger
         this.load.image('dagger', 'assets/daggers.png');
 
+        // Soundtrack
+        this.load.audio('stage4Music', ['assets/audio/soundtrack/stage4.wav']);
+
         // Sound Effects
         // Melee
         this.load.audio('preattack1', ['assets/audio/soundeffects/player/preattack1.mp3']);
@@ -96,6 +101,9 @@ class Stage4Boss extends Phaser.Scene {
     // Create all the Sprites/Images/Platforms
     create() {
         this.cameras.main.setBackgroundColor('#828b99');
+
+        soundtrack4 = this.sound.add('stage4Music', {volume: 0.23, loop: true});
+        soundtrack4.play();
 
         // Player attack sound effects
         preattack1 = this.sound.add('preattack1', {volume: 0.15});
@@ -182,7 +190,7 @@ class Stage4Boss extends Phaser.Scene {
         buttonB4 = this.add.text(50, 50, 'STAGE 5', { fontSize: '20px', fill: '#b5dbf7' });
         buttonB4.setInteractive();
         buttonB4.on('pointerdown', () => {
-          //soundtrack5.stop();
+          soundtrack4.stop();
           this.scene.stop('Stage4Boss');
           this.scene.start('Stage5');
         });
@@ -264,10 +272,12 @@ class Stage4Boss extends Phaser.Scene {
     update() {
         // Scene End Condition
         if (!swordAlive && !daggersAlive) {
+            soundtrack4.stop();
             this.scene.pause('Stage4Boss');
             this.scene.launch('Stage4BossWin');
         }
         else if (!playerAlive) {
+            soundtrack4.stop();
             this.scene.pause('Stage4Boss');
             this.scene.launch('Stage4BossDie')
         }

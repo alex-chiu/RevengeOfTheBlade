@@ -102,7 +102,7 @@ class Stage4 extends Phaser.Scene {
     create() {
         this.cameras.main.setBackgroundColor('#828b99');
         // Play background music
-        soundtrack4 = this.sound.add('stage4Music', {volume: 0.15, loop: true});
+        soundtrack4 = this.sound.add('stage4Music', {volume: 0.23, loop: true});
         soundtrack4.play();
 
         // Player attack sound effects
@@ -316,7 +316,8 @@ class Stage4 extends Phaser.Scene {
         }
         else if (!playerAlive) {
             this.scene.pause('Stage4Boss');
-            this.scene.launch('Stage4Die')
+            this.scene.launch('Stage4Die');
+            soundtrack4.stop();
         }
 
         // Implement Parallax Background
