@@ -74,7 +74,7 @@ class Stage1Boss extends Phaser.Scene {
         // Sound Effects
         // Soundtrack
         this.load.audio('stage1Music', ['assets/audio/soundtrack/stage1.wav']);
-        
+
         // Melee
         this.load.audio('preattack1', ['assets/audio/soundeffects/player/preattack1.mp3']);
         this.load.audio('attack1_metal', ['assets/audio/soundeffects/player/attack1_metal.mp3']);
@@ -184,8 +184,9 @@ class Stage1Boss extends Phaser.Scene {
         button1B.setInteractive();
         button1B.on('pointerdown', () => {
           //soundtrack5.stop();
+          soundtrack1.stop();
           this.scene.stop('Stage1Boss');
-          this.scene.start('Stage4');
+          this.scene.start('Storyline2');
         });
 
         // SCENE SPECIFIC GAME OBJECTS
@@ -376,7 +377,7 @@ class Stage1Boss extends Phaser.Scene {
           dags.setVelocityX(0);
         }
 
-        if (D.isDown && this.label.text.length == 65){
+        if (D.isDown && this.label.text.length == 58){
           this.label.destroy();
           textAlive = false;
         }

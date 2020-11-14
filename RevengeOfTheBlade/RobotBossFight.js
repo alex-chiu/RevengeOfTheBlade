@@ -8,26 +8,26 @@
 var player, playerMeleeAtk, playerWalkNA, playerArm, playerArmFinal;
 var meleeAtkDir, rangedAtkDir, callRangedAttack, attackAnimPlaying;
 var daggerGroup;
-var boss;
-var bossAlive = true;
+var boss, boss1;
+var bossAlive = true, boss1Alive = true;
 var playerAlive = true;
-var playerDetected = false;
-var delX, atkDir, callAttack;
-var laserGroup;
+var playerDetected = false, playerDetected1 = false;
+var delX, atkDir, callAttack, delX1;
+var laserGroup, laserGroupSecond;
 var cursors, spaceBar;
 var W, A, S, D;
-var life = 100, bossLife = 200;
-var lifeText, bossLifeText;
+var life = 100, bossLife = 100, boss1Life = 100;
+var lifeText, bossLifeText, boss1LifeText;
 var attackAnimPlaying = false;
 var sky, clouds;
 var far, back, mid, front;
 var ground, platforms;
 var soundtrack5;
 var bombs;
-var bossDmg = false;
-var swordLoot;
-var swordAlive  = true;
-var lootCounterSw = 0;
+var bossDmg = false, boss1Dmg = false;
+var swordLoot, dagLoot;
+var swordAlive  = true, dagsAlive = true;
+var lootCounterSw = 0, lootCounterDag = 0;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -86,13 +86,18 @@ class RobotBossFight extends Phaser.Scene {
 
         // Reset Values
         life = 100;
-        bossLife = 200;
+        bossLife = 100;
+        boss1Life = 100;
         playerAlive = true;
         bossAlive = true;
+        boss1Alive = true;
         playerDetected = false;
+        playerDetected1 = false;
         attackAnimPlaying = false;
         swordAlive = true;
+        dagsAlive = true;
         lootCounterSw = 0;
+        lootCounterDag = 0
 
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky0');
@@ -107,7 +112,8 @@ class RobotBossFight extends Phaser.Scene {
 
         // Text
         lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
-        bossLifeText = this.add.text(580, 15, 'Boss Life: 200', { fontSize: '25px', fill: '#ffffff' });
+        bossLifeText = this.add.text(580, 15, 'Boss Life: 100', { fontSize: '15px', fill: '#ffffff' });
+        boss1LifeText = this.add.text(350, 15, 'Boss1 Life: 100', { fontSize: '15px', fill: '#ffffff' });
 
         // Platforms
         platforms = this.physics.add.staticGroup();
@@ -129,8 +135,21 @@ class RobotBossFight extends Phaser.Scene {
         boss.scaleY = boss.scaleX;
         boss.body.setGravityY(300);
 
+
+        boss1 = this.physics.add.sprite(150, 400, 'robotBoss')
+        boss1.setBounce(0);
+        boss1.setCollideWorldBounds(true);
+        boss1.displayWidth = game.config.width * 0.15;
+        boss1.scaleY = boss1.scaleX;
+        boss1.body.setGravityY(300);
+
+        //boss1.disableBody(true, true);
+
+
         // Boss' Laser Attacks
         laserGroup = new LaserGroup(this);
+
+        laserGroupSecond = new LaserGroupSecond(this);
 
         // Create Player
         this.createPlayerSprites();
@@ -170,6 +189,11 @@ class RobotBossFight extends Phaser.Scene {
         this.physics.add.overlap(playerMeleeAtk, swordLoot, this.pickupLoot, null, this);
         this.physics.add.collider(swordLoot, platforms);
 
+        dagLoot = this.physics.add.group();
+        this.physics.add.overlap(player, dagLoot, this.pickupLoot1, null, this);
+        this.physics.add.overlap(playerMeleeAtk, dagLoot, this.pickupLoot1, null, this);
+        this.physics.add.collider(dagLoot, platforms);
+
         bombs = this.physics.add.group();
         this.physics.add.collider(bombs, platforms);
         this.physics.add.collider(player, bombs, this.bombAttack, null, this);
@@ -185,16 +209,24 @@ class RobotBossFight extends Phaser.Scene {
         this.physics.add.overlap(player, boss);
         this.physics.add.overlap(playerMeleeAtk, boss);
         this.physics.add.collider(boss, platforms);
+
+        this.physics.add.overlap(player, boss1);
+        this.physics.add.overlap(playerMeleeAtk, boss1);
+        this.physics.add.collider(boss1, platforms);
     }
 
     // Constantly Updating Game Loop
     update() {
+
+        //boss1.disableBody(true, true);
+        //boss1.setActive(false);
+        //boss1.setVisible(false);
         if (playerAlive == false) {
             soundtrack5.stop();
             this.scene.pause('RobotBossFight')
             this.scene.launch('GameOver');
         }
-        if (!swordAlive) {
+        if (!swordAlive && !dagsAlive) {
             soundtrack5.stop();
             this.scene.pause('RobotBossFight')
             this.scene.launch('GameCompleted');
@@ -302,9 +334,54 @@ class RobotBossFight extends Phaser.Scene {
             }
         }
 
+        if (!playerDetected) {
+            boss1.anims.play('bossDefault');
+        }
+        else {
+            delX1 = boss1.body.position.x - player.body.position.x;
+            if (player.body.position.x < boss1.body.position.x) {
+                boss1.anims.play('bossLeftAtk');
+                if (delX1 > 150) {
+                    boss1.setVelocityX(-40);
+                }
+                else if (delX1 < 140) {
+                    boss.setVelocityX(40);
+                }
+                else {
+                    boss.setVelocityX(0);
+                    if (boss1Alive) {
+                      this.shootLaser1('L');
+                    }
+                }
+            }
+            else if (player.body.position.x > boss1.body.position.x) {
+                boss1.anims.play('bossRightAtk');
+                if (delX1 < -150) {
+                    boss1.setVelocityX(40);
+                }
+                else if (delX1 > -140) {
+                    boss1.setVelocityX(-40);
+                }
+                else {
+                    boss1.setVelocityX(0);
+                    if (boss1Alive){
+                      this.shootLaser1('R');
+                    }
+
+                }
+            }
+        }
+
         if (Math.abs(player.body.position.x - boss.body.position.x) <= 200) {
             playerDetected = true;
         }
+
+        if (Math.abs(player.body.position.x - boss1.body.position.x) <= 200) {
+            playerDetected = true;
+        }
+
+        //boss1.setActive(false);
+        //boss1.setVisible(false);
 
         // Debug Player and Boss Locations
         if (debug) {
@@ -326,11 +403,26 @@ class RobotBossFight extends Phaser.Scene {
                 }
             })
         }
+
+        if (boss1Dmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    boss1.clearTint();
+                    boss1Dmg = false;
+                }
+            })
+        }
     }
 
     pickupLoot(player, swordLoot) {
         swordLoot.disableBody(true, true);
         swordAlive = false
+    }
+
+    pickupLoot1(player, dagLoot) {
+        dagLoot.disableBody(true, true);
+        dagsAlive = false
     }
 
     // Makes sure each sprite is in the same position.
@@ -354,7 +446,7 @@ class RobotBossFight extends Phaser.Scene {
     // Creates player sprites
     createPlayerSprites() {
         // Base player sprite
-        player = this.physics.add.sprite(130, 475, 'hero');
+        player = this.physics.add.sprite(400, 475, 'hero');
         player.setBounce(0.25);
         player.setCollideWorldBounds(true);
         player.displayWidth = game.config.width * 0.075;
@@ -362,7 +454,7 @@ class RobotBossFight extends Phaser.Scene {
         player.body.setGravityY(300);
 
         // Melee attack sprite
-        playerMeleeAtk = this.physics.add.sprite(130, 475, 'hero_attack');
+        playerMeleeAtk = this.physics.add.sprite(400, 475, 'hero_attack');
         playerMeleeAtk.setBounce(0.25);
         playerMeleeAtk.setCollideWorldBounds(true);
         playerMeleeAtk.displayWidth = game.config.width * 0.128;
@@ -371,7 +463,7 @@ class RobotBossFight extends Phaser.Scene {
         playerMeleeAtk.visible = false;
 
         // Player walking sprite with no arm (plays when casting ranged attack)
-        playerWalkNA = this.physics.add.sprite(130, 475, 'hero_walk_no_arm');
+        playerWalkNA = this.physics.add.sprite(400, 475, 'hero_walk_no_arm');
         playerWalkNA.setBounce(0.25);
         playerWalkNA.setCollideWorldBounds(true);
         playerWalkNA.displayWidth = game.config.width * 0.075;
@@ -380,7 +472,7 @@ class RobotBossFight extends Phaser.Scene {
         playerWalkNA.visible = false;
 
         // Player arm sprite
-        playerArm = this.physics.add.sprite(130, 475, 'hero_ranged_attack_arm');
+        playerArm = this.physics.add.sprite(400, 475, 'hero_ranged_attack_arm');
         playerArm.setBounce(0.25);
         playerArm.setCollideWorldBounds(true);
         playerArm.displayWidth = game.config.width * 0.075;
@@ -389,7 +481,7 @@ class RobotBossFight extends Phaser.Scene {
         playerArm.visible = false;
 
         // Final frame of player arm sprite (rotated based on projectile direction)
-        playerArmFinal = this.physics.add.sprite(130, 475, 'hero_ranged_attack_arm_final');
+        playerArmFinal = this.physics.add.sprite(400, 475, 'hero_ranged_attack_arm_final');
         playerArmFinal.setBounce(0.25);
         playerArmFinal.setCollideWorldBounds(true);
         playerArmFinal.displayWidth = game.config.width * 0.110;
@@ -449,12 +541,48 @@ class RobotBossFight extends Phaser.Scene {
             //bomb.allowGravity = false;
         }
         if (bossLife == 0 && lootCounterSw == 0) {
-            var hLootB1 = swordLoot.create(700, 200, 'swordLoot');
+            var hLootB1 = swordLoot.create(600, 200, 'swordLoot');
             hLootB1.setBounce(0.5);
             hLootB1.setCollideWorldBounds(true);
             boss.disableBody(true, true);
             bossAlive = false;
             lootCounterSw += 1
+        }
+    }
+
+    updateBossLifeText1() {
+        var boundsA = playerMeleeAtk.getBounds();
+        var boundsB1 = boss1.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB1)) && boss1Alive) {
+            if (boss1Life < 10){
+              boss1Life = 0
+            }
+            else{
+              boss1Life -= 10
+            }
+            boss1LifeText.setText('Boss1 Life: ' + boss1Life);
+            boss1.setTint('0xff0000')
+            this.time.addEvent({
+                delay: 400,
+                callback: () => {
+                    boss1.clearTint();
+                }
+            })
+            var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+            var bomb = bombs.create(x, 16, 'bomb');
+            bomb.setBounce(1);
+            bomb.setCollideWorldBounds(true);
+            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+            //bomb.allowGravity = false;
+        }
+        if (boss1Life == 0 && lootCounterDag == 0) {
+            var hLootB2 = dagLoot.create(400, 200, 'dagger');
+            hLootB2.setBounce(0.5);
+            hLootB2.setCollideWorldBounds(true);
+            boss1.disableBody(true, true);
+            boss1Alive = false;
+            lootCounterDag += 1
         }
     }
 
@@ -473,6 +601,15 @@ class RobotBossFight extends Phaser.Scene {
         }
     }
 
+    shootLaser1(direction) {
+        if (direction == 'L') {
+            laserGroupSecond.fireLaser1(boss1.body.position.x - 10, boss1.body.position.y + 80, direction);
+        }
+        else {
+            laserGroupSecond.fireLaser1(boss1.body.position.x + 125, boss1.body.position.y + 95, direction);
+        }
+    }
+
     // Called when player starts melee attack.
     playerMeleeAttack() {
         if (debug) { console.log('MELEE ATTACK') };
@@ -487,6 +624,7 @@ class RobotBossFight extends Phaser.Scene {
                         player.visible = false;
                         playerMeleeAtk.visible = true;
                         this.updateBossLifeText();
+                        this.updateBossLifeText1();
                         playerMeleeAtk.anims.play('playerMeleeAtkR');
                         this.time.addEvent({
                             delay: 400,
@@ -510,6 +648,7 @@ class RobotBossFight extends Phaser.Scene {
                         player.visible = false;
                         playerMeleeAtk.visible = true;
                         this.updateBossLifeText();
+                        this.updateBossLifeText1();
                         playerMeleeAtk.anims.play('playerMeleeAtkL');
                         this.time.addEvent({
                             delay: 400,
@@ -653,6 +792,27 @@ class LaserGroup extends Phaser.Physics.Arcade.Group {
     }
 }
 
+class LaserGroupSecond extends Phaser.Physics.Arcade.Group {
+    constructor(scene) {
+        super(scene.physics.world, scene);
+
+        this.createMultiple({
+            classType: LaserSecond,
+            frameQuantity: 1,
+            active: false,
+            visible: false,
+            key: 'laser'
+        })
+    }
+
+    fireLaser1 (x, y, direction) {
+        const laser = this.getFirstDead(false);
+        if (laser) {
+            laser.fire1(x, y, direction);
+        }
+    }
+}
+
 // Laser Class
 class Laser extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
@@ -692,6 +852,54 @@ class Laser extends Phaser.Physics.Arcade.Sprite {
 
 
     fire (x, y, direction) {
+        this.body.reset(x, y);
+        this.setActive(true);
+        this.setVisible(true);
+        this.body.setGravityY(0);
+
+        if (direction == 'L') {
+            this.setVelocityX(-250);
+            this.setVelocityY(100);
+            var angle = Math.atan2(-100, 250);
+            this.rotation = angle;
+        }
+        else if (direction == 'R') {
+            this.setVelocityX(250);
+            this.rotation = Math.PI;
+        }
+    }
+}
+
+class LaserSecond extends Phaser.Physics.Arcade.Sprite {
+    constructor(scene, x, y) {
+        super(scene, x, y, 'laser');
+    }
+
+    preUpdate(time, delta) {
+        super.preUpdate(time, delta);
+
+        if (this.y >= 528) {
+            this.setActive(false);
+            this.setVisible(false);
+        }
+        else if (Phaser.Geom.Rectangle.Overlaps(this.getBounds(), player.getBounds()) && playerAlive) {
+            life -= 5;
+
+            this.setActive(false);
+            this.setVisible(false);
+
+        }
+        if (life == 0) {
+            player.disableBody(true, true);
+            player.setActive(false);
+            player.setVisible(false);
+            playerAlive = false;
+            soundtrack5.stop();
+        }
+    }
+
+
+    fire1 (x, y, direction) {
         this.body.reset(x, y);
         this.setActive(true);
         this.setVisible(true);
@@ -768,6 +976,26 @@ class Dagger1 extends Phaser.Physics.Arcade.Sprite {
             bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
         }
 
+        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), boss1.getBounds())) && boss1Alive) {
+            this.setActive(false);
+            this.setVisible(false);
+            boss1Life -= 5;
+
+            if (!playerDetected) {
+                playerDetected = true;
+            }
+
+            boss1LifeText.setText('Boss1 Life: ' + boss1Life);
+            boss1.setTint('0xff0000');
+            boss1Dmg = true;
+
+            var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+            var bomb = bombs.create(x, 16, 'bomb');
+            bomb.setBounce(1);
+            bomb.setCollideWorldBounds(true);
+            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        }
+
         if (bossLife == 0 && lootCounterSw == 0) {
             var hLoot = swordLoot.create(700, 200, 'swordLoot');
             hLoot.setBounce(0.5);
@@ -775,6 +1003,15 @@ class Dagger1 extends Phaser.Physics.Arcade.Sprite {
             bossAlive = false;
             boss.disableBody(true, true);
             lootCounterSw += 1
+        }
+
+        if (boss1Life == 0 && lootCounterDag == 0) {
+            var hLoot = dagLoot.create(700, 200, 'dagger');
+            hLoot.setBounce(0.5);
+            hLoot.setCollideWorldBounds(true);
+            boss1Alive = false;
+            boss1.disableBody(true, true);
+            lootCounterDag += 1
         }
     }
 
