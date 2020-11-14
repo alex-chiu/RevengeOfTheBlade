@@ -14,7 +14,7 @@ Stage 1
 - Upgrades don't actually increase player damage
 
 Stage 2
-- Police car aniimation doesn't work
+- Police car animation doesn't work
 - Politician animation doesn't work
 - Police man animation doesn't work
 - Police car sizing wrong
