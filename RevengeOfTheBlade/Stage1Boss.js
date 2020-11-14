@@ -186,7 +186,7 @@ class Stage1Boss extends Phaser.Scene {
           //soundtrack5.stop();
           soundtrack1.stop();
           this.scene.stop('Stage1Boss');
-          this.scene.start('Stage4');
+          this.scene.start('Storyline2');
         });
 
         // SCENE SPECIFIC GAME OBJECTS
@@ -377,7 +377,7 @@ class Stage1Boss extends Phaser.Scene {
           dags.setVelocityX(0);
         }
 
-        if (D.isDown && this.label.text.length == 65){
+        if (D.isDown && this.label.text.length == 58){
           this.label.destroy();
           textAlive = false;
         }

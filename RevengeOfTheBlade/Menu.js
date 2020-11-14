@@ -23,7 +23,7 @@ class Menu extends Phaser.Scene {
       this.load.image('clouds1', 'assets/backgrounds/stage5/1clouds.png');
 
       this.load.audio('buttonSound', ['assets/audio/soundeffects/button1.mp3']);
-    
+
     }
 
     create() {
@@ -59,7 +59,7 @@ class Menu extends Phaser.Scene {
         buttonSound.play();
         this.soundtrack.stop();
         this.scene.stop('Menu');
-        this.scene.start('Stage1');
+        this.scene.start('Storyline1');
       });
       playButton.on('pointerover', () => { this.buttonOver(playButton); });
       playButton.on('pointerout', () => { this.buttonNotOver(playButton); });

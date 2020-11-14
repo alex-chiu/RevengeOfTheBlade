@@ -192,7 +192,7 @@ class Stage4Boss extends Phaser.Scene {
         buttonB4.on('pointerdown', () => {
           soundtrack4.stop();
           this.scene.stop('Stage4Boss');
-          this.scene.start('Stage5');
+          this.scene.start('Storyline3');
         });
 
         // SCENE SPECIFIC GAME OBJECTS

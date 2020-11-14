@@ -26,7 +26,7 @@ class Stage4BossWin extends Phaser.Scene {
       tryAgainButton.on('pointerdown', () => {
         this.scene.restart('Stage4Boss');
         this.scene.stop('Stage4Boss');
-        this.scene.start('Stage5');
+        this.scene.start('Storyline3');
       });
 
       const menuButton = this.add.text(game.config.width/2, 300, 'MENU', { fontSize: '40px', fill: '#8db9d9' }).setOrigin(0.5);
