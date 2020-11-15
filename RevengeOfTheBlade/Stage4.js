@@ -272,7 +272,7 @@ class Stage4 extends Phaser.Scene {
         // Enemy Life Text
         policeLifeText = this.add.text(590, 20, 'Police Life: 180', { fontSize: '15px', fill: '#ffffff' });
         carLifeText = this.add.text(190, 20, 'Car Battery: 200', { fontSize: '15px', fill: '#ffffff' });
-        politicianLifeText = this.add.text(390, 20, 'Politician Life: 150', { fontSize: '15px', fill: '#ffffff' });
+        politicianLifeText = this.add.text(375, 20, 'Politician Life: 150', { fontSize: '15px', fill: '#ffffff' });
 
 
         // Enemy Overlap
@@ -705,6 +705,8 @@ class Stage4 extends Phaser.Scene {
                         playerMeleeAtk.visible = true;
                         // Check damage against targets
                         this.updatePoliceLife();
+                        this.updatePoliticianLife();
+                        this.updateCarLife();
                         playerMeleeAtk.anims.play('playerMeleeAtkR');
                         this.time.addEvent({
                             delay: 400,
@@ -729,6 +731,8 @@ class Stage4 extends Phaser.Scene {
                         playerMeleeAtk.visible = true;
                         // Check damage against targets
                         this.updatePoliceLife();
+                        this.updatePoliticianLife();
+                        this.updateCarLife();
                         playerMeleeAtk.anims.play('playerMeleeAtkL');
                         this.time.addEvent({
                             delay: 400,
@@ -984,13 +988,51 @@ class DaggerS4 extends Phaser.Physics.Arcade.Sprite {
             police.setTint('0xff0000')
             policeDmg = true;
         }
+        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), politician.getBounds())) && politicianAlive) {
+            this.setActive(false);
+            this.setVisible(false);
+            politicianLife -= 5;
+            if (!playerDetected) {
+                playerDetected = true;
+            }
+            politicianLifeText.setText('Politician Life: ' + politicianLife);
+            politician.setTint('0xff0000')
+            politicianDmg = true;
+        }
+        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), car.getBounds())) && carAlive) {
+            this.setActive(false);
+            this.setVisible(false);
+            carLife -= 5;
+            if (!playerDetected) {
+                playerDetected = true;
+            }
+            carLifeText.setText('Car Life: ' + carLife);
+            car.setTint('0xff0000')
+            carDmg = true;
+        }
         // Disable enemies if their health reaches 0
-        if (policeLife == 0 && lootCounter1 == 0) {
+        if (policeLife == 0) {
             var hLoot = healthLoot.create(police.body.x, police.body.y, 'healthLoot');
             hLoot.setBounce(0.5);
             hLoot.setCollideWorldBounds(true);
             police.disableBody(true, true);
             policeAlive = false;
+            lootCounter1 += 1
+        }
+        if (politicianLife == 0) {
+            var hLoot = healthLoot.create(politician.body.x, politician.body.y, 'healthLoot');
+            hLoot.setBounce(0.5);
+            hLoot.setCollideWorldBounds(true);
+            politician.disableBody(true, true);
+            politicianAlive = false;
+            lootCounter1 += 1
+        }
+        if (carLife == 0) {
+            var hLoot = healthLoot.create(car.body.x, car.body.y, 'healthLoot');
+            hLoot.setBounce(0.5);
+            hLoot.setCollideWorldBounds(true);
+            car.disableBody(true, true);
+            carAlive = false;
             lootCounter1 += 1
         }
     }

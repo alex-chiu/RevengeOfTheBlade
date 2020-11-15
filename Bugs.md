@@ -1,9 +1,9 @@
 Current Bugs in Game:
 
 General
-- Rotate arms with dagger throw. (Skip)
+- Rotate arms with dagger throw. (SKIP)
 - Menu Audio Button
-- Soundtracks overlap. (Fixed)
+- Soundtracks overlap. (FIXED)
 
 Platforms
 - Push the character when moving left/right
@@ -15,12 +15,12 @@ Stage 1
 - Upgrades don't actually increase player damage
 
 Stage 2
-- Police car animation doesn't work. (Fixed)
-- Politician animation doesn't work. (Fixed)
-- Police man animation doesn't work. (Fixed)
-- Police car sizing wrong
+- Police car animation doesn't work. (FIXED)
+- Politician animation doesn't work. (FIXED)
+- Police man animation doesn't work. (FIXED)
+- Police car sizing wrong. (FIXED)
 - Units don't deal damage
-- Politician Life Text position
+- Politician Life Text position. (FIXED)
 
 Final Stage
 - Sound for dagger. (FIXED)
