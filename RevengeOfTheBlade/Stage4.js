@@ -64,8 +64,10 @@ class Stage4 extends Phaser.Scene {
         this.load.image('4front51', 'assets/backgrounds/stage4/5front4.png');
         this.load.image('4ground11', 'assets/backgrounds/stage4/ground4.png');
 
-        // Boss Spritesheet
+        // Enemy Spritesheets
         this.load.spritesheet('police', 'assets/sprites/police.png', { frameWidth: 110, frameHeight: 150 });
+        this.load.spritesheet('car', 'assets/sprites/policecar.png', { frameWidth: 365, frameHeight: 120 });
+        this.load.spritesheet('politician', 'assets/sprites/politician.png', { frameWidth: 105, frameHeight: 150 });
 
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
@@ -256,7 +258,7 @@ class Stage4 extends Phaser.Scene {
         car = this.physics.add.sprite(650, 400, 'car')
         car.setBounce(0);
         car.setCollideWorldBounds(true);
-        car.displayWidth = game.config.width * 0.45;
+        car.displayWidth = game.config.width * 0.3;
         car.scaleY = car.scaleX;
         car.body.setGravityY(300);
 
@@ -451,11 +453,6 @@ class Stage4 extends Phaser.Scene {
             car.anims.play('carLeft');
         }
         else {
-            delX1 = police.body.position.x - player.body.position.x;
-            delX2 = politician.body.position.x - player.body.position.x;
-            delX3 = car.body.position.x - player.body.position.x;
-
-            /*
             if (player.body.position.x < police.body.position.x - 5) {
                 police.anims.play('policeLeft', true);
                 police.setVelocityX(-70);
@@ -468,94 +465,32 @@ class Stage4 extends Phaser.Scene {
                 police.anims.play('policeStatic');
                 police.setVelocityX(0);
             }
-            */
 
-            // Player is left of enemies
-            if (player.body.position.x < police.body.position.x) {
-                police.anims.play('policeLeft');
-                // add police run SFX
-                if (delX1 > 160) {
-                    police.setVelocityX(-70);
-                }
-                else if (delX1 < 130) {
-                    police.setVelocityX(70);
-                }
-                else {
-                    police.setVelocityX(0);
-                    police.anims.play('policeStatic');
-                }
+            if (player.body.position.x < politician.body.position.x - 5) {
+                politician.anims.play('politicianLeft', true);
+                politician.setVelocityX(-50);
             }
-            // Player is right of enemies
-            else if (player.body.position.x > police.body.position.x) {
-                police.anims.play('policeRight');
-                if (delX1 > -130) {
-                    police.setVelocityX(-75);
-                }
-                else if (delX1 < -160) {
-                    police.setVelocityX(70);
-                }
-                else {
-                    police.setVelocityX(0);
-                    police.anims.play('policeStatic');
-                }
+            else if (player.body.position.x > politician.body.position.x + 5) {
+                politician.anims.play('politicianRight', true);
+                politician.setVelocityX(50);
+            }
+            else {
+                politician.anims.play('politicianStatic');
+                politician.setVelocityX(0);
             }
 
-            // politician
-            if (player.body.position.x < politician.body.position.x) {
-                politician.anims.play('politicianLeft');
-                if (delX2 > 50) {
-                    politician.setVelocityX(-50);
-                }
-                else if (delX2 <= 50) {
-                    politician.setVelocityX(50);
-                }
-                else {
-                    politician.setVelocityX(0);
-                    politician.anims.play('politicianStatic');
-                }
+            if (player.body.position.x < car.body.position.x - 5) {
+                car.anims.play('carLeft', true);
+                car.setVelocityX(-40);
             }
-            else if (player.body.position.x > politician.body.position.x) {
-                politician.anims.play('politicianRight');
-                if (delX2 < -50) {
-                    politician.setVelocityX(50);
-                }
-                else if (delX2 > -50) {
-                    politician.setVelocityX(-50);
-                }
-                else {
-                    politician.setVelocityX(0);
-                    politician.anims.play('politicianStatic');
-                }
+            else if (player.body.position.x > car.body.position.x + 5) {
+                car.anims.play('carRight', true);
+                car.setVelocityX(40);
             }
-
-            // car
-            if (player.body.position.x < car.body.position.x) {
-                car.anims.play('carLeft');
-                if (delX3 > 50) {
-                    car.setVelocityX(-50);
-                }
-                else if (delX3 <= 50) {
-                    car.setVelocityX(50);
-                }
-                else {
-                    car.setVelocityX(0);
-                    car.anims.play('carLeft');
-                }
+            else {
+                car.anims.play('carStatic');
+                car.setVelocityX(0);
             }
-            else if (player.body.position.x > car.body.position.x) {
-                car.anims.play('carRight');
-                if (delX3 < -50) {
-                    car.setVelocityX(50);
-                }
-                else if (delX3 > -50) {
-                    car.setVelocityX(-50);
-                }
-                else {
-                    car.setVelocityX(0);
-                    car.anims.play('carRight');
-                }
-            }
-
         }
 
         if (Math.abs(player.body.position.x - police.body.position.x) <= 150) {
