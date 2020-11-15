@@ -41,7 +41,7 @@ class Instructions extends Phaser.Scene {
       playButton.on('pointerdown', () => {
         buttonSound.play();
         this.scene.stop('Instructions');
-        this.scene.start('Tutorial');
+        this.scene.start('StorylineT');
       });
       playButton.on('pointerover', () => { this.buttonOver(playButton); });
       playButton.on('pointerout', () => { this.buttonNotOver(playButton); });

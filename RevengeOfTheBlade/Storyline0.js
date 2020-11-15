@@ -1,4 +1,4 @@
-/*  STORYLINE SCENE (before stage1)
+/*  STORYLINE SCENE (after clicking PLAY)
 
 
 */
