@@ -385,6 +385,7 @@ class Tutorial extends Phaser.Scene {
         playerMeleeAtk.body.y = player.body.y;
         playerWalkNA.body.y = player.body.y;
         playerArm.body.y = player.body.y;
+        playerArmFinal.body.x = player.body.x;
         playerArmFinal.body.y = player.body.y;
     }
 

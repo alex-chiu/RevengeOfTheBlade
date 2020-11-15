@@ -1,7 +1,7 @@
 Current Bugs in Game:
 
 General
-- Rotate arms with dagger throw
+- Rotate arms with dagger throw. (Skip)
 - Menu Audio Button
 - Soundtracks overlap. (Fixed)
 
