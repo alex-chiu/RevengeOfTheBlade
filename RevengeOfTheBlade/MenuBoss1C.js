@@ -19,7 +19,7 @@ class MenuBoss1C extends Phaser.Scene {
       this.load.image('check', 'assets/checkmark.png');
       this.load.image('cross', 'assets/crossmark.png');
 
-      this.load.audio('buttonSound', ['assets/audio/soundeffects/button1.mp3']);
+      this.load.audio('buttonSound', ['assets/audio/soundeffects/button2.mp3']);
 
     }
 
@@ -69,7 +69,7 @@ class MenuBoss1C extends Phaser.Scene {
       this.add.text(160,450,'BOSS 3', { fontSize: '20px', fill: '#8db9d9' });
       this.add.text(470,420,'Titanium Level', { fontSize: '30px', fill: '#02a3d9' });
       this.add.text(560,450,'BOSS 4', { fontSize: '20px', fill: '#8db9d9' });
-      this.add.text(210,508,'Chromium Allow Level', { fontSize: '30px', fill: '#02a3d9' });
+      this.add.text(210,508,'Chromium Alloy Level', { fontSize: '30px', fill: '#02a3d9' });
       this.add.text(355,538,'BOSS 5', { fontSize: '20px', fill: '#8db9d9' });
 
       ironlevelButton = this.add.text(500,330,'Iron Level', { fontSize: '30px', fill: '#02a3d9' });

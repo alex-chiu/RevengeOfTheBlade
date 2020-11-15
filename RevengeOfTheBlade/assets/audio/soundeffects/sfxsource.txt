@@ -2,3 +2,13 @@ Sound effects source:
 
 www.zapsplat.com
 Standard License
+
+
+Open door
+- freesound.org/people/NeoSpica/sounds/425090/
+
+button2
+- freesound.org/people/josepharaoh99/sounds/367997/
+
+button3
+- freesound.org/people/GameAudio/sounds/220166/
