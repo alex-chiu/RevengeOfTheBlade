@@ -106,7 +106,7 @@ class Tutorial extends Phaser.Scene {
         preattack2 = this.sound.add('preattack2', {volume: 0.25});
 
         //Moving platforms
-        pf1 = this.physics.add.image(50, 470, 'platform1')
+        pf1 = this.physics.add.image(50, 400, 'platform1')
             .setImmovable(true);
         pf1.body.collideWorldBounds = true;
         pf1.body.bounce.set(1);
@@ -245,7 +245,7 @@ class Tutorial extends Phaser.Scene {
         }
 
         pf2.setVelocityY(dir2*60);
-        if (pf2.body.position.y >= 500){
+        if (pf2.body.position.y >= 600){
             dir2 = -1;
         }
         if (pf2.body.position.y <= 100){
@@ -253,7 +253,6 @@ class Tutorial extends Phaser.Scene {
         }
 
         pf3.setVelocityX(dir3*70);
-        // pf3.setVelocityY(0);
         if (pf3.body.position.x >= 600){
             dir3 = -1;
         }
