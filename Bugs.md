@@ -3,7 +3,7 @@ Current Bugs in Game:
 General
 - Rotate arms with dagger throw
 - Menu Audio Button
-- Soundtracks overlap (fixed)
+- Soundtracks overlap. (Fixed)
 
 Platforms
 - Push the character when moving left/right
@@ -23,8 +23,8 @@ Stage 2
 - Politician Life Text position
 
 Final Stage
-- Sound for dagger. (fixed)
-- Music for stage (fixed)
+- Sound for dagger. (FIXED)
+- Music for stage. (FIXED)
 
 Consider adding story/information for player.
 Information about sword/dagger dmg.

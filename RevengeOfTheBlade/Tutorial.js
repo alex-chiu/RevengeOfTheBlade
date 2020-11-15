@@ -205,22 +205,6 @@ class Tutorial extends Phaser.Scene {
         this.physics.add.overlap(playerMeleeAtk, target1);
         this.physics.add.overlap(player, target2);
         this.physics.add.overlap(playerMeleeAtk, target2);
-
-        // Obstacles
-        obstacles = this.physics.add.staticGroup();
-        obstacles.create(250, 650, 'platformV');
-        obstacles.create(0, 525, 'platformH');
-        obstacles.create(250, 475, 'platformH');
-        obstacles.create(285, 500, 'platformH');
-        obstacles.create(320, 525, 'platformH');
-        obstacles.create(320, 550, 'platformH');
-
-        // Obstacle Colliders
-        this.physics.add.collider(player, obstacles);
-        this.physics.add.collider(playerMeleeAtk, obstacles);
-        this.physics.add.collider(playerWalkNA, obstacles);
-        this.physics.add.collider(playerArm, obstacles);
-        this.physics.add.collider(playerArmFinal, obstacles);
     }
 
     typewriteText(text){
