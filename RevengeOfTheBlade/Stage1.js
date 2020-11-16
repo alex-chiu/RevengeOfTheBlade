@@ -153,7 +153,7 @@ class Stage1 extends Phaser.Scene {
         }
 
         // Moving platforms
-        pf1 = this.physics.add.image(50, 470, 'platform1')
+        pf1 = this.physics.add.image(50, 450, 'platform1')
             .setImmovable(true);
         pf1.body.collideWorldBounds = true;
         pf1.body.bounce.set(1);
@@ -341,7 +341,7 @@ class Stage1 extends Phaser.Scene {
         }
 
         pf2.setVelocityY(dir2*60);
-        if (pf2.body.position.y >= 500){
+        if (pf2.body.position.y >= 450){
             dir2 = -1;
         }
         if (pf2.body.position.y <= 100){
@@ -358,7 +358,7 @@ class Stage1 extends Phaser.Scene {
         }
 
         pf4.setVelocityY(dir4*40);
-        if (pf4.body.position.y >= 600){
+        if (pf4.body.position.y >= 420){
             dir4 = -1;
         }
         if (pf4.body.position.y <= 130){
