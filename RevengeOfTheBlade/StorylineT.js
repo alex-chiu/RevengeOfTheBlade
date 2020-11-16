@@ -63,7 +63,7 @@ class StorylineT extends Phaser.Scene {
             opendoor.play();
             cutsceneT.stop();
             this.scene.stop('StorylineT');
-            this.scene.launch('Tutorial');
+            this.scene.launch('Instructions');
         }
 
         }
