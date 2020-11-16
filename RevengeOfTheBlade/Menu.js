@@ -6,9 +6,9 @@
 
 // const { default: WebFontFile } = ("./WebFontFile.js");
 
-var playButton, tutorialButton, audioButton;
-var soundState = 'off';
-var buttonSound;
+var playButton, tutorialButton, creditButton, audioButton;
+var soundState = 'on';
+var buttonSound, soundtrack;
 var clouds;
 
 class Menu extends Phaser.Scene {
@@ -28,9 +28,11 @@ class Menu extends Phaser.Scene {
 
     create() {
       // Background music
-      this.soundtrack = this.sound.add('menuMusic', {volume: 0.05, loop: true});
-
+      // this.soundtrack = this.sound.add('menuMusic', {volume: 0.55, loop: true});
+      soundtrack = this.sound.add('menuMusic', {volume: 0.55, loop: true});
+      soundtrack.play();
       buttonSound = this.sound.add('buttonSound', {volume: 0.50});
+      soundState = "on";
 
       // Background
       this.add.tileSprite(400, 300, 800, 600, 'sky0');
@@ -41,11 +43,11 @@ class Menu extends Phaser.Scene {
       this.add.text(280,170,'Blade', { fontSize: '75px', fill: '#ffffff' });
 
       // Play tutorial
-      tutorialButton = this.add.text(350, 300, 'TUTORIAL', { fontSize: '20px', fill: '#b5dbf7' });
+      tutorialButton = this.add.text(330, 300, 'TUTORIAL', { fontSize: '30px', fill: '#b5dbf7' });
       tutorialButton.setInteractive();
       tutorialButton.on('pointerdown', () => {
         buttonSound.play();
-        this.soundtrack.stop();
+        soundtrack.stop();
         this.scene.stop('Menu');
         this.scene.start('StorylineT');
       });
@@ -53,18 +55,31 @@ class Menu extends Phaser.Scene {
       tutorialButton.on('pointerout', () => { this.buttonNotOver(tutorialButton); });
 
       // Play main levels
-      playButton = this.add.text(310, 375, 'PLAY', { fontSize: '75px', fill: '#8db9d9' });
+      playButton = this.add.text(280, 375, '▸PLAY', { fontSize: '75px', fill: '#8db9d9' });
       playButton.setInteractive();
       playButton.on('pointerdown', () => {
         buttonSound.play();
-        this.soundtrack.stop();
+        soundtrack.stop();
         this.scene.stop('Menu');
         this.scene.start('Storyline0');
       });
       playButton.on('pointerover', () => { this.buttonOver(playButton); });
       playButton.on('pointerout', () => { this.buttonNotOver(playButton); });
 
-      audioButton = this.add.text(5, 570, 'audio', { fontSize: '30px', fill: '#8db9d9' });
+      // View Game Credits
+      creditButton = this.add.text(325, 485, 'CREDITS', { fontSize: '35px', fill: '#8db9d9' });
+      creditButton.setInteractive();
+      creditButton.on('pointerdown', () => {
+        buttonSound.play();
+        soundtrack.stop();
+        this.scene.stop('Menu');
+        this.scene.start('EndCredits');
+      });
+      creditButton.on('pointerover', () => { this.buttonOver(creditButton); });
+      creditButton.on('pointerout', () => { this.buttonNotOver(creditButton); });
+
+      // Play Audio
+      audioButton = this.add.text(5, 570, 'audio ☊', { fontSize: '25px', fill: '#8db9d9' });
       audioButton.setInteractive();
       audioButton.on('pointerdown', () => {
         this.switchSound();
@@ -76,24 +91,27 @@ class Menu extends Phaser.Scene {
 
     switchSound() {
       if (soundState == 'off') {
-        this.soundtrack.play();
+        soundtrack.play();
         soundState = 'on'
       }
       else {
-        this.soundtrack.stop();
+        soundtrack.stop();
         soundState = 'off'
       }
     }
 
     buttonOver(button) {
       if (button == playButton) {
-        playButton.setStyle({fill:'#FACF1A'});
+        playButton.setStyle({fill:'#37F121'});
       }
       if (button == tutorialButton) {
-        tutorialButton.setStyle({fill:'#FACF1A'});
+        tutorialButton.setStyle({fill:'#37F121'});
+      }
+      if (button == creditButton) {
+        creditButton.setStyle({fill:'#37F121'});
       }
       if (button == audioButton) {
-        audioButton.setStyle({fill:'#FACF1A'});
+        audioButton.setStyle({fill:'#37F121'});
       }
     }
 
@@ -103,6 +121,9 @@ class Menu extends Phaser.Scene {
       }
       if (button == tutorialButton) {
         tutorialButton.setStyle({fill:'#8db9d9'});
+      }
+      if (button == creditButton) {
+        creditButton.setStyle({fill:'#8db9d9'});
       }
       if (button == audioButton) {
         audioButton.setStyle({fill:'#8db9d9'});

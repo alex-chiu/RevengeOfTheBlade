@@ -47,7 +47,7 @@ class Storyline2 extends Phaser.Scene {
           ++i
         },
         repeat: length -1,
-        delay: 50
+        delay: 45
       })
 
       this.time.addEvent({

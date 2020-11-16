@@ -95,7 +95,7 @@ class Stage1Boss extends Phaser.Scene {
     // Create all the Sprites/Images/Platforms
     create() {
         this.cameras.main.setBackgroundColor('#828b99');
-        soundtrack1 = this.sound.add('stage1Music', {volume: 0.15, loop: true});
+        soundtrack1 = this.sound.add('stage1Music', {volume: 0.35, loop: true});
         soundtrack1.play();
 
         // Player attack sound effects

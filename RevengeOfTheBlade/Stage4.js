@@ -1010,7 +1010,7 @@ class DaggerS4 extends Phaser.Physics.Arcade.Sprite {
             if (!playerDetected) {
                 playerDetected = true;
             }
-            carLifeText.setText('Car Life: ' + carLife);
+            carLifeText.setText('Car Battery: ' + carLife);
             car.setTint('0xff0000')
             carDmg = true;
         }

@@ -113,7 +113,7 @@ class Stage5 extends Phaser.Scene {
         this.cameras.main.setBackgroundColor('#828b99')
 
         // Play background music
-        soundtrack5 = this.sound.add('stage5Music', {volume: 0.25, loop: true});
+        soundtrack5 = this.sound.add('stage5Music', {volume: 0.35, loop: true});
         soundtrack5.play();
 
         // Player attack sound effects

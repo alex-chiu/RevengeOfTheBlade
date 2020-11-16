@@ -25,9 +25,9 @@ class MenuBoss1C extends Phaser.Scene {
 
     create() {
       // Background music
-      this.soundtrack = this.sound.add('menuMusic', {volume: 0.05, loop: true});
+      this.soundtrack = this.sound.add('menuMusic', {volume: 0.5, loop: true});
 
-      buttonSound = this.sound.add('buttonSound', {volume: 0.50});
+      buttonSound = this.sound.add('buttonSound', {volume: 0.5});
 
       // Background
       this.add.tileSprite(400, 300, 800, 600, 'sky0');

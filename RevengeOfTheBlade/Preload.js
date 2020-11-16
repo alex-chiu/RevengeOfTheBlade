@@ -26,6 +26,9 @@ class Preload extends Phaser.Scene {
         this.load.spritesheet('police', 'assets/sprites/police.png', { frameWidth: 110, frameHeight: 150 });
         this.load.spritesheet('car', 'assets/sprites/policecar.png', { frameWidth: 365, frameHeight: 120 });
         this.load.spritesheet('politician', 'assets/sprites/politician.png', { frameWidth: 105, frameHeight: 150 });
+        this.load.spritesheet('helicopter', 'assets/sprites/helicopter.png', { frameWidth: 320, frameHeight: 123 });
+        this.load.spritesheet('tank', 'assets/sprites/tank.png', { frameWidth: 353, frameHeight: 125 });
+
 
         // Stage 5
         this.load.spritesheet('enemy1', 'assets/sprites/robot1.png', { frameWidth: 167, frameHeight: 280 });
@@ -50,6 +53,8 @@ class Preload extends Phaser.Scene {
         this.createPoliceAnims();
         this.createCarAnims();
         this.createPoliticianAnims();
+        this.createHelicopterAnims();
+        this.createTankAnims();
 
         // Stage 5 Animations
         this.createEnemy1Anims();
@@ -295,7 +300,7 @@ class Preload extends Phaser.Scene {
     createCarAnims() {
         this.anims.create({
             key:'carLeft',
-            frames: this.anims.generateFrameNumbers('car', { starddt: 0, end: 1}),
+            frames: this.anims.generateFrameNumbers('car', { start: 0, end: 1}),
             frameRate: 10,
             repeat: -1
         });
@@ -327,6 +332,50 @@ class Preload extends Phaser.Scene {
             repeat: -1
         });
     }
+
+    createHelicopterAnims() {
+        this.anims.create({
+            key:'helicopterLeft',
+            frames: this.anims.generateFrameNumbers('helicopter', { stardt: 0, end: 4}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'helicopterRight',
+            frames: this.anims.generateFrameNumbers('helicopter', { start: 5, end: 9}),
+            frameRate: 10,
+            repeat: -1
+        });
+    }
+
+    createTankAnims() {
+        this.anims.create({
+            key:'tankLeft',
+            frames: this.anims.generateFrameNumbers('tank', { start: 5, end: 3}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'tankLeftAtk',
+            frames: this.anims.generateFrameNumbers('tank', { start: 2, end: 0}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'tankRight',
+            frames: this.anims.generateFrameNumbers('tank', { start: 6, end: 8}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'tankRightAtk',
+            frames: this.anims.generateFrameNumbers('tank', { start: 9, end: 11}),
+            frameRate: 10,
+            repeat: -1
+        });
+    }
+
+
 
     // flying enemy [no specific orientation]
     createDroneAnims() {
@@ -360,7 +409,7 @@ class Preload extends Phaser.Scene {
     }
 
     createBossAnims() {
-        // Create Boss Animations
+        // Create Final boss Animations
         this.anims.create({
             key:'bossLeftAtk',
             frames: this.anims.generateFrameNumbers('robotBoss', { start: 0, end: 2}),

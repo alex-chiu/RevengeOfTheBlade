@@ -111,7 +111,7 @@ class Stage1 extends Phaser.Scene {
     // Create all the Sprites/Images/Platforms
     create() {
         this.cameras.main.setBackgroundColor('#828b99');
-        soundtrack1 = this.sound.add('stage1Music', {volume: 0.15, loop: true});
+        soundtrack1 = this.sound.add('stage1Music', {volume: 0.35, loop: true});
         soundtrack1.play();
 
 
@@ -428,6 +428,16 @@ class Stage1 extends Phaser.Scene {
         if (W.isDown && player.body.touching.down) {
             player.setVelocityY(-270);
         }
+
+        // if (W.isDown && A.isDown && player.body.touching.down ) {
+        //     player.setVelocityY(-100);
+        //     player.setVelocityX(-50);
+        // }
+
+        // if (W.isDown && D.isDown && player.body.touching.down) {
+        //     player.setVelocityY(-100);
+        //     player.setVelocityX(50);
+        // } 
 
         // Melee Attack
         if (spaceBar.isDown) {

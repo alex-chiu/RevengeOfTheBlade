@@ -30,7 +30,13 @@ var cloud2Life = 100;
 var daggersAlive = true, swordAlive = true;
 var textAlive5 = true;
 
-var trex, trexAlive = true, trexLife = 100, trexLifeText, trexDmg;
+var helicopter, helicopterAlive = true, helicopterLife = 150, helicopterLifeText, helicopterDmg;
+var helicopter2, helicopter2Alive = true, helicopter2Life = 200, helicopter2LifeText, helicopter2Dmg;
+var tank, tankAlive = true, tankLife = 200, tankLifeText, tankDmg;
+var ammo, missile;
+
+var delX0, delX1, delX2, delY1, delY2;
+
 var swordLoot;
 var daggerLoot;
 var spike, spike1, spike2;
@@ -65,8 +71,14 @@ class Stage4Boss extends Phaser.Scene {
         this.load.image('4front51', 'assets/backgrounds/stage4/5front4.png');
         this.load.image('4ground11', 'assets/backgrounds/stage4/ground4.png');
 
-        // Boss Spritesheet
-        this.load.spritesheet('trex', 'assets/sprites/trex.png', { frameWidth: 470, frameHeight: 245 });
+        // Boss Spritesheets
+        this.load.spritesheet('helicopter', 'assets/sprites/helicopter.png', { frameWidth: 320, frameHeight: 123 });
+        this.load.spritesheet('tank', 'assets/sprites/tank.png', { frameWidth: 353, frameHeight: 125 });
+        
+
+        // Boss ammunition 
+        this.load.image('ammo', 'assets/ammo.png');
+        this.load.image('missile', 'assets/missile.png');
 
         this.load.image('cloud', 'assets/cloud.png');
 
@@ -199,16 +211,28 @@ class Stage4Boss extends Phaser.Scene {
 
         // Reset Values
         //playerLife = Math.floor(playerLife);
-        playerLife = 100;
-        trexLife = 100;
-        playerAlive = true;
-        trexAlive = true;
+        playerLife = 150;
         daggersAlive = true;
         swordAlive = true;
-        trexLifeText = 100;
+        playerAlive = true;
+
         lootCounter1 = 0;
+
+        helicopterLife = 200;
+        helicopterAlive = true;
+        helicopterLifeText = 200;
+        
+        helicopter2Life = 150;
+        helicopter2Alive = true;
+        helicopter2LifeText = 150;
+
+        tankLife = 200;
+        tankAlive = true;
+        tankLifeText = 200;
+
         playerDetected = false;
         attackAnimPlaying = false;
+        
         dir = 1;
         dir1 = 1;
         dir2 = 1;
@@ -220,12 +244,26 @@ class Stage4Boss extends Phaser.Scene {
 
 
         // Create Enemies
-        trex = this.physics.add.sprite(650, 400, 'trex')
-        trex.setBounce(0);
-        trex.setCollideWorldBounds(true);
-        trex.displayWidth = game.config.width * 0.4;
-        trex.scaleY = trex.scaleX;
-        trex.body.setGravityY(300);
+        helicopter = this.physics.add.sprite(300, 200, 'helicopter')
+        helicopter.setBounce(0);
+        helicopter.setCollideWorldBounds(true);
+        helicopter.displayWidth = game.config.width * 0.25;
+        helicopter.scaleY = helicopter.scaleX;
+        helicopter.body.setGravityY(0);
+
+        helicopter2 = this.physics.add.sprite(650, 400, 'helicopter')
+        helicopter2.setBounce(0);
+        helicopter2.setCollideWorldBounds(true);
+        helicopter2.displayWidth = game.config.width * 0.25;
+        helicopter2.scaleY = helicopter2.scaleX;
+        helicopter2.body.setGravityY(0);
+
+        tank = this.physics.add.sprite(650, 400, 'tank')
+        tank.setBounce(0);
+        tank.setCollideWorldBounds(true);
+        tank.displayWidth = game.config.width * 0.4;
+        tank.scaleY = tank.scaleX;
+        tank.body.setGravityY(300);
 
         cloud = this.physics.add.image(650, 100, 'cloud')
         cloud1 = this.physics.add.image(400, 200, 'cloud')
@@ -233,12 +271,23 @@ class Stage4Boss extends Phaser.Scene {
         daggerLoot = this.physics.add.image(650, 70, 'dagger')
 
         // Enemy Life Text
-        trexLifeText = this.add.text(590, 20, 'T-Rex Life: 100', { fontSize: '15px', fill: '#ffffff' });
+        helicopterLifeText = this.add.text(190, 20, 'Attack Helicopter: 150', { fontSize: '13px', fill: '#ffffff' });
+        helicopter2LifeText = this.add.text(380, 20, 'Missile Helicopter: 200', { fontSize: '13px', fill: '#ffffff' });
+        tankLifeText = this.add.text(590, 20, 'Tank Life: 200', { fontSize: '13px', fill: '#ffffff' });
+
 
         // Enemy Overlap
-        this.physics.add.collider(trex, platforms);
-        this.physics.add.overlap(player, trex);
-        this.physics.add.overlap(playerMeleeAtk, trex);
+        this.physics.add.collider(helicopter, platforms);
+        this.physics.add.overlap(player, helicopter);
+        this.physics.add.overlap(playerMeleeAtk, helicopter);
+
+        this.physics.add.collider(helicopter2, platforms);
+        this.physics.add.overlap(player, helicopter2);
+        this.physics.add.overlap(playerMeleeAtk, helicopter2);
+
+        this.physics.add.collider(tank, platforms);
+        this.physics.add.overlap(player, tank);
+        this.physics.add.overlap(playerMeleeAtk, tank);
 
         this.physics.add.overlap(player, cloud);
         this.physics.add.overlap(playerMeleeAtk, cloud);
@@ -373,37 +422,239 @@ class Stage4Boss extends Phaser.Scene {
 
         // Enemy Movement
         if (!playerDetected) {
-            trex.anims.play('trexStatic');
+            tank.anims.play('tankLeft');
+            helicopter.anims.play('helicopterLeft');
+            helicopter2.anims.play('helicopterLeft');
+
         }
         else {
-            if (player.body.position.x < trex.body.position.x - 5) {
-                trex.anims.play('trexLeft', true);
-                trex.setVelocityX(-70);
+            delX0 = tank.body.position.x - tank.body.position.x;
+
+            delX1 = helicopter.body.position.x - player.body.position.x;
+            delX2 = helicopter2.body.position.x - player.body.position.x;
+            delY1 = helicopter.body.position.y - player.body.position.y;
+            delY2 = helicopter2.body.position.y - player.body.position.y;
+            // TANK: shoot if close, else keep moving left /  right
+            // Player is left of Tank
+            if (player.body.position.x < tank.body.position.x) {
+                if (delX0 > 160) {
+                    tank.anims.play('tankLeft', true);
+                    tank.setVelocityX(-50);
+                }
+                else if (delX0 < 130) {
+                    tank.anims.play('tankLeft', true);
+                    tank.setVelocityX(50);
+                }
+                else {
+                    tank.anims.play('tankLeftAtk');
+                    tank.setVelocityX(0);
+                    if (tankAlive) {
+                        this.shootAmmo('L');
+                    }
+                }
             }
-            else if (player.body.position.x > trex.body.position.x + 5) {
-                trex.anims.play('trexRight', true);
-                trex.setVelocityX(70);
+            // Player is right of tank
+            else if (player.body.position.x > tank.body.position.x) {
+                if (delX0 > -130) {
+                    tank.anims.play('tankRight', true);
+                    tank.setVelocityX(-35);
+                }
+                else if (delX0 < -160) {
+                    tank.anims.play('tankRight', true);
+                    tank.setVelocityX(35);
+                }
+                else {
+                    tank.anims.play('tankRightAtk');
+                    tank.setVelocityX(0);
+                    if (tankAlive){
+                        this.shootAmmo('R');
+                    }
+                }
             }
-            else {
-                trex.anims.play('trexStatic');
-                trex.setVelocityX(0);
+            // HELICOPTER 1
+            // upper right or directly above
+            if (player.body.position.x <= helicopter.body.position.x && player.body.position.y <= helicopter.body.position.y) {
+                helicopter.anims.play('helicopterLeft', true);
+                if (delX1 > 10 && delY1 > 10) {
+                    helicopter.setVelocityX(-70);
+                    helicopter.setVelocityY(-1);
+                }
+                else  {
+                    helicopter.setVelocityX(-60);
+                    helicopter.setVelocityY(-5);
+                }
+            }
+            // Helicopter is upper left
+            else if (player.body.position.x > helicopter.body.position.x && player.body.position.y < helicopter.body.position.y) {
+                helicopter.anims.play('helicopterRight', true);
+                if (delX1 > 10 && delY1 > 10) {
+                    helicopter.setVelocityX(70);
+                    helicopter.setVelocityY(-5);
+                }
+                else  {
+                    helicopter.setVelocityX(60);
+                    helicopter.setVelocityY(-5);
+                }
+            }
+            // Helicopter lower right or directly below
+            else if (player.body.position.x <= helicopter.body.position.x && player.body.position.y >= helicopter.body.position.y) {
+                helicopter.anims.play('helicopterLeft', true);
+                if (delX1 > 10 && delY1 > 10) {
+                    helicopter.setVelocityX(-70);
+                    helicopter.setVelocityY(30);
+                }
+                else  {
+                    helicopter.setVelocityX(-30);
+                    helicopter.setVelocityY(30);
+                }
+            }
+            // Helicopter lower left
+            else if (player.body.position.x > helicopter.body.position.x && player.body.position.y > helicopter.body.position.y) {
+                helicopter.anims.play('helicopterRight', true);
+                if (delX1 > 10 && delY1 > 10) {
+                    helicopter.setVelocityX(-70);
+                    helicopter.setVelocityY(30);
+                }
+                else  {
+                    helicopter.setVelocityX(40);
+                    helicopter.setVelocityY(30);
+                }
+            }
+
+            // Helicopter directly left
+            else if (player.body.position.x > helicopter.body.position.x && player.body.position.y == helicopter.body.position.y) {
+                helicopter.anims.play('helicopterLeft', true);
+                if (delX1 > 10) {
+                    helicopter.setVelocityX(70);
+                    helicopter.setVelocityY(10);
+                }
+                else  {
+                    helicopter.setVelocityX(70);
+                    helicopter.setVelocityY(3);
+                }
+            }
+
+            // Helicopter directly right
+            else if (player.body.position.x < helicopter.body.position.x && player.body.position.y == helicopter.body.position.y) {
+                helicopter.anims.play('helicopterLeft', true);
+                if (delX1 > 200) {
+                    helicopter.setVelocityX(70);
+                    helicopter.setVelocityY(10);
+                }
+                else  {
+                    helicopter.setVelocityX(-70);
+                    helicopter.setVelocityY(3);
+                }
+            }
+
+            // HELICOPTER 2
+            // upper right or directly above
+            if (player.body.position.x <= helicopter2.body.position.x && player.body.position.y <= helicopter2.body.position.y) {
+                helicopter2.anims.play('helicopterLeft', true);
+                if (delX2 > 10 && delY2 > 10) {
+                    helicopter2.setVelocityX(-70);
+                    helicopter2.setVelocityY(-1);
+                }
+                else {
+                    helicopter2.setVelocityX(-60);
+                    helicopter2.setVelocityY(-5);
+                }
+            }
+            // Helicopter2 is upper left
+            else if (player.body.position.x > helicopter2.body.position.x && player.body.position.y < helicopter2.body.position.y) {
+                helicopter2.anims.play('helicopterRight', true);
+                if (delX2 > 10 && delY2 > 10) {
+                    helicopter2.setVelocityX(70);
+                    helicopter2.setVelocityY(-5);
+                }
+                else  {
+                    helicopter2.setVelocityX(60);
+                    helicopter2.setVelocityY(-5);
+                }
+            }
+            // Helicopter2 lower right or directly below
+            else if (player.body.position.x <= helicopter2.body.position.x && player.body.position.y >= helicopter2.body.position.y) {
+                helicopter2.anims.play('helicopterLeft', true);
+                if (delX2 > 10 && delY2 > 10) {
+                    helicopter2.setVelocityX(-70);
+                    helicopter2.setVelocityY(30);
+                }
+                else  {
+                    helicopter2.setVelocityX(-30);
+                    helicopter2.setVelocityY(30);
+                }
+            }
+            // Helicopter2 lower left
+            else if (player.body.position.x > helicopter2.body.position.x && player.body.position.y > helicopter2.body.position.y) {
+                helicopter2.anims.play('helicopterRight', true);
+                if (delX2 > 10 && delY2 > 10) {
+                    helicopter2.setVelocityX(-70);
+                    helicopter2.setVelocityY(30);
+                }
+                else  {
+                    helicopter2.setVelocityX(40);
+                    helicopter2.setVelocityY(30);
+                }
+            }
+
+            // Helicopter2 directly left
+            else if (player.body.position.x > helicopter2.body.position.x && player.body.position.y == helicopter2.body.position.y) {
+                helicopter2.anims.play('helicopterLeft', true);
+                if (delX2 > 10) {
+                    helicopter2.setVelocityX(70);
+                    helicopter2.setVelocityY(10);
+                }
+                else  {
+                    helicopter2.setVelocityX(70);
+                    helicopter2.setVelocityY(3);
+                }
+            }
+
+            // Helicopter2 directly right
+            else if (player.body.position.x < helicopter2.body.position.x && player.body.position.y == helicopter2.body.position.y) {
+                helicopter2.anims.play('helicopterLeft', true);
+                if (delX2 > 200) {
+                    helicopter2.setVelocityX(70);
+                    helicopter2.setVelocityY(10);
+                }
+                else  {
+                    helicopter2.setVelocityX(-70);
+                    helicopter2.setVelocityY(3);
+                }
             }
         }
 
-        if (Math.abs(player.body.position.x - trex.body.position.x) <= 150) {
+        if (Math.abs(player.body.position.x - tank.body.position.x) <= 150) {
+            playerDetected = true;
+        }
+
+        if (Math.abs(player.body.position.x - helicopter.body.position.x) <= 800) {
+            playerDetected = true;
+        }
+
+        if (Math.abs(player.body.position.y - helicopter.body.position.y) <= 600) {
+            playerDetected = true;
+        }
+
+        if (Math.abs(player.body.position.x - helicopter2.body.position.x) <= 800) {
+            playerDetected = true;
+        }
+
+        if (Math.abs(player.body.position.y - helicopter2.body.position.y) <= 600) {
             playerDetected = true;
         }
 
         var boundsPl = player.getBounds();
-        var boundsV = trex.getBounds();
+        var boundsT = tank.getBounds();
 
-        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsV)) && playerAlive && trexAlive) {
-            playerLife -= 0.15;
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsT)) && playerAlive && tankAlive) {
+            playerLife -= 0.25;
             if (playerLife <= 0) {
                 player.disableBody(true, true);
                 player.setActive(false);
                 player.setVisible(false);
                 playerAlive = false;
+                soundtrack1.stop();
             }
             this.updatePlayerLifeText()
             player.setTint('0xff0000');
@@ -414,6 +665,52 @@ class Stage4Boss extends Phaser.Scene {
                 }
             })
         }
+
+        var boundsHc = helicopter.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsHc)) && playerAlive && helicopterAlive) {
+            playerLife -= 0.1
+            if (playerLife <= 0) {
+                player.disableBody(true, true);
+                player.setActive(false);
+                player.setVisible(false);
+                playerAlive = false;
+                soundtrack1.stop();
+            }
+            this.updatePlayerLifeText()
+            player.setTint('0xff0000');
+            this.time.addEvent({
+                delay: 300,
+                callback: () => {
+                    player.clearTint();
+                }
+            })
+        }
+
+        var boundsHc2 = helicopter2.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsHc2)) && playerAlive && helicopter2Alive) {
+            playerLife -= 0.1
+            if (playerLife <= 0) {
+                player.disableBody(true, true);
+                player.setActive(false);
+                player.setVisible(false);
+                playerAlive = false;
+                //soundtrack1.stop();
+            }
+            this.updatePlayerLifeText()
+            player.setTint('0xff0000');
+            this.time.addEvent({
+                delay: 300,
+                callback: () => {
+                    player.clearTint();
+                }
+            })
+        }
+
+        // Update Life Text
+        this.updatePlayerLifeText();
+    
 
         var boundsC = cloud.getBounds();
         if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsC)) && playerAlive && cloudLife0 > 0) {
@@ -523,15 +820,35 @@ class Stage4Boss extends Phaser.Scene {
 
 
     // Function that clears the tints on each object (player and enemies) each loop.
-    // Necessary because Events/Callbacks not allowed in Dagger/Laser detection
+    // Necessary because Events/Callbacks not allowed in Dagger/ammo detection
     resetTints() {
         // Clear Tint
-        if (trexDmg) {
+        if (tankDmg) {
             this.time.addEvent({
                 delay: 200,
                 callback: () => {
-                    trex.clearTint();
-                    trexDmg = false;
+                    tank.clearTint();
+                    tankDmg = false;
+                }
+            })
+        }
+
+        if (helicopterDmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    helicopter.clearTint();
+                    helicopterDmg = false;
+                }
+            })
+        }
+
+        if (helicopter2Dmg) {
+            this.time.addEvent({
+                delay: 200,
+                callback: () => {
+                    helicopter2.clearTint();
+                    helicopter2Dmg = false;
                 }
             })
         }
@@ -636,7 +953,9 @@ class Stage4Boss extends Phaser.Scene {
                         player.visible = false;
                         playerMeleeAtk.visible = true;
                         // Check damage against targets
-                        this.updateTRexLife();
+                        this.updateTankLife();
+                        this.updateHelicopterLife();
+                        this.updateHelicopter2Life();
                         playerMeleeAtk.anims.play('playerMeleeAtkR');
                         this.time.addEvent({
                             delay: 400,
@@ -660,7 +979,9 @@ class Stage4Boss extends Phaser.Scene {
                         player.visible = false;
                         playerMeleeAtk.visible = true;
                         // Check damage against targets
-                        this.updateTRexLife();
+                        this.updateTankLife();
+                        this.updateHelicopterLife();
+                        this.updateHelicopter2Life();
                         playerMeleeAtk.anims.play('playerMeleeAtkL');
                         this.time.addEvent({
                             delay: 400,
@@ -776,28 +1097,80 @@ class Stage4Boss extends Phaser.Scene {
         }
     }
 
-    updateTRexLife() {
+    updateTankLife() {
         var boundsA = playerMeleeAtk.getBounds();
-        var boundsB = trex.getBounds();
+        var boundsB = tank.getBounds();
 
-        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && trexAlive) {
-            if (trexLife < 10) {
-              trexLife = 0
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && tankAlive) {
+            if (tankLife < 10) {
+                tankLife = 0
             }
             else {
-              trexLife -= 10
+                tankLife -= 10
             }
-            trexLifeText.setText('T-Rex Life: ' + trexLife);
-            trex.setTint('0xff0000');
+            tankLifeText.setText('Tank Life: ' + tankLife);
+            tank.setTint('0xff0000');
             attack2_metal.play();
-            trexDmg = true;
+            tank = true;
         }
-        if (trexLife == 0 && lootCounter1 == 0) {
+        if (tankLife == 0 && lootCounter1 == 0) {
             var hLootB1 = swordLoot.create(game.config.width/2, 200, 'swordLoot');
             hLootB1.setBounce(0.5);
             hLootB1.setCollideWorldBounds(true);
-            trex.disableBody(true, true);
-            trexAlive = false;
+            tank.disableBody(true, true);
+            tankAlive = false;
+            lootCounter1 += 1
+        }
+    }
+
+    updateHelicopterLife() {
+        var boundsA = playerMeleeAtk.getBounds();
+        var boundsB = helicopter.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && helicopterAlive) {
+            if (helicopterLife < 10) {
+                helicopterLife = 0
+            }
+            else {
+                helicopterLife -= 10
+            }
+            helicopterLifeText.setText('Attack Helicopter Life: ' + helicopterLife);
+            helicopter.setTint('0xff0000');
+            attack2_metal.play();
+            helicopter = true;
+        }
+        if (helicopterLife == 0 && lootCounter1 == 0) {
+            var hLootB1 = swordLoot.create(game.config.width/2, 200, 'swordLoot');
+            hLootB1.setBounce(0.5);
+            hLootB1.setCollideWorldBounds(true);
+            helicopter.disableBody(true, true);
+            helicopterAlive = false;
+            lootCounter1 += 1
+        }
+    }
+
+    updateHelicopter2Life() {
+        var boundsA = playerMeleeAtk.getBounds();
+        var boundsB = helicopter2.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && helicopter2Alive) {
+            if (helicopter2Life < 10) {
+                helicopter2Life = 0
+            }
+            else {
+                helicopter2Life -= 10
+            }
+            helicopter2LifeText.setText('Missile Helicopter Life: ' + helicopter2Life);
+            helicopter2.setTint('0xff0000');
+            attack2_metal.play();
+            helicopter2 = true;
+        }
+        if (helicopter2Life == 0 && lootCounter1 == 0) {
+            var hLootB1 = swordLoot.create(game.config.width/2, 200, 'swordLoot');
+            hLootB1.setBounce(0.5);
+            hLootB1.setCollideWorldBounds(true);
+            helicopter2.disableBody(true, true);
+            helicopter2Alive = false;
             lootCounter1 += 1
         }
     }
@@ -812,6 +1185,26 @@ class Stage4Boss extends Phaser.Scene {
         daggerGroup.throwDagger(player.body.x, player.body.y, aimX, aimY)
     }
 
+
+    // Function that shoots ammo from tanks
+    shootAmmo(direction) {
+        if (direction == 'L') {
+            ammoGroup.fireAmmo(tank.body.position.x - 20, tank.body.position.y + 75, direction);
+        }
+        else if (direction == 'R') {
+            ammoGroup.fireAmmo(tank.body.position.x + 100, tank.body.position.y + 75, direction);
+        }
+    }
+
+    // Function that shoots ammo from tanks
+    shootMissile(direction) {
+        if (direction == 'L') {
+            missileGroup.fireAmmo(missile.body.position.x - 20, missile.body.position.y + 75, direction);
+        }
+        else if (direction == 'R') {
+            missileGroup.fireAmmo(missile.body.position.x + 100, missile.body.position.y + 75, direction);
+        }
+    }
 }
 
 // Dagger Group Class
@@ -838,6 +1231,158 @@ class DaggerGroupB4 extends Phaser.Physics.Arcade.Group {
     }
 }
 
+
+
+// Ammo Group Class
+class AmmoGroup4 extends Phaser.Physics.Arcade.Group {
+    constructor(scene) {
+        super(scene.physics.world, scene);
+
+        this.createMultiple({
+            classType: Ammo5,
+            frameQuantity: 1,
+            active: false,
+            visible: false,
+            key: 'ammo'
+        })
+    }
+
+    fireAmmo (x, y, direction) {
+        const ammo = this.getFirstDead(false);
+        if (ammo) {
+            ammo.fire(x, y, direction);
+        }
+    }
+}
+
+// ammo Class
+class Ammo4 extends Phaser.Physics.Arcade.Sprite {
+    constructor(scene, x, y) {
+        super(scene, x, y, 'ammo');
+    }
+
+    preUpdate(time, delta) {
+        super.preUpdate(time, delta);
+
+        if (this.y >= 528) {
+            this.setActive(false);
+            this.setVisible(false);
+        }
+        else if (Phaser.Geom.Rectangle.Overlaps(this.getBounds(), player.getBounds()) && playerAlive) {
+            playerLife -= 5;
+            player.setTint('0xff0000');
+            playerDmg = true;
+            this.setActive(false);
+            this.setVisible(false);
+        }
+        if (playerLife <= 0) {
+            playerLife = 0;
+            player.disableBody(true, true);
+            player.setActive(false);
+            player.setVisible(false);
+            playerAlive = false;
+            soundtrack4.stop();
+        }
+    }
+
+    fire (x, y, direction) {
+        this.body.reset(x, y);
+        this.setActive(true);
+        this.setVisible(true);
+        this.body.setGravityY(0);
+
+        if (direction == 'L') {
+            this.setVelocityX(-250);
+            this.setVelocityY(100);
+            var angle = Math.atan2(-100, 250);
+            this.rotation = angle;
+        }
+        else if (direction == 'R') {
+            this.setVelocityX(250);
+            this.setVelocityY(100);
+            var angle = Math.atan2(-100, -250);
+            this.rotation = angle;
+        }
+    }
+}
+
+
+// Missile Group Class
+class MissileGroup4 extends Phaser.Physics.Arcade.Group {
+    constructor(scene) {
+        super(scene.physics.world, scene);
+
+        this.createMultiple({
+            classType: Ammo5,
+            frameQuantity: 1,
+            active: false,
+            visible: false,
+            key: 'missile'
+        })
+    }
+
+    fireAmmo (x, y, direction) {
+        const missile = this.getFirstDead(false);
+        if (missile) {
+            missile.fire(x, y, direction);
+        }
+    }
+}
+
+// Missile Class
+class Missile4 extends Phaser.Physics.Arcade.Sprite {
+    constructor(scene, x, y) {
+        super(scene, x, y, 'ammo');
+    }
+
+    preUpdate(time, delta) {
+        super.preUpdate(time, delta);
+
+        if (this.y >= 528) {
+            this.setActive(false);
+            this.setVisible(false);
+        }
+        else if (Phaser.Geom.Rectangle.Overlaps(this.getBounds(), player.getBounds()) && playerAlive) {
+            playerLife -= 5;
+            player.setTint('0xff0000');
+            playerDmg = true;
+            this.setActive(false);
+            this.setVisible(false);
+        }
+        if (playerLife <= 0) {
+            playerLife = 0;
+            player.disableBody(true, true);
+            player.setActive(false);
+            player.setVisible(false);
+            playerAlive = false;
+            soundtrack4.stop();
+        }
+    }
+
+    fire (x, y, direction) {
+        this.body.reset(x, y);
+        this.setActive(true);
+        this.setVisible(true);
+        this.body.setGravityY(0);
+
+        if (direction == 'L') {
+            this.setVelocityX(-250);
+            this.setVelocityY(100);
+            var angle = Math.atan2(-100, 250);
+            this.rotation = angle;
+        }
+        else if (direction == 'R') {
+            this.setVelocityX(250);
+            this.setVelocityY(100);
+            var angle = Math.atan2(-100, -250);
+            this.rotation = angle;
+        }
+    }
+}
+
+
+
+
 // Dagger Class
 class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
@@ -853,24 +1398,57 @@ class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
         }
         // Check dagger overlap with enemies
-        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), trex.getBounds())) && trexAlive) {
+        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), tank.getBounds())) && tankAlive) {
             this.setActive(false);
             this.setVisible(false);
-            trexLife -= 5;
+            tankLife -= 5;
             if (!playerDetected) {
                 playerDetected = true;
             }
-            trexLifeText.setText('T-Rex Life: ' + trexLife);
-            trex.setTint('0xff0000')
-            trexDmg = true;
+            tankLifeText.setText('Tank Life: ' + tankLife);
+            tank.setTint('0xff0000')
+            tankDmg = true;
         }
+        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), helicopter.getBounds())) && helicopterAlive) {
+            this.setActive(false);
+            this.setVisible(false);
+            helicopterLife -= 5;
+            if (!playerDetected) {
+                playerDetected = true;
+            }
+            helicopterLifeText.setText('Attack Helicopter Life: ' + helicopterLife);
+            helicopter.setTint('0xff0000')
+            helicopterDmg = true;
+        }
+        else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), helicopter2.getBounds())) && helicopter2Alive) {
+            this.setActive(false);
+            this.setVisible(false);
+            helicopter2Life -= 5;
+            if (!playerDetected) {
+                playerDetected = true;
+            }
+            helicopter2LifeText.setText('Missile Helicopter Life: ' + helicopterLife);
+            helicopter2.setTint('0xff0000');
+            helicopter2Dmg = true;
+        }
+        
         // Disable enemies if their health reaches 0
-        if (trexLife == 0 && lootCounter1 == 0) {
+        if (tankLife == 0 && lootCounter1 == 0) {
             var hLoot = swordLoot.create(game.config.width/2, 200, 'swordLoot');
             hLoot.setBounce(0.5);
             hLoot.setCollideWorldBounds(true);
-            trex.disableBody(true, true);
-            trexAlive = false;
+            tank.disableBody(true, true);
+            tankAlive = false;
+            lootCounter1 += 1
+        }
+        if (helicopterLife == 0 && lootCounter1 == 0) {
+            helicopter.disableBody(true, true);
+            helicopter = false;
+            lootCounter1 += 1
+        }
+        if (helicopter2Life == 0 && lootCounter1 == 0) {
+            helicopter2.disableBody(true, true);
+            helicopter2 = false;
             lootCounter1 += 1
         }
     }

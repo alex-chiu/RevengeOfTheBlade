@@ -5,6 +5,8 @@ Cutscene 0
 - freesound.org/people/Sirkoto51/sounds/346897/
 Cutscene T
 - freesound.org/people/plasterbrain/sounds/464917/
+Credits
+- freesound.org/people/lharman94/sounds/329597/
 
 Menu 
 - freesound.org/people/tyops/sounds/414046

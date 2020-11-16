@@ -267,6 +267,7 @@ class RobotBossFight extends Phaser.Scene {
             player.setVelocityY(-270);
         }
 
+
         // Melee Attack
         if (spaceBar.isDown) {
             if (player.body.velocity.x >= 0) {
