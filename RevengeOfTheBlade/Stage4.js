@@ -24,6 +24,8 @@ var car, carAlive = true, carLife = 200, carLifeText, carDmg;
 var politician, politicianAlive = true, politicianLife = 150, politicianLifeText, politicianDmg;
 var healthLoot;
 var delX1, delX2, delX3;
+var lootCounterPolit = 0;
+var lootCounterCar = 0;
 
 // PLATFORMS
 var pf1, pf2, pf3, pf4, pf5;
@@ -244,6 +246,8 @@ class Stage4 extends Phaser.Scene {
         politicianLifeText = 150;
 
         lootCounter1 = 0;
+        lootCounterCar = 0;
+        lootCounterPolit = 0;
         playerDetected = false;
         attackAnimPlaying = false;
 
@@ -890,13 +894,13 @@ class Stage4 extends Phaser.Scene {
             attack2_metal.play();
             carDmg = true;
         }
-        if (carLife == 0 && lootCounter1 == 0) {
+        if (carLife == 0 && lootCounterCar == 0) {
             var hLootB1 = healthLoot.create(car.body.x, car.body.y, 'healthLoot');
             hLootB1.setBounce(0.5);
             hLootB1.setCollideWorldBounds(true);
             car.disableBody(true, true);
             carAlive = false;
-            lootCounter1 += 1
+            lootCounterCar += 1
         }
     }
 
@@ -916,13 +920,13 @@ class Stage4 extends Phaser.Scene {
             attack1_creature1.play();
             politicianDmg = true;
         }
-        if (politicianLife == 0 && lootCounter1 == 0) {
+        if (politicianLife == 0 && lootCounterPolit == 0) {
             var hLootB1 = healthLoot.create(politician.body.x, politician.body.y, 'healthLoot');
             hLootB1.setBounce(0.5);
             hLootB1.setCollideWorldBounds(true);
             politician.disableBody(true, true);
             politicianAlive = false;
-            lootCounter1 += 1
+            lootCounterPolit += 1
         }
     }
 
@@ -1011,7 +1015,7 @@ class DaggerS4 extends Phaser.Physics.Arcade.Sprite {
             carDmg = true;
         }
         // Disable enemies if their health reaches 0
-        if (policeLife == 0) {
+        if (policeLife == 0 && lootCounter1 == 0) {
             var hLoot = healthLoot.create(police.body.x, police.body.y, 'healthLoot');
             hLoot.setBounce(0.5);
             hLoot.setCollideWorldBounds(true);
@@ -1019,21 +1023,21 @@ class DaggerS4 extends Phaser.Physics.Arcade.Sprite {
             policeAlive = false;
             lootCounter1 += 1
         }
-        if (politicianLife == 0) {
+        if (politicianLife == 0 && lootCounterPolit == 0 ) {
             var hLoot = healthLoot.create(politician.body.x, politician.body.y, 'healthLoot');
             hLoot.setBounce(0.5);
             hLoot.setCollideWorldBounds(true);
             politician.disableBody(true, true);
             politicianAlive = false;
-            lootCounter1 += 1
+            lootCounterPolit += 1
         }
-        if (carLife == 0) {
+        if (carLife == 0 && lootCounterCar) {
             var hLoot = healthLoot.create(car.body.x, car.body.y, 'healthLoot');
             hLoot.setBounce(0.5);
             hLoot.setCollideWorldBounds(true);
             car.disableBody(true, true);
             carAlive = false;
-            lootCounter1 += 1
+            lootCounterCar += 1
         }
     }
 
