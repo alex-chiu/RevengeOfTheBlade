@@ -77,9 +77,9 @@ class Stage4Boss extends Phaser.Scene {
         // Boss Spritesheets
         this.load.spritesheet('helicopter', 'assets/sprites/helicopter.png', { frameWidth: 320, frameHeight: 123 });
         this.load.spritesheet('tank', 'assets/sprites/tank.png', { frameWidth: 353, frameHeight: 125 });
-        
 
-        // Boss ammunition 
+
+        // Boss ammunition
         this.load.image('ammo', 'assets/ammo.png');
         this.load.image('missile', 'assets/missile.png');
 
@@ -224,7 +224,7 @@ class Stage4Boss extends Phaser.Scene {
         helicopterLife = 150;
         helicopterAlive = true;
         helicopterLifeText = 150;
-        
+
         helicopter2Life = 200;
         helicopter2Alive = true;
         helicopter2LifeText = 200;
@@ -235,7 +235,7 @@ class Stage4Boss extends Phaser.Scene {
 
         playerDetected = false;
         attackAnimPlaying = false;
-        
+
         dir = 1;
         dir1 = 1;
         dir2 = 1;
@@ -272,9 +272,9 @@ class Stage4Boss extends Phaser.Scene {
         daggerLoot = this.physics.add.image(650, 70, 'dagger')
 
         // Enemy Life Text
-        helicopterLifeText = this.add.text(190, 20, 'Attack Helicopter: 150', { fontSize: '13px', fill: '#ffffff' });
-        helicopter2LifeText = this.add.text(380, 20, 'Missile Helicopter: 200', { fontSize: '13px', fill: '#ffffff' });
-        tankLifeText = this.add.text(590, 20, 'Tank Life: 200', { fontSize: '13px', fill: '#ffffff' });
+        helicopterLifeText = this.add.text(220, 20, 'Attack Helicopter: 150', { fontSize: '13px', fill: '#ffffff' });
+        helicopter2LifeText = this.add.text(430, 20, 'Missile Helicopter: 200', { fontSize: '13px', fill: '#ffffff' });
+        tankLifeText = this.add.text(660, 20, 'Tank Life: 200', { fontSize: '13px', fill: '#ffffff' });
 
 
         // Enemy Overlap
@@ -313,8 +313,8 @@ class Stage4Boss extends Phaser.Scene {
         this.physics.add.collider(spike2, platforms);
 
 
-        this.label = this.add.text(13, 570, '', { fontSize: '17px' }).setWordWrapWidth(800);
-        this.typewriteText('Message: You have entered a warzone. Jump on the clouds to collect the weapons!');
+        this.label = this.add.text(8, 570, '', { fontSize: '17px' }).setWordWrapWidth(800);
+        this.typewriteText('You have entered a warzone. Jump on the clouds to collect the weapons!');
     }
 
     // Constantly Updating Game Loop
@@ -710,7 +710,7 @@ class Stage4Boss extends Phaser.Scene {
 
         // Update Life Text
         this.updatePlayerLifeText();
-    
+
 
         var boundsC = cloud.getBounds();
         if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsC)) && playerAlive && cloudLife0 > 0) {
@@ -1431,7 +1431,7 @@ class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
             helicopter2.setTint('0xff0000');
             helicopter2Dmg = true;
         }
-        
+
         // Disable enemies if their health reaches 0
         if (tankLife == 0 && lootCounter1 == 0) {
             var hLoot = swordLoot.create(game.config.width/2, 200, 'swordLoot');

@@ -49,36 +49,31 @@ class MenuBoss1C extends Phaser.Scene {
       tutorialButton.on('pointerover', () => { this.buttonOver(tutorialButton); });
       tutorialButton.on('pointerout', () => { this.buttonNotOver(tutorialButton); });
 
-      this.add.image(315, 345, 'check');
-      this.add.image(310, 435, 'cross');
-      this.add.image(735, 435, 'cross');
-      this.add.image(582, 525, 'cross');
 
-      // boss crosses/checks
-      this.add.image(245, 370, 'check');
-      this.add.image(646, 370, 'cross');
-      this.add.image(245, 460, 'cross');
-      this.add.image(646, 460, 'cross');
-      this.add.image(439, 548, 'cross');
+      this.add.image(510, 345, 'check');
+      this.add.image(590, 525, 'cross');
+
+      // boss crosses
+      this.add.image(450, 370, 'check');
+      this.add.image(450, 460, 'cross');
+      this.add.image(450, 548, 'cross');
 
 
-      this.add.text(100,330,'Stone Level', { fontSize: '30px', fill: '#02a3d9' });
-      this.add.text(160, 360, 'BOSS 1', { fontSize: '20px', fill: '#8db9d9' });
-      this.add.text(560,360,'BOSS 2', { fontSize: '20px', fill: '#8db9d9' });
-      this.add.text(100,420,'Steel Level', { fontSize: '30px', fill: '#02a3d9' });
-      this.add.text(160,450,'BOSS 3', { fontSize: '20px', fill: '#8db9d9' });
-      this.add.text(470,420,'Titanium Level', { fontSize: '30px', fill: '#02a3d9' });
-      this.add.text(560,450,'BOSS 4', { fontSize: '20px', fill: '#8db9d9' });
-      this.add.text(210,508,'Chromium Alloy Level', { fontSize: '30px', fill: '#02a3d9' });
-      this.add.text(355,538,'BOSS 5', { fontSize: '20px', fill: '#8db9d9' });
+      this.add.text(300,330,'Stone Level', { fontSize: '30px', fill: '#02a3d9' });
+      this.add.text(360, 360, 'BOSS 1', { fontSize: '20px', fill: '#8db9d9' });
+      this.add.text(360,450,'BOSS 4', { fontSize: '20px', fill: '#8db9d9' });
+      this.add.text(220,508,'Chromium Alloy Level', { fontSize: '30px', fill: '#02a3d9' });
+      this.add.text(360,538,'BOSS 5', { fontSize: '20px', fill: '#8db9d9' });
 
-      ironlevelButton = this.add.text(500,330,'Iron Level', { fontSize: '30px', fill: '#02a3d9' });
+
+
+      ironlevelButton = this.add.text(280,420,'Titanium Level', { fontSize: '30px', fill: '#02a3d9' });
       ironlevelButton.setInteractive();
       ironlevelButton.on('pointerdown', () => {
         buttonSound.play();
         this.soundtrack.stop();
         this.scene.stop('MenuBoss1C');
-        this.scene.start('Stage5'); // change to Stage2 when available
+        this.scene.start('Stage4'); // change to Stage2 when available
       });
       ironlevelButton.on('pointerover', () => { this.buttonOver(ironlevelButton); });
       ironlevelButton.on('pointerout', () => { this.buttonNotOver(ironlevelButton); });

@@ -1031,7 +1031,7 @@ class DaggerS4 extends Phaser.Physics.Arcade.Sprite {
             politicianAlive = false;
             lootCounterPolit += 1
         }
-        if (carLife == 0 && lootCounterCar) {
+        if (carLife == 0 && lootCounterCar == 0) {
             var hLoot = healthLoot.create(car.body.x, car.body.y, 'healthLoot');
             hLoot.setBounce(0.5);
             hLoot.setCollideWorldBounds(true);

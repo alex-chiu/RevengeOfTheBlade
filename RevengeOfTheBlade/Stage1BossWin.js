@@ -18,8 +18,8 @@ class Stage1BossWin extends Phaser.Scene {
       this.background.fillRoundedRect(150, 175, 500, 250, 25)
       this.background.fillStyle('#9ba3a0')
 
-      this.add.text(game.config.width/2, 220,'Well done. Mission Phase I Completed.', { fontSize: '18px', fill: '#37F121' }).setOrigin(0.5);
-      this.add.text(game.config.width/2, 262,'☑ Earth\'s Prehistoric Era', { fontSize: '20px', fill: '#ffffff' }).setOrigin(0.5);
+      this.add.text(game.config.width/2, 210,'Well done. Mission Phase I Completed.', { fontSize: '22px', fill: '#37F121' }).setOrigin(0.5);
+      this.add.text(game.config.width/2, 240,'☑ Earth\'s Prehistoric Era', { fontSize: '23px', fill: '#ffffff' }).setOrigin(0.5);
 
       const tryAgainButton = this.add.text(game.config.width/2, 370, 'EARTH\'s MODERN ERA', { fontSize: '40px', fill: '#b5dbf7' }).setOrigin(0.5);
       tryAgainButton.setInteractive();

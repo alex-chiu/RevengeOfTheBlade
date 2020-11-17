@@ -18,8 +18,9 @@ class GameCompleted extends Phaser.Scene {
       this.background.fillRoundedRect(150, 175, 500, 250, 25)
       this.background.fillStyle('#9ba3a0')
 
-      this.add.text(game.config.width/2, 210, 'Well done, Comrade. Earth thanks you.', { fontSize: '45px', fill: '#ffffff' }).setOrigin(0.5);
-      this.add.text(game.config.width/2, 280, 'MISSION COMPLETED', { fontSize: '75px', fill: '#ffffff' }).setOrigin(0.5);
+      this.add.text(game.config.width/2, 210, 'Well done, Comrade.', { fontSize: '30px', fill: '#37F121' }).setOrigin(0.5);
+      this.add.text(game.config.width/2, 240, 'Earth thanks you.', { fontSize: '30px', fill: '#37F121' }).setOrigin(0.5);
+      this.add.text(game.config.width/2, 310, 'MISSION COMPLETED', { fontSize: '40px', fill: '#37F121' }).setOrigin(0.5);
 
       const menuButton = this.add.text(game.config.width/2, 375, 'MENU', { fontSize: '40px', fill: '#8db9d9' }).setOrigin(0.5);
       menuButton.setInteractive();
