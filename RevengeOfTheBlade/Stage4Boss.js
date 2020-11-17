@@ -218,13 +218,13 @@ class Stage4Boss extends Phaser.Scene {
 
         lootCounter1 = 0;
 
-        helicopterLife = 200;
+        helicopterLife = 150;
         helicopterAlive = true;
-        helicopterLifeText = 200;
+        helicopterLifeText = 150;
         
-        helicopter2Life = 150;
+        helicopter2Life = 200;
         helicopter2Alive = true;
-        helicopter2LifeText = 150;
+        helicopter2LifeText = 200;
 
         tankLife = 200;
         tankAlive = true;
@@ -313,8 +313,8 @@ class Stage4Boss extends Phaser.Scene {
         this.physics.add.collider(spike2, platforms);
 
 
-        this.label = this.add.text(13, 570, '', { fontSize: '20px' }).setWordWrapWidth(800);
-        this.typewriteText('Jump on the clouds to collect the daggers! If you fail, try again');
+        this.label = this.add.text(13, 570, '', { fontSize: '17px' }).setWordWrapWidth(800);
+        this.typewriteText('Message: You have entered a warzone. Jump on the clouds to collect the weapons!');
     }
 
     // Constantly Updating Game Loop

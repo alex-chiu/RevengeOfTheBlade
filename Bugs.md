@@ -1,4 +1,4 @@
-Current Bugs in Game:
+Current Bugs in Game & Components to Add:
 
 General
 - Rotate arms with dagger throw. (SKIP)
@@ -14,6 +14,11 @@ Platforms
 Stage 1
 - Pterodactyl animation rapidly switches back and forth when on top of character
 - Upgrades don't actually increase player damage
+- SFX: 
+    - pterodactyl wing flap sound does not play
+    - velociraptor walking sound
+    - trex walking / growl sound
+    - dinosaur / growling / nature sounds?
 
 Stage 2
 - Police car animation doesn't work. (FIXED)
@@ -25,10 +30,24 @@ Stage 2
 - Politician Life Text position. (FIXED)
 - Stage 2 helicopter position error
 - Clouds difficult to jump on / collect final item
+- SFX: 
+    - car driving sound
+    - gun sounds
+    - walking sound for politician
+    - running sound for police (prev, with higher rate)
+    - tank move & shoot sound
+    - helicopter fly & missile sound 
+    
 
 Final Stage
 - Sound for dagger. (FIXED)
 - Music for stage. (FIXED)
+- SFX: 
+    - laser sound
+    - robot rolling sounds
+    - boss walking sound 
+    - bomb sound
+
 
 Consider adding story/information for player (DONE)
 Information about sword/dagger dmg & health (DONE)

@@ -492,7 +492,7 @@ class Stage4 extends Phaser.Scene {
                 car.setVelocityX(40);
             }
             else {
-                car.anims.play('carStatic');
+                car.anims.play('carLeft');
                 car.setVelocityX(0);
             }
         }
