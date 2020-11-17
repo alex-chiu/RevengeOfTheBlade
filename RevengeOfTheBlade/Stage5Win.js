@@ -18,7 +18,7 @@ class Stage5Win extends Phaser.Scene {
       this.background.fillRoundedRect(150, 175, 500, 250, 25)
       this.background.fillStyle('#9ba3a0')
 
-      this.add.text(game.config.width/2, 220,'YOU WON', { fontSize: '75px', fill: '#ffffff' }).setOrigin(0.5);
+      this.add.text(game.config.width/2, 220,'Well done. Weapons upgraded to chromium alloy, deal high damage.', { fontSize: '75px', fill: '#ffffff' }).setOrigin(0.5);
 
       const finalBossButton = this.add.text(game.config.width/2, 375, 'FINAL BOSS', { fontSize: '40px', fill: '#b5dbf7' }).setOrigin(0.5);
       finalBossButton.setInteractive();

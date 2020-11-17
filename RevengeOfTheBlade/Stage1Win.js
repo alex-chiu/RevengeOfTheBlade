@@ -18,9 +18,10 @@ class Stage1Win extends Phaser.Scene {
       this.background.fillRoundedRect(150, 175, 500, 250, 25)
       this.background.fillStyle('#9ba3a0')
 
-      this.add.text(game.config.width/2, 220,'YOU WON', { fontSize: '75px', fill: '#ffffff' }).setOrigin(0.5);
+      this.add.text(game.config.width/2, 220,'Mission Phase I part I completed.', { fontSize: '21px', fill: '#37F121' }).setOrigin(0.5);
+      this.add.text(game.config.width/2, 230,'Weapon upgraded from Stone to Iron.', { fontSize: '21px', fill: '#37F121' }).setOrigin(0.5);
 
-      const finalBossButton = this.add.text(game.config.width/2, 360, 'BOSS 1', { fontSize: '40px', fill: '#b5dbf7' }).setOrigin(0.5);
+      const finalBossButton = this.add.text(game.config.width/2, 360, 'PREHISTORIC ERA BOSS', { fontSize: '35px', fill: '#b5dbf7' }).setOrigin(0.5);
       finalBossButton.setInteractive();
       finalBossButton.on('pointerdown', () => {
         this.scene.restart('Stage1');

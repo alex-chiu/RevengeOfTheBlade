@@ -217,7 +217,7 @@ class Stage4 extends Phaser.Scene {
         this.physics.add.collider(playerArmFinal, platforms);
 
         // temporary buttons
-        buttonS4 = this.add.text(50, 50, 'BOSS 4', { fontSize: '20px', fill: '#b5dbf7' });
+        buttonS4 = this.add.text(50, 50, '> travel to: MODERN ERA BOSS', { fontSize: '20px', fill: '#b5dbf7' });
         buttonS4.setInteractive();
         buttonS4.on('pointerdown', () => {
           soundtrack4.stop();
@@ -884,10 +884,10 @@ class Stage4 extends Phaser.Scene {
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && carAlive) {
             if (carLife < 10) {
-                carLife = 0
+                carLife = 0;
             }
             else {
-                carLife -= 15
+                carLife -= 15;
             }
             carLifeText.setText('Car Battery: ' + carLife);
             car.setTint('0xff0000');

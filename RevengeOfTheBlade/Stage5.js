@@ -292,7 +292,7 @@ class Stage5 extends Phaser.Scene {
 
 
         // temporary button
-        button = this.add.text(50, 50, 'BOSS', { fontSize: '20px', fill: '#b5dbf7' });
+        button = this.add.text(50, 50, '> combat: FUTURE ERA BOSS', { fontSize: '20px', fill: '#b5dbf7' });
         button.setInteractive();
         button.on('pointerdown', () => {
           soundtrack5.stop();

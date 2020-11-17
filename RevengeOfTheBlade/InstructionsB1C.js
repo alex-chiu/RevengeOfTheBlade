@@ -13,7 +13,7 @@ class InstructionsB1C extends Phaser.Scene {
     }
 
     preload() {
-      this.add.text(game.config.width/2, 45, 'INSTRUCTIONS', { fontSize: '75px', fill: '#6543b5' }).setOrigin(0.5);
+      this.add.text(game.config.width/2, 45, 'INSTRUCTIONS', { fontSize: '65px', fill: '#6543b5' }).setOrigin(0.5);
 
       this.add.text(50, 150, 'W - Jump', { fontSize: '40px', fill: '#d2c4f5' });
       this.add.text(50, 200, 'A - Move Left', { fontSize: '40px', fill: '#d2c4f5' });
@@ -24,8 +24,10 @@ class InstructionsB1C extends Phaser.Scene {
       this.load.image('heroStatic', 'assets/sprites/hero.png');
       this.load.image('arrowR', 'assets/arrowR.png');
       this.load.image('arrowL', 'assets/arrowL.png');
+
       menuTxt = this.add.text(100, 541,'MENU', { fontSize: '20px', fill: '#ffffff' });
       practiceTxt = this.add.text(605, 541,'PRACTICE', { fontSize: '20px', fill: '#ffffff' });
+    
     }
 
     create() {
@@ -37,7 +39,8 @@ class InstructionsB1C extends Phaser.Scene {
       playButton.on('pointerdown', () => {
         this.scene.stop('InstructionsB1C');
         this.scene.start('TutorialB1C');
-      });
+      });tank
+
       playButton.on('pointerover', () => { this.buttonOver(playButton); });
       playButton.on('pointerout', () => { this.buttonNotOver(playButton); });
 

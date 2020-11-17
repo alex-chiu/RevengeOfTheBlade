@@ -7,7 +7,7 @@ var moveOnAlive = false;
 var ENTER;
 var script;
 var enterText;
-var cutsceneT;
+var cutsceneT, opendoor;
 
 class StorylineT extends Phaser.Scene {
     constructor() {

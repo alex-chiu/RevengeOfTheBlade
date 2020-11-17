@@ -6,6 +6,7 @@
 var heroStatic;
 var playButton, backButton;
 var practiceTxt, menuTxt;
+var cutsceneT;
 
 class Instructions extends Phaser.Scene {
     constructor() {
@@ -13,7 +14,7 @@ class Instructions extends Phaser.Scene {
     }
 
     preload() {
-      this.add.text(game.config.width/2, 45, 'INSTRUCTIONS', { fontSize: '75px', fill: '#6543b5' }).setOrigin(0.5);
+      this.add.text(game.config.width/2, 75, 'INSTRUCTIONS', { fontSize: '65px', fill: '#6543b5' }).setOrigin(0.5);
 
       this.load.audio('buttonSound', ['assets/audio/soundeffects/button3.wav']);
 
@@ -22,6 +23,8 @@ class Instructions extends Phaser.Scene {
       this.add.text(50, 250, 'D - Move Right', { fontSize: '40px', fill: '#d2c4f5' });
       this.add.text(50, 350, 'SPACE - Melee Attack', { fontSize: '40px', fill: '#d2c4f5' });
       this.add.text(50, 400, 'MB1 - Ranged Attack', { fontSize: '40px', fill: '#d2c4f5' });
+
+      this.load.audio('cutsceneT', ['assets/audio/soundtrack/cutsceneT.mp3']);
 
       this.load.image('heroStatic', 'assets/sprites/hero.png');
       this.load.image('arrowR', 'assets/arrowR.png');
@@ -35,11 +38,15 @@ class Instructions extends Phaser.Scene {
       heroStatic.create(660, 280, 'heroStatic');
 
       buttonSound = this.sound.add('buttonSound', {volume: 0.50});
+      cutsceneT = this.sound.add('cutsceneT', {volume: 0.15, loop: true});
+      cutsceneT.play();
+
 
       playButton = this.add.image(750, 550, 'arrowR');
       playButton.setInteractive();
       playButton.on('pointerdown', () => {
         buttonSound.play();
+        cutsceneT.stop();
         this.scene.stop('Instructions');
         this.scene.start('Tutorial');
       });
@@ -50,6 +57,7 @@ class Instructions extends Phaser.Scene {
       backButton.setInteractive();
       backButton.on('pointerdown', () => {
         buttonSound.play();
+        cutsceneT.stop();
         this.scene.stop('Instructions');
         this.scene.start('Menu');
       });

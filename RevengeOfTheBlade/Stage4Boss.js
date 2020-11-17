@@ -30,9 +30,12 @@ var cloud2Life = 100;
 var daggersAlive = true, swordAlive = true;
 var textAlive5 = true;
 
-var helicopter, helicopterAlive = true, helicopterLife = 150, helicopterLifeText, helicopterDmg;
-var helicopter2, helicopter2Alive = true, helicopter2Life = 200, helicopter2LifeText, helicopter2Dmg;
-var tank, tankAlive = true, tankLife = 200, tankLifeText, tankDmg;
+var helicopter;
+var helicopterAlive = true, helicopterLife = 150, helicopterLifeText, helicopterDmg;
+var helicopter2;
+var helicopter2Alive = true, helicopter2Life = 200, helicopter2LifeText, helicopter2Dmg;
+var tank;
+var tankAlive = true, tankLife = 200, tankLifeText, tankDmg;
 var ammo, missile;
 
 var delX0, delX1, delX2, delY1, delY2;
@@ -199,7 +202,7 @@ class Stage4Boss extends Phaser.Scene {
         this.physics.add.collider(playerArmFinal, platforms);
 
         // temporary buttons
-        buttonB4 = this.add.text(50, 50, 'STAGE 5', { fontSize: '20px', fill: '#b5dbf7' });
+        buttonB4 = this.add.text(50, 50, 'travel to: FUTURE ERA (2200)', { fontSize: '20px', fill: '#b5dbf7' });
         buttonB4.setInteractive();
         buttonB4.on('pointerdown', () => {
           soundtrack4.stop();
@@ -245,18 +248,16 @@ class Stage4Boss extends Phaser.Scene {
 
         // Create Enemies
         helicopter = this.physics.add.sprite(300, 200, 'helicopter')
-        helicopter.setBounce(0);
         helicopter.setCollideWorldBounds(true);
         helicopter.displayWidth = game.config.width * 0.25;
         helicopter.scaleY = helicopter.scaleX;
-        helicopter.body.setGravityY(0);
+        helicopter.body.setAllowGravity(false);
 
         helicopter2 = this.physics.add.sprite(650, 400, 'helicopter')
-        helicopter2.setBounce(0);
         helicopter2.setCollideWorldBounds(true);
         helicopter2.displayWidth = game.config.width * 0.25;
         helicopter2.scaleY = helicopter2.scaleX;
-        helicopter2.body.setGravityY(0);
+        helicopter2.body.setAllowGravity(false);
 
         tank = this.physics.add.sprite(650, 400, 'tank')
         tank.setBounce(0);
@@ -277,17 +278,16 @@ class Stage4Boss extends Phaser.Scene {
 
 
         // Enemy Overlap
-        this.physics.add.collider(helicopter, platforms);
-        this.physics.add.overlap(player, helicopter);
-        this.physics.add.overlap(playerMeleeAtk, helicopter);
-
-        this.physics.add.collider(helicopter2, platforms);
-        this.physics.add.overlap(player, helicopter2);
-        this.physics.add.overlap(playerMeleeAtk, helicopter2);
-
         this.physics.add.collider(tank, platforms);
         this.physics.add.overlap(player, tank);
         this.physics.add.overlap(playerMeleeAtk, tank);
+
+        this.physics.add.overlap(player, helicopter);
+        this.physics.add.overlap(player, helicopter2);
+
+        this.physics.add.overlap(playerMeleeAtk, helicopter);
+        this.physics.add.overlap(playerMeleeAtk, helicopter2);
+
 
         this.physics.add.overlap(player, cloud);
         this.physics.add.overlap(playerMeleeAtk, cloud);

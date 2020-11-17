@@ -301,7 +301,7 @@ class Stage1 extends Phaser.Scene {
 
 
         // temporary buttons
-        button1 = this.add.text(50, 50, 'BOSS 1', { fontSize: '20px', fill: '#b5dbf7' });
+        button1 = this.add.text(50, 50, '> combat: PREHISTORIC ERA BOSS', { fontSize: '20px', fill: '#b5dbf7' });
         button1.setInteractive();
         button1.on('pointerdown', () => {
             soundtrack1.stop();

@@ -180,7 +180,7 @@ class Stage1Boss extends Phaser.Scene {
         this.physics.add.collider(playerArmFinal, platforms);
 
         // temporary buttons
-        button1B = this.add.text(50, 50, 'STAGE 2', { fontSize: '20px', fill: '#b5dbf7' });
+        button1B = this.add.text(50, 50, '> travel to: MODERN ERA', { fontSize: '20px', fill: '#b5dbf7' });
         button1B.setInteractive();
         button1B.on('pointerdown', () => {
           //soundtrack5.stop();

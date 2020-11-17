@@ -1,10 +1,16 @@
 Current Bugs in Game & Components to Add:
+11/16/2020 8PM
 
 General
 - Rotate arms with dagger throw. (SKIP)
 - Menu Audio Button (FIXED)
     - Audio begins upon game load; audio button mutes / unmutes
 - Soundtracks overlap. (FIXED)
+
+Tutorial
+- SFX: 
+    - Target hit
+- background 
 
 Platforms
 - Push the character when moving left/right
@@ -29,6 +35,7 @@ Stage 2
     - Deal damage upon contact
 - Politician Life Text position. (FIXED)
 - Stage 2 helicopter position error
+- Edit helicopter motion s.t. stays above lower half of screen
 - Clouds difficult to jump on / collect final item
 - SFX: 
     - car driving sound
