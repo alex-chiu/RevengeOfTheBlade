@@ -15,7 +15,7 @@ var ground, platforms, obstacles;
 var daggerGroup;
 
 // PLATFORM CODE
-var pf1, pf2, pf3, pf4, pf5;
+var pf0, pf1, pf2, pf3, pf4, pf5;
 var dir1 = 1;
 var dir2 = 1;
 var dir3 = 1;
@@ -98,15 +98,19 @@ class Tutorial extends Phaser.Scene {
         this.add.existing(ground);
         sky.fixedToCamera = true;
 
-        this.label = this.add.text(100, 70, '', { fontSize: '25px' }).setWordWrapWidth(350);
-        this.typewriteText('Destroy both targets by using your sword and daggers!');
+        this.label = this.add.text(50, 40, '', { fontSize: '18px', fill: '#37F121' }).setWordWrapWidth(375);
+        this.typewriteText('⊡ TRAINING SIMULATION ⊡ \n\n▸ Goal: Destroy both targets by using your sword and daggers. \n\n▸ Note: different damage strengths of your two attacks \n\n▸ Practice: navigating platforms & aiming with cursor');
 
         // soundeffects
         preattack1 = this.sound.add('preattack1', {volume: 0.25});
         preattack2 = this.sound.add('preattack2', {volume: 0.25});
 
         //Moving platforms
-        pf1 = this.physics.add.image(50, 400, 'platform1')
+        pf0 = this.physics.add.image(200, 510, 'platform1')
+            .setImmovable(true);
+        pf0.body.setAllowGravity(false);
+
+        pf1 = this.physics.add.image(50, 450, 'platform1')
             .setImmovable(true);
         pf1.body.collideWorldBounds = true;
         pf1.body.bounce.set(1);
@@ -194,11 +198,11 @@ class Tutorial extends Phaser.Scene {
 
         // Targets
         target1 = this.add.image(750, 515, 'target');
-        target2 = this.add.image(600, 100, 'target');
+        target2 = this.add.image(600, 150, 'target');
 
         // Target Life Text
-        target1LifeText = this.add.text(650, 45, 'Life: 50', { fontSize: '25px', fill: '#ffffff' });
-        target2LifeText = this.add.text(650, 15, 'Life: 50', { fontSize: '25px', fill: '#ffffff' });
+        target1LifeText = this.add.text(518, 65, 'Ground Target: 50', { fontSize: '22px', fill: '#ffffff' });
+        target2LifeText = this.add.text(495, 35, 'Airborne Target: 50', { fontSize: '22px', fill: '#ffffff' });
 
         // Target Overlap
         this.physics.add.overlap(player, target1);
@@ -278,6 +282,10 @@ class Tutorial extends Phaser.Scene {
 
 
         // allow player to stand on platforms
+        this.physics.world.collide(pf0, player, function () {
+            player.setVelocityX(1);
+        });
+
         this.physics.world.collide(pf1, player, function () {
             player.setVelocityX(0);
         });
@@ -635,8 +643,8 @@ class Tutorial extends Phaser.Scene {
     }
 
     updateTargetLifeText() {
-        target1LifeText.setText('Life: ' + target1life)
-        target2LifeText.setText('Life: ' + target2life)
+        target1LifeText.setText('Ground Target: ' + target1life)
+        target2LifeText.setText('Airborne Target: ' + target2life)
     }
 
     // Throws Dagger

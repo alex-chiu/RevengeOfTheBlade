@@ -18,9 +18,9 @@ class TutorialCompleted extends Phaser.Scene {
       this.background.fillRoundedRect(150, 175, 500, 250, 25)
       this.background.fillStyle('#9ba3a0')
 
-      this.add.text(game.config.width/2, 220 ,'TUTORIAL COMPLETED', { fontSize: '40px', fill: '#ffffff' }).setOrigin(0.5);
+      this.add.text(game.config.width/2, 220 ,'TRAINING COMPLETED', { fontSize: '30px', fill: '#37F121' }).setOrigin(0.5);
 
-      const practiceAgainButton = this.add.text(game.config.width/2, 360, 'PRACTICE AGAIN', { fontSize: '40px', fill: '#b5dbf7' }).setOrigin(0.5);
+      const practiceAgainButton = this.add.text(game.config.width/2, 360, 'TRAIN AGAIN', { fontSize: '40px', fill: '#b5dbf7' }).setOrigin(0.5);
       practiceAgainButton.setInteractive();
       practiceAgainButton.on('pointerdown', () => {
         this.scene.stop('Tutorial');
