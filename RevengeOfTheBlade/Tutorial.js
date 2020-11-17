@@ -283,7 +283,7 @@ class Tutorial extends Phaser.Scene {
 
         // allow player to stand on platforms
         this.physics.world.collide(pf0, player, function () {
-            player.setVelocityX(1);
+            player.setVelocityX(0);
         });
 
         this.physics.world.collide(pf1, player, function () {
@@ -307,6 +307,47 @@ class Tutorial extends Phaser.Scene {
         this.physics.world.collide(pf5, player, function () {
             player.setVelocityX(0);
         });
+
+
+        // fix collisions s.t. only Top collision detected (not R, L, Bt)
+        // this.physics.world.collide(pf0, player, function () {
+        //     player.setVelocityX(0);
+        //     return true;
+        // }, function () {
+        //     if (player.body.touching.left) {
+
+        //     }
+        // });
+
+        // this.physics.world.collide(pf1, player, function () {
+        //     player.setVelocityX(0);
+        //     return true;
+        // });
+
+        // this.physics.world.collide(pf2, player, function () {
+        //     pf2.setVelocityX(0);
+        //     player.setVelocityX(0);
+        //     return true;
+        // });
+
+        // this.physics.world.collide(pf3, player, function () {
+        //     player.setVelocityX(0);
+        //     return true;
+        // });
+
+        // this.physics.world.collide(pf4, player, function () {
+        //     pf4.setVelocityX(0);
+        //     player.setVelocityX(0);
+        //     return true;
+        // });
+
+        // this.physics.world.collide(pf5, player, function () {
+        //     player.setVelocityX(0);
+        //     return true;
+        // });
+
+
+
         // Player Movement
         if (A.isDown) {
             player.setVelocityX(-160);

@@ -1,5 +1,5 @@
 Current Bugs in Game & Components to Add:
-11/16/2020 8PM
+11/16/2020 10PM
 
 General
 - Rotate arms with dagger throw. (SKIP)
@@ -12,11 +12,12 @@ Tutorial
 - SFX: 
     - Target hit
 - background 
+- Add story details (DONE)
 
 Platforms
 - Push the character when moving left/right
 - Player arm/attack sprites don't move with the platform when a player stands on them
-- Platforms can push the character into the ground/obstacles
+- Platforms can push the character into the ground (FIXED) / other platforms (PENDING)
 
 Stage 1
 - Pterodactyl animation rapidly switches back and forth when on top of character
@@ -56,7 +57,7 @@ Final Stage
     - boss walking sound 
     - bomb sound
 
-
+OTHER
 Consider adding story/information for player (DONE)
 Information about sword/dagger dmg & health (DONE)
 Information about constant jumping/hopping.
