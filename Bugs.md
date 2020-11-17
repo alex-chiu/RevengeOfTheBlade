@@ -6,6 +6,7 @@ General
 - Menu Audio Button (FIXED)
     - Audio begins upon game load; audio button mutes / unmutes
 - Soundtracks overlap. (FIXED)
+- Story details pre & post stage & boss fight completion (FIXED)
 
 Tutorial
 - SFX: 

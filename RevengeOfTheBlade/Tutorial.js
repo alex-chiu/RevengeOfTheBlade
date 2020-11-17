@@ -245,7 +245,7 @@ class Tutorial extends Phaser.Scene {
         }
 
         pf2.setVelocityY(dir2*60);
-        if (pf2.body.position.y >= 600){
+        if (pf2.body.position.y >= 450){
             dir2 = -1;
         }
         if (pf2.body.position.y <= 100){
@@ -261,7 +261,7 @@ class Tutorial extends Phaser.Scene {
         }
 
         pf4.setVelocityY(dir4*40);
-        if (pf4.body.position.y >= 600){
+        if (pf4.body.position.y >= 420){
             dir4 = -1;
         }
         if (pf4.body.position.y <= 130){

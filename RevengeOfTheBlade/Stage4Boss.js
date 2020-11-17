@@ -202,7 +202,7 @@ class Stage4Boss extends Phaser.Scene {
         this.physics.add.collider(playerArmFinal, platforms);
 
         // temporary buttons
-        buttonB4 = this.add.text(50, 50, 'travel to: FUTURE ERA (2200)', { fontSize: '20px', fill: '#b5dbf7' });
+        buttonB4 = this.add.text(50, 50, 'travel to: FUTURE ERA', { fontSize: '20px', fill: '#b5dbf7' });
         buttonB4.setInteractive();
         buttonB4.on('pointerdown', () => {
           soundtrack4.stop();
