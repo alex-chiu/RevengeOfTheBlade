@@ -2,7 +2,8 @@ Current Bugs in Game:
 
 General
 - Rotate arms with dagger throw. (SKIP)
-- Menu Audio Button
+- Menu Audio Button (FIXED)
+    - Audio begins upon game load; audio button mutes / unmutes
 - Soundtracks overlap. (FIXED)
 
 Platforms
@@ -19,14 +20,17 @@ Stage 2
 - Politician animation doesn't work. (FIXED)
 - Police man animation doesn't work. (FIXED)
 - Police car sizing wrong. (FIXED)
-- Units don't deal damage
+- Units don't deal damage (FIXED)
+    - Deal damage upon contact
 - Politician Life Text position. (FIXED)
+- Stage 2 helicopter position error
+- Clouds difficult to jump on / collect final item
 
 Final Stage
 - Sound for dagger. (FIXED)
 - Music for stage. (FIXED)
 
-Consider adding story/information for player.
-Information about sword/dagger dmg.
+Consider adding story/information for player (DONE)
+Information about sword/dagger dmg & health (DONE)
 Information about constant jumping/hopping.
 Platforms too complex?
