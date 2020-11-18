@@ -32,8 +32,6 @@ class Storyline0 extends Phaser.Scene {
 
       enterText = this.add.text(480,530,'[PRESS ENTER TO ACCEPT MISSION]', { fontSize: '15px', fill: '#ffffff'});
       enterText.visible = false;
-
-
     }
 
     typewriteText(text){
