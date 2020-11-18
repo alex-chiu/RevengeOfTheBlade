@@ -7,7 +7,7 @@
 // const { default: WebFontFile } = ("./WebFontFile.js");
 
 var playButton, tutorialButton, creditButton, audioButton;
-var soundState = 'on';
+var soundState = 'off';
 var buttonSound, soundtrack;
 var clouds;
 
@@ -23,16 +23,15 @@ class Menu extends Phaser.Scene {
       this.load.image('clouds1', 'assets/backgrounds/stage5/1clouds.png');
 
       this.load.audio('buttonSound', ['assets/audio/soundeffects/button3.wav']);
-
     }
 
     create() {
       // Background music
       // this.soundtrack = this.sound.add('menuMusic', {volume: 0.55, loop: true});
       soundtrack = this.sound.add('menuMusic', {volume: 0.55, loop: true});
-      soundtrack.play();
+      // soundtrack.play();
       buttonSound = this.sound.add('buttonSound', {volume: 0.50});
-      soundState = "on";
+      // soundState = "on";
 
       // Background
       this.add.tileSprite(400, 300, 800, 600, 'sky0');
