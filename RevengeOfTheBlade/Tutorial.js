@@ -99,7 +99,7 @@ class Tutorial extends Phaser.Scene {
         sky.fixedToCamera = true;
 
         this.label = this.add.text(50, 40, '', { fontSize: '18px', fill: '#37F121' }).setWordWrapWidth(375);
-        this.typewriteText('⊡ TRAINING SIMULATION ⊡ \n\n▸ Goal: Destroy both targets by using your sword and daggers. \n\n▸ Note: different damage strengths of your two attacks \n\n▸ Practice: navigating platforms & aiming with cursor');
+        this.typewriteText('⊡ TRAINING SIMULATION ⊡ \n\n▸ Goal: Destroy both targets by using your sword and daggers. \n\n▸ Note: Your weapons deal different amounts of damage. \n\n▸ Practice: Try navigating the platforms and aiming with your cursor.');
 
         // soundeffects
         preattack1 = this.sound.add('preattack1', {volume: 0.25});

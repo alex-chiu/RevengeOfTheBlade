@@ -26,7 +26,7 @@ class StorylineT extends Phaser.Scene {
 
         opendoor = this.sound.add('opendoor', {volume: 0.35});
 
-        script = '✧ Welcome to the Intergalactic Space Force [ISF] ⇴ Weapons Training Arena\n\n\nWeapon Class: Blade \n▹ Types: Sword and Daggers \n▹ Material: Steel \n▹ Strength: Medium\n\n\nLoading Training Simulation \n▒▋▒▋▒▋▒▋▒▋▒▋▒▋▒▋▒▋▒▋ 100%  \n\n↗ Fellow ISF comrades report higher rates of mission success after completing training.'
+        script = '✧ Welcome to the Intergalactic Space Force [ISF] ⇴ Weapons Training Arena\n\n\nAgent Name: Blade \n▹ Weapons: Sword and Daggers \n▹ Material: Steel \n▹ Strength: Medium\n\n\nLoading Training Simulation \n▒▋▒▋▒▋▒▋▒▋▒▋▒▋▒▋▒▋▒▋ 100%  \n\n↗ Fellow ISF comrades report higher rates of mission success after completing training.'
         this.label = this.add.text(80, 80, '', { fontSize: '23px', fill: '#37F121'}).setWordWrapWidth(600);
         this.typewriteText(script);
         ENTER = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
@@ -50,7 +50,7 @@ class StorylineT extends Phaser.Scene {
         })
 
         this.time.addEvent({
-            delay: 6300,
+            delay: 30 * text.length + 1000,
             callback: () => {
                 enterText.visible = true;
             }
@@ -59,7 +59,7 @@ class StorylineT extends Phaser.Scene {
         }
 
     update() {
-        if (ENTER.isDown) {
+        if (ENTER.isDown && enterText.visible) {
             opendoor.play();
             cutsceneT.stop();
             this.scene.stop('StorylineT');

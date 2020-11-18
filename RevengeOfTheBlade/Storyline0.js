@@ -25,7 +25,7 @@ class Storyline0 extends Phaser.Scene {
 
       button2 = this.sound.add('button2', {volume: 0.35});
 
-      script = 'Log in: ✳❃✱✻✹ \n\nWelcome, Comrade of the Intergalactic Space Force \nYou have (1) new mission assignment. \n\nReceiving data from headquarters  ▋▋▋▋▋▋▋▋▋▋  \n\n\n► MISSION DETAILS ◀ \nOperation: Avenge Planet Earth & Save Humanity \n\nLocation in Space: \n▹ Planet Earth\n▹ Milky Way Galaxy\n▹ Dimension 46B03 \n [A parallel dimension in which Earth still exists]  \n\nLocation in Time: \n▹ Mission begins in Earth\'s prehistoric age.\n▹ Use your time-traveling device to continue to the year 2200. \n\nWeapon Class: Blade \n▹ Sword and dagger \n▹ Weapon status will change to reflect current time period.  '
+      script = 'Log in: ✳❃✱✻✹ \n\nWelcome, Comrade of the Intergalactic Space Force \nYou have (1) new mission assignment. \n\nReceiving data from headquarters  ▋▋▋▋▋▋▋▋▋▋  \n\n\n► MISSION DETAILS ◀ \nOperation: Defend Planet Earth & Save Humanity \n\nLocation: \n▹ Planet Earth\n▹ Milky Way Galaxy\n▹ Dimension 46B03 \n [A parallel dimension in which Earth still exists]  \n\nTime: \n▹ Mission begins in Earth\'s prehistoric age.\n▹ Use your time-traveling device to progress to the year 2200. \n\nEquipment Type: Blade \n▹ Sword and Daggers \n▹ Collect upgrades from each time period you pass through.'
       this.label = this.add.text(70, 60, '', { fontSize: '16px', fill: '#37F121' }).setWordWrapWidth(650);
       this.typewriteText(script);
       ENTER = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
@@ -43,11 +43,11 @@ class Storyline0 extends Phaser.Scene {
           ++i
         },
         repeat: length -1,
-        delay: 50
+        delay: 30
       })
 
       this.time.addEvent({
-          delay: 8500,
+          delay: 30*text.length + 1000,
           callback: () => {
               enterText.visible = true;
           }
@@ -57,7 +57,7 @@ class Storyline0 extends Phaser.Scene {
 
 
     update() {
-      if (ENTER.isDown) {
+      if (ENTER.isDown && enterText.visible) {
         button2.play();
         this.scene.stop('Storyline0');
         this.scene.launch('Storyline1');

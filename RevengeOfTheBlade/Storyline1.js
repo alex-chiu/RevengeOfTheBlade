@@ -21,7 +21,7 @@ class Storyline1 extends Phaser.Scene {
     create() {
       opendoor = this.sound.add('opendoor', {volume: 0.35});
 
-      script = '⍟ COORDINATES ⍟\n\nPangea, Earth \n65 Million BCE [Prehistoric Era] \nDimension 46B03 \n\n\nCommencing intergalactic time travel \n\n▁▁▁▂▂▂▃▃▃▃▄▄▄▅▅▅▆▆▆▇▇▇███\n\n\nMessage: Beware of carnivorous dinosaurs. \n\nCurrent weapon material: Stone \n\n\n▋▋▋▋▋▋▋▋▋▋ ARRIVED ▋▋▋▋▋▋▋▋▋▋ '
+      script = '⍟ COORDINATES ⍟\n\nPangaea, Earth \n68 Million BCE [Cretaceous Period] \nDimension 46B03 \n\n\nCommencing interdimensional time travel \n\n▁▁▁▂▂▂▃▃▃▃▄▄▄▅▅▅▆▆▆▇▇▇███\n\n\nCaution: Beware of carnivorous dinosaurs. \n\nCurrent Weapon Material: Stone \n\n\n▋▋▋▋▋▋▋▋▋▋ ARRIVED ▋▋▋▋▋▋▋▋▋▋ '
       this.label = this.add.text(95, 95, '', { fontSize: '17px', fill: '#37F121' }).setWordWrapWidth(600);
       this.typewriteText(script);
       ENTER = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
@@ -41,11 +41,11 @@ class Storyline1 extends Phaser.Scene {
           ++i
         },
         repeat: length -1,
-        delay: 50
+        delay: 40
       })
 
       this.time.addEvent({
-          delay: 8500,
+          delay: 40 * text.length + 1000,
           callback: () => {
               enterText.visible = true;
           }
@@ -55,7 +55,7 @@ class Storyline1 extends Phaser.Scene {
 
 
     update() {
-      if (ENTER.isDown) {
+      if (ENTER.isDown && enterText.visible) {
         opendoor.play();
         cutscene0.stop();
         this.scene.stop('Storyline1');
