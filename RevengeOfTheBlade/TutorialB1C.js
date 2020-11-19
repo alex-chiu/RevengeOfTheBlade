@@ -44,6 +44,8 @@ class TutorialB1C extends Phaser.Scene {
         this.load.spritesheet('hero_ranged_attack_arm_final', 'assets/sprites/ranged-attack/attack2-throw.png', { frameWidth: 220, frameHeight: 230 });
 
         // soundeffects
+        // soundtrack
+        this.load.audio('tutorialMusic', ['assets/audio/soundtrack/tutorial.wav']);
         this.load.audio('preattack1', ['assets/audio/soundeffects/player/preattack1.mp3']);
         this.load.audio('preattack2', ['assets/audio/soundeffects/player/preattack2.mp3']);
 
@@ -59,6 +61,7 @@ class TutorialB1C extends Phaser.Scene {
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
         this.load.image('platformH', 'assets/platforms/platformH.png');
+        this.load.image('platform1', 'assets/platforms/platform-s1.png');
 
         // Target
         this.load.image('target', 'assets/target.png');
@@ -69,7 +72,10 @@ class TutorialB1C extends Phaser.Scene {
 
     // Create all the Sprites/Images/Platforms
     create() {
-        this.cameras.main.setBackgroundColor('#828b99')
+        this.cameras.main.setBackgroundColor('#828b99');
+        // Play background music
+        soundtrack0 = this.sound.add('tutorialMusic', {volume: 0.15, loop: true});
+        soundtrack0.play();
 
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky01');
@@ -82,12 +88,41 @@ class TutorialB1C extends Phaser.Scene {
         this.add.existing(ground);
         sky.fixedToCamera = true;
 
-        this.label = this.add.text(100, 70, '', { fontSize: '25px' }).setWordWrapWidth(350);
-        this.typewriteText('Destroy both targets by using your sword and daggers!');
+        this.label = this.add.text(50, 40, '', { fontSize: '18px', fill: '#37F121' }).setWordWrapWidth(375);
+        this.typewriteText('⊡ TRAINING SIMULATION ⊡ \n\n▸ Goal: Destroy both targets by using your sword and daggers. \n\n▸ Note: Your weapons deal different amounts of damage. \n\n▸ Practice: Try navigating the platforms and aiming with your cursor.');
 
         // soundeffects
         preattack1 = this.sound.add('preattack1', {volume: 0.25});
         preattack2 = this.sound.add('preattack2', {volume: 0.25});
+
+        //Moving platforms
+        pf0 = this.physics.add.image(200, 510, 'platform1')
+            .setImmovable(true);
+        pf0.body.setAllowGravity(false);
+
+        pf1 = this.physics.add.image(50, 450, 'platform1')
+            .setImmovable(true);
+        pf1.body.collideWorldBounds = true;
+        pf1.body.bounce.set(1);
+        pf1.body.setAllowGravity(false);
+
+        pf2 = this.physics.add.image(300, 380, 'platform1')
+            .setImmovable(true);
+
+        pf3 = this.physics.add.image(150, 170, 'platform1')
+            .setImmovable(true);
+        pf3.body.collideWorldBounds = true;
+        pf3.body.bounce.set(1);
+        pf3.body.setAllowGravity(false);
+
+        pf4 = this.physics.add.image(700, 270, 'platform1')
+            .setImmovable(true);
+
+        pf5 = this.physics.add.image(600, 280, 'platform1')
+            .setImmovable(true);
+        pf5.body.collideWorldBounds = true;
+        pf5.body.bounce.set(1);
+        pf5.body.setAllowGravity(false);
 
         // Platforms
         platforms = this.physics.add.staticGroup();
@@ -153,33 +188,17 @@ class TutorialB1C extends Phaser.Scene {
 
         // Targets
         target1 = this.add.image(750, 515, 'target');
-        target2 = this.add.image(600, 100, 'target');
+        target2 = this.add.image(600, 150, 'target');
 
         // Target Life Text
-        target1LifeText = this.add.text(650, 45, 'Life: 50', { fontSize: '25px', fill: '#ffffff' });
-        target2LifeText = this.add.text(650, 15, 'Life: 50', { fontSize: '25px', fill: '#ffffff' });
+        target1LifeText = this.add.text(518, 65, 'Ground Target: 50', { fontSize: '22px', fill: '#ffffff' });
+        target2LifeText = this.add.text(495, 35, 'Airborne Target: 50', { fontSize: '22px', fill: '#ffffff' });
 
         // Target Overlap
         this.physics.add.overlap(player, target1);
         this.physics.add.overlap(playerMeleeAtk, target1);
         this.physics.add.overlap(player, target2);
         this.physics.add.overlap(playerMeleeAtk, target2);
-
-        // Obstacles
-        obstacles = this.physics.add.staticGroup();
-        obstacles.create(250, 650, 'platformV');
-        obstacles.create(0, 525, 'platformH');
-        obstacles.create(250, 475, 'platformH');
-        obstacles.create(285, 500, 'platformH');
-        obstacles.create(320, 525, 'platformH');
-        obstacles.create(320, 550, 'platformH');
-
-        // Obstacle Colliders
-        this.physics.add.collider(player, obstacles);
-        this.physics.add.collider(playerMeleeAtk, obstacles);
-        this.physics.add.collider(playerWalkNA, obstacles);
-        this.physics.add.collider(playerArm, obstacles);
-        this.physics.add.collider(playerArmFinal, obstacles);
     }
 
     typewriteText(text){
@@ -191,16 +210,17 @@ class TutorialB1C extends Phaser.Scene {
           ++i
         },
         repeat: length -1,
-        delay: 100
+        delay: 30
       })
     }
 
     // Constantly Updating Game Loop
     update() {
         // Scene End Condition
-        if (target1Alive == false && target2Alive == false) {
-          this.scene.pause('TutorialB1C')
+        if (!target1Alive && !target2Alive) {
+          this.scene.pause('TutorialB1C');
           this.scene.launch('TutorialCompletedB1C');
+          soundtrack0.stop();
         }
 
         // Implement Parallax Background
@@ -208,6 +228,115 @@ class TutorialB1C extends Phaser.Scene {
         far.tilePositionX += 0.3;
         back.tilePositionX -= 0.2;
         mid.tilePositionX += 0.1;
+
+        // Platform movement
+        pf1.setVelocityX(dir1*70);
+        if (pf1.body.position.x >= 400){
+            dir1 = -1;
+        }
+        if (pf1.body.position.x <= 10){
+            dir1 = 1;
+        }
+
+        pf2.setVelocityY(dir2*60);
+        if (pf2.body.position.y >= 450){
+            dir2 = -1;
+        }
+        if (pf2.body.position.y <= 100){
+            dir2 = 1;
+        }
+
+        pf3.setVelocityX(dir3*70);
+        if (pf3.body.position.x >= 600){
+            dir3 = -1;
+        }
+        if (pf3.body.position.x <= 200){
+            dir3 = 1;
+        }
+
+        pf4.setVelocityY(dir4*40);
+        if (pf4.body.position.y >= 420){
+            dir4 = -1;
+        }
+        if (pf4.body.position.y <= 130){
+            dir4 = 1;
+        }
+
+        pf5.setVelocityX(dir5*70);
+        if (pf5.body.position.x >= 600){
+            dir5 = -1;
+        }
+        if (pf5.body.position.x <= 100){
+            dir5 = 1;
+        }
+
+
+        // allow player to stand on platforms
+        this.physics.world.collide(pf0, player, function () {
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf1, player, function () {
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf2, player, function () {
+            pf2.setVelocityX(0);
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf3, player, function () {
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf4, player, function () {
+            pf4.setVelocityX(0);
+            player.setVelocityX(0);
+        });
+
+        this.physics.world.collide(pf5, player, function () {
+            player.setVelocityX(0);
+        });
+
+
+        // fix collisions s.t. only Top collision detected (not R, L, Bt)
+        // this.physics.world.collide(pf0, player, function () {
+        //     player.setVelocityX(0);
+        //     return true;
+        // }, function () {
+        //     if (player.body.touching.left) {
+
+        //     }
+        // });
+
+        // this.physics.world.collide(pf1, player, function () {
+        //     player.setVelocityX(0);
+        //     return true;
+        // });
+
+        // this.physics.world.collide(pf2, player, function () {
+        //     pf2.setVelocityX(0);
+        //     player.setVelocityX(0);
+        //     return true;
+        // });
+
+        // this.physics.world.collide(pf3, player, function () {
+        //     player.setVelocityX(0);
+        //     return true;
+        // });
+
+        // this.physics.world.collide(pf4, player, function () {
+        //     pf4.setVelocityX(0);
+        //     player.setVelocityX(0);
+        //     return true;
+        // });
+
+        // this.physics.world.collide(pf5, player, function () {
+        //     player.setVelocityX(0);
+        //     return true;
+        // });
+
+
 
         // Player Movement
         if (A.isDown) {
@@ -295,6 +424,7 @@ class TutorialB1C extends Phaser.Scene {
         playerMeleeAtk.body.y = player.body.y;
         playerWalkNA.body.y = player.body.y;
         playerArm.body.y = player.body.y;
+        playerArmFinal.body.x = player.body.x;
         playerArmFinal.body.y = player.body.y;
     }
 
@@ -544,8 +674,8 @@ class TutorialB1C extends Phaser.Scene {
     }
 
     updateTargetLifeText() {
-        target1LifeText.setText('Life: ' + target1life)
-        target2LifeText.setText('Life: ' + target2life)
+        target1LifeText.setText('Ground Target: ' + target1life)
+        target2LifeText.setText('Airborne Target: ' + target2life)
     }
 
     // Throws Dagger
