@@ -321,7 +321,7 @@ class Stage4 extends Phaser.Scene {
             soundtrack4.stop();
         }
         else if (!playerAlive) {
-            this.scene.pause('Stage4Boss');
+            this.scene.pause('Stage4');
             this.scene.launch('Stage4Die');
             soundtrack4.stop();
         }

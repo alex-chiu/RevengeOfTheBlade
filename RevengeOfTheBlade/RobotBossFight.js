@@ -139,7 +139,7 @@ class RobotBossFight extends Phaser.Scene {
         boss1 = this.physics.add.sprite(150, 400, 'robotBoss')
         boss1.setBounce(0);
         boss1.setCollideWorldBounds(true);
-        boss1.displayWidth = game.config.width * 0.25;
+        boss1.displayWidth = game.config.width * 0.18;
         boss1.scaleY = boss1.scaleX;
         boss1.body.setGravityY(300);
 
@@ -381,6 +381,49 @@ class RobotBossFight extends Phaser.Scene {
             playerDetected = true;
         }
 
+        var boundsPlayer = player.getBounds();
+        var boundsRB = boss.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsPlayer, boundsRB)) && playerAlive && bossAlive) {
+            life -= 0.1
+            if (life <= 0) {
+                player.disableBody(true, true);
+                player.setActive(false);
+                player.setVisible(false);
+                playerAlive = false;
+                soundtrack5.stop();
+            }
+            this.updatePlayerLifeText()
+            player.setTint('0xff0000');
+            this.time.addEvent({
+                delay: 300,
+                callback: () => {
+                    player.clearTint();
+                }
+            })
+        }
+
+        var boundsRB1 = boss1.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsPlayer, boundsRB1)) && playerAlive && boss1Alive) {
+            life -= 0.1
+            if (life <= 0) {
+                player.disableBody(true, true);
+                player.setActive(false);
+                player.setVisible(false);
+                playerAlive = false;
+                soundtrack5.stop();
+            }
+            this.updatePlayerLifeText()
+            player.setTint('0xff0000');
+            this.time.addEvent({
+                delay: 300,
+                callback: () => {
+                    player.clearTint();
+                }
+            })
+        }
+
         //boss1.setActive(false);
         //boss1.setVisible(false);
 
@@ -492,7 +535,12 @@ class RobotBossFight extends Phaser.Scene {
     }
 
     bombAttack(player, bomb) {
-      life -= 5
+      if (life < 5){
+        life = 0
+      }
+      else{
+        life -= 5
+      }
       lifeText.setText('Life: ' + life);
       player.setTint('0xff0000')
       this.time.addEvent({
@@ -589,7 +637,7 @@ class RobotBossFight extends Phaser.Scene {
 
     // Updates player's life text
     updatePlayerLifeText() {
-        lifeText.setText('Life: ' + life);
+        lifeText.setText('Life: ' + Math.round(life));
     }
 
     // Function that fires laser from boss
@@ -828,18 +876,14 @@ class Laser extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
         }
         else if (Phaser.Geom.Rectangle.Overlaps(this.getBounds(), player.getBounds()) && playerAlive) {
-            life -= 5;
-
-            /*player.setTint('0xff0000')
-            this.time.addEvent({
-                delay: 400,
-                callback: () => {
-                    player.clearTint();
-                }
-            })*/
-
-            this.setActive(false);
-            this.setVisible(false);
+            if (life < 5){
+              life = 0
+            }
+            else{
+              life -= 5;
+              this.setActive(false);
+              this.setVisible(false);
+            }
 
         }
         if (life == 0) {
@@ -884,11 +928,14 @@ class LaserSecond extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
         }
         else if (Phaser.Geom.Rectangle.Overlaps(this.getBounds(), player.getBounds()) && playerAlive) {
-            life -= 5;
-
-            this.setActive(false);
-            this.setVisible(false);
-
+            if (life < 5){
+              life = 0
+            }
+            else{
+              life -= 5;
+              this.setActive(false);
+              this.setVisible(false);
+            }
         }
         if (life == 0) {
             player.disableBody(true, true);

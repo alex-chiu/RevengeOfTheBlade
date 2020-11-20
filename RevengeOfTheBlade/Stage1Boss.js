@@ -63,7 +63,7 @@ class Stage1Boss extends Phaser.Scene {
         // Boss Spritesheet
         this.load.spritesheet('trex', 'assets/sprites/trex.png', { frameWidth: 470, frameHeight: 245 });
 
-        // Lava 
+        // Lava
         this.load.image('lava', 'assets/lava.png');
 
         // Platforms
@@ -240,7 +240,7 @@ class Stage1Boss extends Phaser.Scene {
         this.label = this.add.text(13, 570, '', { fontSize: '20px' }).setWordWrapWidth(800);
         this.typewriteText('In boss fights, collect both the daggers and sword to win!');
 
-        
+
         lavaF = this.physics.add.group();
         // this.physics.add.collider(lavaF, platforms);
         this.physics.add.collider(player, lavaF, this.lavaFall, null, this);
@@ -263,7 +263,8 @@ class Stage1Boss extends Phaser.Scene {
         }
         else if (!playerAlive) {
             this.scene.pause('Stage1Boss');
-            this.scene.launch('Stage1BossDie')
+            this.scene.launch('Stage1BossDie');
+            soundtrack1.stop();
         }
 
         // Implement Parallax Background
@@ -272,7 +273,7 @@ class Stage1Boss extends Phaser.Scene {
         back.tilePositionX -= 0.2;
         mid.tilePositionX += 0.1;
 
-        
+
 
         // Player Movement
         if (A.isDown) {
@@ -352,7 +353,12 @@ class Stage1Boss extends Phaser.Scene {
         var boundsV = trex.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsV)) && playerAlive && trexAlive) {
-            playerLife -= 0.15;
+            if (playerLife < 0.15){
+              playerLife = 0
+            }
+            else{
+              playerLife -= 0.15;
+            }
             if (playerLife <= 0) {
                 player.disableBody(true, true);
                 player.setActive(false);
@@ -684,9 +690,14 @@ class Stage1Boss extends Phaser.Scene {
         }
     }
 
-    // Falling 
+    // Falling
     lavaFall(player, lava) {
-        playerLife -= 5;
+        if (playerLife < 5){
+          playerLife = 0
+        }
+        else{
+          playerLife -= 5;
+        }
         lifeText.setText('Life: ' + playerLife);
         player.setTint('0xff0000')
         this.time.addEvent({
@@ -698,7 +709,7 @@ class Stage1Boss extends Phaser.Scene {
         lava.disableBody(true, true);
         lava.setActive(false);
         lava.setVisible(false);
-  
+
         if (playerLife == 0) {
             player.disableBody(true, true);
             player.setActive(false);
@@ -758,12 +769,12 @@ class Stage1Boss extends Phaser.Scene {
             lava0.setVelocity(Phaser.Math.Between(-200, 200), 20);
             lava1.setVelocity(Phaser.Math.Between(-100, 0), 30);
             lava2.setVelocity(Phaser.Math.Between(0, 100), 40);
-        
+
         }
     }
 
-    
-  
+
+
 
     // Function that updates the player's life text
     updatePlayerLifeText() {
@@ -826,7 +837,7 @@ class DaggerS1B extends Phaser.Physics.Arcade.Sprite {
             trexLifeText.setText('T-Rex Life: ' + trexLife);
             trex.setTint('0xff0000')
             trexDmg = true;
-            
+
             var x0 = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
             var x1 = Phaser.Math.Between(50, 750);
             var x2 = Phaser.Math.Between(200, 600);
@@ -839,7 +850,7 @@ class DaggerS1B extends Phaser.Physics.Arcade.Sprite {
             lava0.setVelocity(Phaser.Math.Between(-200, 200), 20);
             lava1.setVelocity(Phaser.Math.Between(-100, 0), 30);
             lava2.setVelocity(Phaser.Math.Between(0, 100), 40);
-        
+
 
         }
 
