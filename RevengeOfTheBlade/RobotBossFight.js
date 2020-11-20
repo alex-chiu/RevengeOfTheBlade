@@ -139,7 +139,7 @@ class RobotBossFight extends Phaser.Scene {
         boss1 = this.physics.add.sprite(150, 400, 'robotBoss')
         boss1.setBounce(0);
         boss1.setCollideWorldBounds(true);
-        boss1.displayWidth = game.config.width * 0.15;
+        boss1.displayWidth = game.config.width * 0.25;
         boss1.scaleY = boss1.scaleX;
         boss1.body.setGravityY(300);
 

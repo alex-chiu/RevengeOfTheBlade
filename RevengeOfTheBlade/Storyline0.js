@@ -57,7 +57,7 @@ class Storyline0 extends Phaser.Scene {
 
 
     update() {
-      if (ENTER.isDown && enterText.visible) {
+      if (ENTER.isDown) {
         button2.play();
         this.scene.stop('Storyline0');
         this.scene.launch('Storyline1');

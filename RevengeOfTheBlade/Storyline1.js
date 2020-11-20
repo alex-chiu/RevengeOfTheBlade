@@ -55,7 +55,7 @@ class Storyline1 extends Phaser.Scene {
 
 
     update() {
-      if (ENTER.isDown && enterText.visible) {
+      if (ENTER.isDown) {
         opendoor.play();
         cutscene0.stop();
         this.scene.stop('Storyline1');

@@ -5,7 +5,7 @@
 */
 
 // GLOBAL VARIABLES IN EACH SCENE
-var player, playerMeleeAtk, playerWalkNA, playerArm, playerArmFinal;
+var player, playerLife, playerMeleeAtk, playerWalkNA, playerArm, playerArmFinal;
 var playerAlive = true;
 var meleeAtkDir, rangedAtkDir, callRangedAttack, attackAnimPlaying = false;
 var W, A, S, D, cursors, spaceBar, mouseX, mouseY;
@@ -20,6 +20,7 @@ var textAlive = true;
 
 var trex, trexAlive = true, trexLife = 100, trexLifeText, trexDmg;
 var healthLoot;
+var lavaF;
 
 var balloon;
 var balloonLife = 5;
@@ -62,6 +63,9 @@ class Stage1Boss extends Phaser.Scene {
         // Boss Spritesheet
         this.load.spritesheet('trex', 'assets/sprites/trex.png', { frameWidth: 470, frameHeight: 245 });
 
+        // Lava 
+        this.load.image('lava', 'assets/lava.png');
+
         // Platforms
         this.load.image('platformV', 'assets/platforms/platformV1.png');
         this.load.image('platformH', 'assets/platforms/platformH.png');
@@ -80,6 +84,8 @@ class Stage1Boss extends Phaser.Scene {
         this.load.audio('attack1_metal', ['assets/audio/soundeffects/player/attack1_metal.mp3']);
         this.load.audio('attack1_object', ['assets/audio/soundeffects/player/attack1_object.mp3']);
         this.load.audio('attack1_platform', ['assets/audio/soundeffects/player/attack1_platform.mp3']);
+        this.load.audio('attack1_creature', ['assets/audio/soundeffects/player/attack1_creature.mp3']);
+
         // Range
         this.load.audio('preattack2', ['assets/audio/soundeffects/player/preattack2.mp3']);
         this.load.audio('attack2_throw', ['assets/audio/soundeffects/player/preattack2.mp3']);
@@ -234,6 +240,12 @@ class Stage1Boss extends Phaser.Scene {
         this.label = this.add.text(13, 570, '', { fontSize: '20px' }).setWordWrapWidth(800);
         this.typewriteText('In boss fights, collect both the daggers and sword to win!');
 
+        
+        lavaF = this.physics.add.group();
+        // this.physics.add.collider(lavaF, platforms);
+        this.physics.add.collider(player, lavaF, this.lavaFall, null, this);
+
+
         //game.input.onDown.addOnce(this.label.destroy());
         /*this.label.on('pointerdown', () => {
           //soundtrack5.stop();
@@ -259,6 +271,8 @@ class Stage1Boss extends Phaser.Scene {
         far.tilePositionX += 0.3;
         back.tilePositionX -= 0.2;
         mid.tilePositionX += 0.1;
+
+        
 
         // Player Movement
         if (A.isDown) {
@@ -670,21 +684,59 @@ class Stage1Boss extends Phaser.Scene {
         }
     }
 
+    // Falling 
+    lavaFall(player, lava) {
+        playerLife -= 5;
+        lifeText.setText('Life: ' + playerLife);
+        player.setTint('0xff0000')
+        this.time.addEvent({
+            delay: 400,
+            callback: () => {
+                player.clearTint();
+            }
+        })
+        lava.disableBody(true, true);
+        lava.setActive(false);
+        lava.setVisible(false);
+  
+        if (playerLife == 0) {
+            player.disableBody(true, true);
+            player.setActive(false);
+            player.setVisible(false);
+            playerAlive = false;
+            soundtrack1.stop();
+        }
+    }
+
+    // Function to update T-rex life
     updateTRexLife() {
         var boundsA = playerMeleeAtk.getBounds();
         var boundsB = trex.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && trexAlive) {
-            if (trexLife < 10) {
+            if (trexLife < 10){
               trexLife = 0
             }
-            else {
+            else{
               trexLife -= 10
             }
             trexLifeText.setText('T-Rex Life: ' + trexLife);
             trex.setTint('0xff0000');
-            attack2_metal.play();
+		    attack1_creature.play();
             trexDmg = true;
+
+            var x0 = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+            var x1 = Phaser.Math.Between(50, 750);
+            var x2 = Phaser.Math.Between(200, 600);
+            var lava0 = lavaF.create(x0, 10, 'lava');
+            var lava1 = lavaF.create(x1, 20, 'lava');
+            var lava2 = lavaF.create(x2, 30, 'lava');
+            lava0.setBounce(1);
+            lava1.setBounce(0.5);
+            lava2.setBounce(1);
+            lava0.setVelocity(Phaser.Math.Between(-200, 200), 20);
+            lava1.setVelocity(Phaser.Math.Between(-100, 0), 30);
+            lava2.setVelocity(Phaser.Math.Between(0, 100), 40);
         }
         if (trexLife == 0 && lootCounter1 == 0) {
             var hLootB1 = swordLoot.create(game.config.width/2, 200, 'swordLoot');
@@ -693,8 +745,25 @@ class Stage1Boss extends Phaser.Scene {
             trex.disableBody(true, true);
             trexAlive = false;
             lootCounter1 += 1
+
+            var x0 = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+            var x1 = Phaser.Math.Between(50, 750);
+            var x2 = Phaser.Math.Between(200, 600);
+            var lava0 = lavaF.create(x0, 10, 'lava');
+            var lava1 = lavaF.create(x1, 20, 'lava');
+            var lava2 = lavaF.create(x2, 30, 'lava');
+            lava0.setBounce(1);
+            lava1.setBounce(0.5);
+            lava2.setBounce(1);
+            lava0.setVelocity(Phaser.Math.Between(-200, 200), 20);
+            lava1.setVelocity(Phaser.Math.Between(-100, 0), 30);
+            lava2.setVelocity(Phaser.Math.Between(0, 100), 40);
+        
         }
     }
+
+    
+  
 
     // Function that updates the player's life text
     updatePlayerLifeText() {
@@ -757,19 +826,47 @@ class DaggerS1B extends Phaser.Physics.Arcade.Sprite {
             trexLifeText.setText('T-Rex Life: ' + trexLife);
             trex.setTint('0xff0000')
             trexDmg = true;
+            
+            var x0 = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+            var x1 = Phaser.Math.Between(50, 750);
+            var x2 = Phaser.Math.Between(200, 600);
+            var lava0 = lavaF.create(x0, 10, 'lava');
+            var lava1 = lavaF.create(x1, 20, 'lava');
+            var lava2 = lavaF.create(x2, 30, 'lava');
+            lava0.setBounce(1);
+            lava1.setBounce(0.5);
+            lava2.setBounce(1);
+            lava0.setVelocity(Phaser.Math.Between(-200, 200), 20);
+            lava1.setVelocity(Phaser.Math.Between(-100, 0), 30);
+            lava2.setVelocity(Phaser.Math.Between(0, 100), 40);
+        
+
         }
 
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), balloon.getBounds())) && balloonAlive) {
             balloonLife -= 5;
             balloon.setTint('0xff0000')
             balloonDmg = true;
+
+            var x0 = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+            var x1 = Phaser.Math.Between(50, 750);
+            var x2 = Phaser.Math.Between(200, 600);
+            var lava0 = lavaF.create(x0, 10, 'lava');
+            var lava1 = lavaF.create(x1, 20, 'lava');
+            var lava2 = lavaF.create(x2, 30, 'lava');
+            lava0.setBounce(1);
+            lava1.setBounce(0.5);
+            lava2.setBounce(1);
+            lava0.setVelocity(Phaser.Math.Between(-200, 200), 20);
+            lava1.setVelocity(Phaser.Math.Between(-100, 0), 30);
+            lava2.setVelocity(Phaser.Math.Between(0, 100), 40);
         }
 
-        // Disable enemies if their health reaches 0
+        // Disable trex if health reaches 0
         if (trexLife == 0 && lootCounter1 == 0) {
             var hLoot = swordLoot.create(game.config.width/2, 200, 'swordLoot');
             hLoot.setBounce(0.5);
-            hLoot.setCollideWorldBounds(true);
+            // hLoot.setCollideWorldBounds(true);
             trex.disableBody(true, true);
             trexAlive = false;
             lootCounter1 += 1
