@@ -1,0 +1,65 @@
+ENEMY HEALTH AND DAMAGE, PLAYER LIFE & ATTACK DAMAGE 
+VALUE PROGRESSION THROUGH STAGES
+
+
+stage 1: STONE // LIFE : 100  // MEL: 10 // RANG: 5
+ptero 	    >> 50 
+ptero 2     >> 50
+raptor      >> 80
+
+total enemy health: 180 (life = 55% of total)
+
+Raptor dmg 2x ptero dmg
+________________________________________________________
+
+stage 1 boss: IRON // LIFE: 100 // MEL: 12 // RANG: 6
+trex       >>  170
+           + lava (30)
+   
+total: 200 (53%)
+
+_________________________________________________________
+_________________________________________________________
+
+stage 4: STEEL // LIFE: 150 // MEL: 15 // RANG: 8
+
+car 	      >>  165
+politician    >>   80
+police        >>   95
+
+total: 340 (44%)
+
+car dmg > pt & pl dmg
+__________________________________________________________
+
+stage 4 boss: TITANIUM // LIFE: 155 // MEL: 17 // RANG: 9
+attack heli       >>   130
+missile heli [2]  >>   140
+tank 	          >>    200
+
+total: 470 (33%)
+
+_________________________________________________________
+_________________________________________________________
+
+stage 5: CHROME  // LIFE: 175 // MEL: 20 // RANG: 10
+spy (e1)      >>  150
+robot (e2)    >>  160
+drone (e3)    >>  70
+drone2 (e4)   >>  70  
+
+total: 430 (41%) 
+no more HP or DPS upgrades
+
+robots dmg > drone dmg
+_________________________________________________________
+
+stage 5 boss: CHROME // LIFE: 175 // MEL: 20 // RANG: 10
+android (boss)         >> 150
+robot (boss1, larger)  >> 250
+attack heli            >>  100 
+                          + bombs and lava? (40)
+
+total: 540 (32%)
+
+larger bot dmg > smaller
