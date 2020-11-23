@@ -30,12 +30,9 @@ var cloud2Life = 100;
 var daggersAlive = true, swordAlive = true;
 var textAlive5 = true;
 
-var helicopter;
-var helicopterAlive = true, helicopterLife = 150, helicopterLifeText, helicopterDmg;
-var helicopter2;
-var helicopter2Alive = true, helicopter2Life = 200, helicopter2LifeText, helicopter2Dmg;
-var tank;
-var tankAlive = true, tankLife = 200, tankLifeText, tankDmg;
+var helicopter, helicopterAlive = true, helicopterLife = 150, helicopterLifeText, helicopterDmg;
+var helicopter2, helicopter2Alive = true, helicopter2Life = 200, helicopter2LifeText, helicopter2Dmg;
+var tank, tankAlive = true, tankLife = 200, tankLifeText, tankDmg;
 var ammo, missile;
 
 var dirH = 1;
@@ -205,7 +202,7 @@ class Stage4Boss extends Phaser.Scene {
         this.physics.add.collider(playerArmFinal, platforms);
 
         // temporary buttons
-        buttonB4 = this.add.text(50, 50, 'travel to: FUTURE ERA', { fontSize: '20px', fill: '#b5dbf7' });
+        buttonB4 = this.add.text(50, 50, 'travel to: FUTURE ERA', { fontSize: '10px', fill: '#b5dbf7' });
         buttonB4.setInteractive();
         buttonB4.on('pointerdown', () => {
           soundtrack4.stop();
@@ -250,29 +247,29 @@ class Stage4Boss extends Phaser.Scene {
 
 
         // Create Enemies
-        helicopter = this.physics.add.sprite(50, 120, 'helicopter')
+        helicopter = this.physics.add.sprite(50, 120, 'helicopter');
         helicopter.setCollideWorldBounds(true);
         helicopter.displayWidth = game.config.width * 0.24;
         helicopter.scaleY = helicopter.scaleX;
         helicopter.body.setAllowGravity(false);
 
-        helicopter2 = this.physics.add.sprite(550, 200, 'helicopter')
+        helicopter2 = this.physics.add.sprite(550, 200, 'helicopter');
         helicopter2.setCollideWorldBounds(true);
         helicopter2.displayWidth = game.config.width * 0.26;
         helicopter2.scaleY = helicopter2.scaleX;
         helicopter2.body.setAllowGravity(false);
 
-        tank = this.physics.add.sprite(650, 400, 'tank')
+        tank = this.physics.add.sprite(650, 400, 'tank');
         tank.setBounce(0);
         tank.setCollideWorldBounds(true);
         tank.displayWidth = game.config.width * 0.4;
         tank.scaleY = tank.scaleX;
         tank.body.setGravityY(300);
 
-        cloud = this.physics.add.image(650, 100, 'cloud')
-        cloud1 = this.physics.add.image(400, 200, 'cloud')
-        cloud2 = this.physics.add.image(150, 300, 'cloud')
-        daggerLoot = this.physics.add.image(650, 70, 'dagger')
+        cloud = this.physics.add.image(650, 100, 'cloud');
+        cloud1 = this.physics.add.image(400, 200, 'cloud');
+        cloud2 = this.physics.add.image(150, 300, 'cloud');
+        daggerLoot = this.physics.add.image(650, 70, 'dagger');
 
         // Enemy Life Text
         helicopterLifeText = this.add.text(220, 20, 'Attack Helicopter: 150', { fontSize: '13px', fill: '#ffffff' });
@@ -478,6 +475,7 @@ class Stage4Boss extends Phaser.Scene {
         // helicopter movement (steady height, fly horizontally while shooting)
         helicopter.setVelocityX(dirH*30);
         helicopter.setVelocityY(0);
+        helicopter2.anims.play('helicopterRight', true);
         if (helicopter.body.position.x >= 30){
             dirH = 1;
             helicopter.anims.play('helicopterRight', true);
@@ -489,6 +487,7 @@ class Stage4Boss extends Phaser.Scene {
 
         helicopter2.setVelocityX(dirH2*30);
         helicopter2.setVelocityY(0);
+        helicopter2.anims.play('helicopterLeft', true);
         if (helicopter2.body.position.x >= 100){
             dirH2 = 1;
             helicopter2.anims.play('helicopterRight', true);

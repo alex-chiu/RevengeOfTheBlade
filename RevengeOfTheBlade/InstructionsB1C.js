@@ -39,7 +39,7 @@ class InstructionsB1C extends Phaser.Scene {
       playButton.on('pointerdown', () => {
         this.scene.stop('InstructionsB1C');
         this.scene.start('TutorialB1C');
-      });tank
+      });
 
       playButton.on('pointerover', () => { this.buttonOver(playButton); });
       playButton.on('pointerout', () => { this.buttonNotOver(playButton); });
