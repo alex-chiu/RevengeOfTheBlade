@@ -39,7 +39,7 @@ class Menu extends Phaser.Scene {
       this.add.text(280,170,'Blade', { fontSize: '75px', fill: '#ffffff' });
 
       // Play tutorial
-      tutorialButton = this.add.text(330, 300, 'TUTORIAL', { fontSize: '30px', fill: '#b5dbf7' });
+      tutorialButton = this.add.text(310, 300, 'TUTORIAL', { fontSize: '35px', fill: '#b5dbf7' });
       tutorialButton.setInteractive();
       tutorialButton.on('pointerdown', () => {
         buttonSound.play();
@@ -51,7 +51,7 @@ class Menu extends Phaser.Scene {
       tutorialButton.on('pointerout', () => { this.buttonNotOver(tutorialButton); });
 
       // Play main levels
-      playButton = this.add.text(280, 375, '▸PLAY', { fontSize: '75px', fill: '#8db9d9' });
+      playButton = this.add.text(275, 375, '▸PLAY', { fontSize: '75px', fill: '#8db9d9' });
       playButton.setInteractive();
       playButton.on('pointerdown', () => {
         buttonSound.play();
@@ -63,7 +63,7 @@ class Menu extends Phaser.Scene {
       playButton.on('pointerout', () => { this.buttonNotOver(playButton); });
 
       // View Game Credits
-      creditButton = this.add.text(325, 485, 'CREDITS', { fontSize: '35px', fill: '#8db9d9' });
+      creditButton = this.add.text(325, 485, 'CREDITS', { fontSize: '30px', fill: '#8db9d9' });
       creditButton.setInteractive();
       creditButton.on('pointerdown', () => {
         buttonSound.play();

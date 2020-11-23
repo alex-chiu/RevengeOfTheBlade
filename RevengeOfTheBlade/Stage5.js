@@ -320,9 +320,9 @@ class Stage5 extends Phaser.Scene {
 
         // Implement Parallax Background
         clouds.tilePositionX -= 0.5;
-        far.tilePositionX += 0.3;
+        far.tilePositionX += 0.1;
         back.tilePositionX -= 0.2;
-        mid.tilePositionX += 0.1;
+        mid.tilePositionX += 0.3;
 
         // Platform movement
         // 50 150
