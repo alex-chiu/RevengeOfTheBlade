@@ -250,15 +250,15 @@ class Stage4Boss extends Phaser.Scene {
 
 
         // Create Enemies
-        helicopter = this.physics.add.sprite(300, 200, 'helicopter')
+        helicopter = this.physics.add.sprite(50, 120, 'helicopter')
         helicopter.setCollideWorldBounds(true);
-        helicopter.displayWidth = game.config.width * 0.22;
+        helicopter.displayWidth = game.config.width * 0.24;
         helicopter.scaleY = helicopter.scaleX;
         helicopter.body.setAllowGravity(false);
 
-        helicopter2 = this.physics.add.sprite(650, 400, 'helicopter')
+        helicopter2 = this.physics.add.sprite(550, 200, 'helicopter')
         helicopter2.setCollideWorldBounds(true);
-        helicopter2.displayWidth = game.config.width * 0.24;
+        helicopter2.displayWidth = game.config.width * 0.26;
         helicopter2.scaleY = helicopter2.scaleX;
         helicopter2.body.setAllowGravity(false);
 
@@ -476,7 +476,7 @@ class Stage4Boss extends Phaser.Scene {
         }
 
         // helicopter movement (steady height, fly horizontally while shooting)
-        helicopter.setVelocityX(dirH*50);
+        helicopter.setVelocityX(dirH*30);
         helicopter.setVelocityY(0);
         if (helicopter.body.position.x >= 30){
             dirH = 1;
@@ -487,7 +487,7 @@ class Stage4Boss extends Phaser.Scene {
             helicopter.anims.play('helicopterLeft', true);
         }
 
-        helicopter2.setVelocityX(dirH2*70);
+        helicopter2.setVelocityX(dirH2*30);
         helicopter2.setVelocityY(0);
         if (helicopter2.body.position.x >= 100){
             dirH2 = 1;
