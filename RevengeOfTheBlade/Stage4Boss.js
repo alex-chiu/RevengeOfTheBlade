@@ -30,8 +30,8 @@ var cloud2Life = 100;
 var daggersAlive = true, swordAlive = true;
 var textAlive5 = true;
 
-var helicopter, helicopterAlive = true, helicopterLife = 150, helicopterLifeText, helicopterDmg;
-var helicopter2, helicopter2Alive = true, helicopter2Life = 200, helicopter2LifeText, helicopter2Dmg;
+var helicopter, helicopterAlive = true, helicopterLife = 140, helicopterLifeText, helicopterDmg;
+var helicopter2, helicopter2Alive = true, helicopter2Life = 150, helicopter2LifeText, helicopter2Dmg;
 var tank, tankAlive = true, tankLife = 200, tankLifeText, tankDmg;
 var ammo, missile;
 
@@ -221,13 +221,13 @@ class Stage4Boss extends Phaser.Scene {
 
         lootCounter1 = 0;
 
-        helicopterLife = 130;
+        helicopterLife = 140;
         helicopterAlive = true;
-        helicopterLifeText = 130;
+        helicopterLifeText = 140;
 
-        helicopter2Life = 140;
+        helicopter2Life = 150;
         helicopter2Alive = true;
-        helicopter2LifeText = 140;
+        helicopter2LifeText = 150;
 
         tankLife = 200;
         tankAlive = true;
@@ -247,13 +247,13 @@ class Stage4Boss extends Phaser.Scene {
 
 
         // Create Enemies
-        helicopter = this.physics.add.sprite(50, 120, 'helicopter');
+        helicopter = this.physics.add.sprite(20, 120, 'helicopter');
         helicopter.setCollideWorldBounds(true);
         helicopter.displayWidth = game.config.width * 0.24;
         helicopter.scaleY = helicopter.scaleX;
         helicopter.body.setAllowGravity(false);
 
-        helicopter2 = this.physics.add.sprite(550, 200, 'helicopter');
+        helicopter2 = this.physics.add.sprite(550, 220, 'helicopter');
         helicopter2.setCollideWorldBounds(true);
         helicopter2.displayWidth = game.config.width * 0.26;
         helicopter2.scaleY = helicopter2.scaleX;
@@ -272,8 +272,8 @@ class Stage4Boss extends Phaser.Scene {
         daggerLoot = this.physics.add.image(650, 70, 'dagger');
 
         // Enemy Life Text
-        helicopterLifeText = this.add.text(220, 20, 'Attack Helicopter: 150', { fontSize: '13px', fill: '#ffffff' });
-        helicopter2LifeText = this.add.text(430, 20, 'Missile Helicopter: 200', { fontSize: '13px', fill: '#ffffff' });
+        helicopterLifeText = this.add.text(210, 20, 'Attack Helicopter: 140', { fontSize: '13px', fill: '#ffffff' });
+        helicopter2LifeText = this.add.text(430, 20, 'Missile Helicopter: 150', { fontSize: '13px', fill: '#ffffff' });
         tankLifeText = this.add.text(660, 20, 'Tank Life: 200', { fontSize: '13px', fill: '#ffffff' });
 
 
@@ -473,28 +473,28 @@ class Stage4Boss extends Phaser.Scene {
         }
 
         // helicopter movement (steady height, fly horizontally while shooting)
-        helicopter.setVelocityX(dirH*30);
+        // upper heli
+        helicopter.setVelocityX(dirH*45);
         helicopter.setVelocityY(0);
-        helicopter.anims.play('helicopterRight', true);
-        if (helicopter.body.position.x >= 30){
-            dirH = 1;
-            helicopter.anims.play('helicopterRight', true);
-        }
-        if (helicopter.body.position.x <= 300){
+        if (helicopter.body.position.x >= 500){
             dirH = -1;
             helicopter.anims.play('helicopterLeft', true);
         }
-
+        if (helicopter.body.position.x <= 5){
+            dirH = 1;
+            helicopter.anims.play('helicopterRight', true);
+        }
+        // lower heli
         helicopter2.setVelocityX(dirH2*30);
         helicopter2.setVelocityY(0);
-        helicopter2.anims.play('helicopterLeft', true);
-        if (helicopter2.body.position.x >= 100){
+        if (helicopter2.body.position.x >= 550){
+            dirH2 = -1;
+            helicopter2.anims.play('helicopterLeft', true); 
+        }
+        if (helicopter2.body.position.x <= 50){
             dirH2 = 1;
             helicopter2.anims.play('helicopterRight', true);
-        }
-        if (helicopter2.body.position.x <= 500){
-            dirH2 = -1;
-            helicopter2.anims.play('helicopterLeft', true);
+            
         }
 
 
@@ -1292,7 +1292,7 @@ class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
             if (!playerDetected) {
                 playerDetected = true;
             }
-            helicopter2LifeText.setText('Missile Helicopter Life: ' + helicopterLife);
+            helicopter2LifeText.setText('Missile Helicopter Life: ' + helicopter2Life);
             helicopter2.setTint('0xff0000');
             helicopter2Dmg = true;
         }
