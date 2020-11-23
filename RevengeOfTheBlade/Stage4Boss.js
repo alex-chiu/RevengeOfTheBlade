@@ -475,7 +475,7 @@ class Stage4Boss extends Phaser.Scene {
         // helicopter movement (steady height, fly horizontally while shooting)
         helicopter.setVelocityX(dirH*30);
         helicopter.setVelocityY(0);
-        helicopter2.anims.play('helicopterRight', true);
+        helicopter.anims.play('helicopterRight', true);
         if (helicopter.body.position.x >= 30){
             dirH = 1;
             helicopter.anims.play('helicopterRight', true);
