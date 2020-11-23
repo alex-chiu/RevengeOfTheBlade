@@ -38,6 +38,9 @@ var tank;
 var tankAlive = true, tankLife = 200, tankLifeText, tankDmg;
 var ammo, missile;
 
+var dirH = 1;
+var dirH2 = 1;
+
 var delX0, delX1, delX2, delY1, delY2;
 
 var swordLoot;
@@ -249,13 +252,13 @@ class Stage4Boss extends Phaser.Scene {
         // Create Enemies
         helicopter = this.physics.add.sprite(300, 200, 'helicopter')
         helicopter.setCollideWorldBounds(true);
-        helicopter.displayWidth = game.config.width * 0.25;
+        helicopter.displayWidth = game.config.width * 0.22;
         helicopter.scaleY = helicopter.scaleX;
         helicopter.body.setAllowGravity(false);
 
         helicopter2 = this.physics.add.sprite(650, 400, 'helicopter')
         helicopter2.setCollideWorldBounds(true);
-        helicopter2.displayWidth = game.config.width * 0.25;
+        helicopter2.displayWidth = game.config.width * 0.24;
         helicopter2.scaleY = helicopter2.scaleX;
         helicopter2.body.setAllowGravity(false);
 
@@ -423,15 +426,13 @@ class Stage4Boss extends Phaser.Scene {
         // Enemy Movement
         if (!playerDetected) {
             tank.anims.play('tankLeft');
-            helicopter.anims.play('helicopterLeft');
-            helicopter2.anims.play('helicopterLeft');
-
         }
         else {
             delX0 = tank.body.position.x - tank.body.position.x;
 
             delX1 = helicopter.body.position.x - player.body.position.x;
             delX2 = helicopter2.body.position.x - player.body.position.x;
+
             delY1 = helicopter.body.position.y - player.body.position.y;
             delY2 = helicopter2.body.position.y - player.body.position.y;
             // TANK: shoot if close, else keep moving left /  right
@@ -471,178 +472,39 @@ class Stage4Boss extends Phaser.Scene {
                     }
                 }
             }
-            // HELICOPTER 1
-            // upper right or directly above
-            if (player.body.position.x <= helicopter.body.position.x && player.body.position.y <= helicopter.body.position.y) {
-                helicopter.anims.play('helicopterLeft', true);
-                if (delX1 > 10 && delY1 > 10) {
-                    helicopter.setVelocityX(-70);
-                    helicopter.setVelocityY(-1);
-                }
-                else  {
-                    helicopter.setVelocityX(-60);
-                    helicopter.setVelocityY(-5);
-                }
-            }
-            // Helicopter is upper left
-            else if (player.body.position.x > helicopter.body.position.x && player.body.position.y < helicopter.body.position.y) {
-                helicopter.anims.play('helicopterRight', true);
-                if (delX1 > 10 && delY1 > 10) {
-                    helicopter.setVelocityX(70);
-                    helicopter.setVelocityY(-5);
-                }
-                else  {
-                    helicopter.setVelocityX(60);
-                    helicopter.setVelocityY(-5);
-                }
-            }
-            // Helicopter lower right or directly below
-            else if (player.body.position.x <= helicopter.body.position.x && player.body.position.y >= helicopter.body.position.y) {
-                helicopter.anims.play('helicopterLeft', true);
-                if (delX1 > 10 && delY1 > 10) {
-                    helicopter.setVelocityX(-70);
-                    helicopter.setVelocityY(30);
-                }
-                else  {
-                    helicopter.setVelocityX(-30);
-                    helicopter.setVelocityY(30);
-                }
-            }
-            // Helicopter lower left
-            else if (player.body.position.x > helicopter.body.position.x && player.body.position.y > helicopter.body.position.y) {
-                helicopter.anims.play('helicopterRight', true);
-                if (delX1 > 10 && delY1 > 10) {
-                    helicopter.setVelocityX(-70);
-                    helicopter.setVelocityY(30);
-                }
-                else  {
-                    helicopter.setVelocityX(40);
-                    helicopter.setVelocityY(30);
-                }
-            }
-
-            // Helicopter directly left
-            else if (player.body.position.x > helicopter.body.position.x && player.body.position.y == helicopter.body.position.y) {
-                helicopter.anims.play('helicopterLeft', true);
-                if (delX1 > 10) {
-                    helicopter.setVelocityX(70);
-                    helicopter.setVelocityY(10);
-                }
-                else  {
-                    helicopter.setVelocityX(70);
-                    helicopter.setVelocityY(3);
-                }
-            }
-
-            // Helicopter directly right
-            else if (player.body.position.x < helicopter.body.position.x && player.body.position.y == helicopter.body.position.y) {
-                helicopter.anims.play('helicopterLeft', true);
-                if (delX1 > 200) {
-                    helicopter.setVelocityX(70);
-                    helicopter.setVelocityY(10);
-                }
-                else  {
-                    helicopter.setVelocityX(-70);
-                    helicopter.setVelocityY(3);
-                }
-            }
-
-            // HELICOPTER 2
-            // upper right or directly above
-            if (player.body.position.x <= helicopter2.body.position.x && player.body.position.y <= helicopter2.body.position.y) {
-                helicopter2.anims.play('helicopterLeft', true);
-                if (delX2 > 10 && delY2 > 10) {
-                    helicopter2.setVelocityX(-70);
-                    helicopter2.setVelocityY(-1);
-                }
-                else {
-                    helicopter2.setVelocityX(-60);
-                    helicopter2.setVelocityY(-5);
-                }
-            }
-            // Helicopter2 is upper left
-            else if (player.body.position.x > helicopter2.body.position.x && player.body.position.y < helicopter2.body.position.y) {
-                helicopter2.anims.play('helicopterRight', true);
-                if (delX2 > 10 && delY2 > 10) {
-                    helicopter2.setVelocityX(70);
-                    helicopter2.setVelocityY(-5);
-                }
-                else  {
-                    helicopter2.setVelocityX(60);
-                    helicopter2.setVelocityY(-5);
-                }
-            }
-            // Helicopter2 lower right or directly below
-            else if (player.body.position.x <= helicopter2.body.position.x && player.body.position.y >= helicopter2.body.position.y) {
-                helicopter2.anims.play('helicopterLeft', true);
-                if (delX2 > 10 && delY2 > 10) {
-                    helicopter2.setVelocityX(-70);
-                    helicopter2.setVelocityY(30);
-                }
-                else  {
-                    helicopter2.setVelocityX(-30);
-                    helicopter2.setVelocityY(30);
-                }
-            }
-            // Helicopter2 lower left
-            else if (player.body.position.x > helicopter2.body.position.x && player.body.position.y > helicopter2.body.position.y) {
-                helicopter2.anims.play('helicopterRight', true);
-                if (delX2 > 10 && delY2 > 10) {
-                    helicopter2.setVelocityX(-70);
-                    helicopter2.setVelocityY(30);
-                }
-                else  {
-                    helicopter2.setVelocityX(40);
-                    helicopter2.setVelocityY(30);
-                }
-            }
-
-            // Helicopter2 directly left
-            else if (player.body.position.x > helicopter2.body.position.x && player.body.position.y == helicopter2.body.position.y) {
-                helicopter2.anims.play('helicopterLeft', true);
-                if (delX2 > 10) {
-                    helicopter2.setVelocityX(70);
-                    helicopter2.setVelocityY(10);
-                }
-                else  {
-                    helicopter2.setVelocityX(70);
-                    helicopter2.setVelocityY(3);
-                }
-            }
-
-            // Helicopter2 directly right
-            else if (player.body.position.x < helicopter2.body.position.x && player.body.position.y == helicopter2.body.position.y) {
-                helicopter2.anims.play('helicopterLeft', true);
-                if (delX2 > 200) {
-                    helicopter2.setVelocityX(70);
-                    helicopter2.setVelocityY(10);
-                }
-                else  {
-                    helicopter2.setVelocityX(-70);
-                    helicopter2.setVelocityY(3);
-                }
-            }
+            
         }
+
+        // helicopter movement (steady height, fly horizontally while shooting)
+        helicopter.setVelocityX(dirH*50);
+        helicopter.setVelocityY(0);
+        if (helicopter.body.position.x >= 30){
+            dirH = 1;
+            helicopter.anims.play('helicopterRight', true);
+        }
+        if (helicopter.body.position.x <= 300){
+            dirH = -1;
+            helicopter.anims.play('helicopterLeft', true);
+        }
+
+        helicopter2.setVelocityX(dirH2*70);
+        helicopter2.setVelocityY(0);
+        if (helicopter2.body.position.x >= 100){
+            dirH2 = 1;
+            helicopter2.anims.play('helicopterRight', true);
+        }
+        if (helicopter2.body.position.x <= 500){
+            dirH2 = -1;
+            helicopter2.anims.play('helicopterLeft', true);
+        }
+
+
 
         if (Math.abs(player.body.position.x - tank.body.position.x) <= 150) {
             playerDetected = true;
         }
 
-        if (Math.abs(player.body.position.x - helicopter.body.position.x) <= 800) {
-            playerDetected = true;
-        }
-
-        if (Math.abs(player.body.position.y - helicopter.body.position.y) <= 600) {
-            playerDetected = true;
-        }
-
-        if (Math.abs(player.body.position.x - helicopter2.body.position.x) <= 800) {
-            playerDetected = true;
-        }
-
-        if (Math.abs(player.body.position.y - helicopter2.body.position.y) <= 600) {
-            playerDetected = true;
-        }
+        
 
         var boundsPl = player.getBounds();
         var boundsT = tank.getBounds();

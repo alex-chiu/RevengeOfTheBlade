@@ -29,7 +29,7 @@ var dir5 = 1;
 // Enemies
 var enemy1, enemy2, enemy3, enemy4;
 var delX1, delX2, dronePos, delX3, delY3, delX4, delY4;
-var enemy1Life = 150, enemy2Life = 160, enemy3Life = 70, enemy3Life = 70;
+var enemy1Life = 150, enemy2Life = 160, enemy3Life = 70, enemy3Life = 70, enemy4Life = 70;
 var enemy1Alive = true, enemy2Alive = true, enemy3Alive = true, enemy4Alive = true;
 var enemy1LifeText = 150, enemy2LifeText = 160, enemy3LifeText = 70, enemy4LifeText = 70;
 var enemy1Dmg = false, enemy2Dmg = false, enemy3Dmg = false, enemy4Dmg = false;
@@ -157,7 +157,7 @@ class Stage5 extends Phaser.Scene {
 
 
         // Player Life Text
-        lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
+        lifeText = this.add.text(15, 15, 'Life: 175', { fontSize: '25px', fill: '#ffffff' });
 
         // Platforms
         platforms = this.physics.add.staticGroup();
@@ -263,9 +263,9 @@ class Stage5 extends Phaser.Scene {
         laserGroup = new LaserGroup5(this);
 
         // Enemy Life Text
-        enemy1LifeText = this.add.text(590, 20, 'Robot Life: 50', { fontSize: '15px', fill: '#ffffff' });
-        enemy2LifeText = this.add.text(390, 20, 'Spy Bot Life: 70', { fontSize: '15px', fill: '#ffffff' });
-        enemy3LifeText = this.add.text(190, 20, 'Drone Life: 40', { fontSize: '15px', fill: '#ffffff' });
+        enemy1LifeText = this.add.text(590, 20, 'Robot Life: 150', { fontSize: '15px', fill: '#ffffff' });
+        enemy2LifeText = this.add.text(390, 20, 'Spy Bot Life: 160', { fontSize: '15px', fill: '#ffffff' });
+        enemy3LifeText = this.add.text(190, 20, 'Drone Life: 70', { fontSize: '15px', fill: '#ffffff' });
 
         // Enemy Overlap
         this.physics.add.collider(enemy1, platforms);
