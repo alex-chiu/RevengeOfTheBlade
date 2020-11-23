@@ -676,7 +676,7 @@ class Stage1 extends Phaser.Scene {
         var boundsV = raptor.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsV)) && playerAlive && raptorAlive) {
-            playerLife -= 0.25;
+            playerLife -= 0.2;
             if (playerLife <= 0) {
                 player.disableBody(true, true);
                 player.setActive(false);

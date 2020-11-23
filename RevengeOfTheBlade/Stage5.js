@@ -9,7 +9,7 @@ var player, playerMeleeAtk, playerWalkNA, playerArm, playerArmFinal, playerDmg =
 var playerAlive = true;
 var meleeAtkDir, rangedAtkDir, callRangedAttack, attackAnimPlaying = false;
 var W, A, S, D, cursors, spaceBar, mouseX, mouseY;
-var playerLife = 100;
+var playerLife = 175;
 var lifeText;
 var sky, clouds, far, back, mid, front;
 var ground, platforms, obstacles;
@@ -27,12 +27,14 @@ var dir4 = 1;
 var dir5 = 1;
 
 // Enemies
-var enemy1, enemy2, enemy3;
-var delX1, delX2, dronePos, delX3, delY3;
-var enemy1Life = 50, enemy2Life = 70, enemy3Life = 40;
-var enemy1Alive = true, enemy2Alive = true, enemy3Alive = true;
-var enemy1LifeText = 50, enemy2LifeText = 70, enemy3LifeText = 40;
-var enemy1Dmg = false, enemy2Dmg = false, enemy3Dmg = false;
+var enemy1, enemy2, enemy3, enemy4;
+var delX1, delX2, dronePos, delX3, delY3, delX4, delY4;
+var enemy1Life = 150, enemy2Life = 160, enemy3Life = 70, enemy3Life = 70;
+var enemy1Alive = true, enemy2Alive = true, enemy3Alive = true, enemy4Alive = true;
+var enemy1LifeText = 150, enemy2LifeText = 160, enemy3LifeText = 70, enemy4LifeText = 70;
+var enemy1Dmg = false, enemy2Dmg = false, enemy3Dmg = false, enemy4Dmg = false;
+
+var dirE4 = 1;
 
 // Loot
 var healthLoot;
@@ -219,10 +221,11 @@ class Stage5 extends Phaser.Scene {
         // SCENE SPECIFIC GAME OBJECTS
 
         // Reset Values
-        playerLife = 100;
-        enemy1Life = 50;
-        enemy2Life = 70;
-        enemy3Life = 25;
+        playerLife = 175;
+        enemy1Life = 150;
+        enemy2Life = 160;
+        enemy3Life = 70;
+        enemy4Life = 70;
         playerAlive = true;
         enemy1Alive = true;
         enemy2Alive = true;
@@ -636,10 +639,32 @@ class Stage5 extends Phaser.Scene {
         }
 
         var boundsP = player.getBounds();
+
+        var boundsE1 = enemy1.getBounds();
+
+        if ((Phaser.Geom.Rectangle.Overlaps(boundsP, boundsE1)) && playerAlive && enemy1Alive) {
+            playerLife -= 0.12
+            if (playerLife <= 0) {
+                player.disableBody(true, true);
+                player.setActive(false);
+                player.setVisible(false);
+                playerAlive = false;
+                soundtrack5.stop();
+            }
+            this.updatePlayerLifeText()
+            player.setTint('0xff0000');
+            this.time.addEvent({
+                delay: 300,
+                callback: () => {
+                    player.clearTint();
+                }
+            })
+        }
+
         var boundsE2 = enemy2.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsP, boundsE2)) && playerAlive && enemy2Alive) {
-            playerLife -= 0.1
+            playerLife -= 0.12
             if (playerLife <= 0) {
                 player.disableBody(true, true);
                 player.setActive(false);
@@ -810,7 +835,7 @@ class Stage5 extends Phaser.Scene {
               enemy1Life = 0
             }
             else {
-              enemy1Life -= 10
+              enemy1Life -= 20
             }
             enemy1LifeText.setText('Robot Life: ' + enemy1Life);
             enemy1.setTint('0xff0000');
@@ -841,7 +866,7 @@ class Stage5 extends Phaser.Scene {
               enemy2Life = 0
             }
             else {
-              enemy2Life -= 10
+              enemy2Life -= 20
             }
             enemy2LifeText.setText('Spy Bot Life: ' + enemy2Life);
             enemy2.setTint('0xff0000');
@@ -873,7 +898,7 @@ class Stage5 extends Phaser.Scene {
               enemy3Life = 0
             }
             else {
-              enemy3Life -= 5
+              enemy3Life -= 20
             }
             enemy3LifeText.setText('Drone Life: ' + enemy3Life);
             enemy3.setTint('0xff0000');
@@ -1110,7 +1135,7 @@ class Laser5 extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
         }
         else if (Phaser.Geom.Rectangle.Overlaps(this.getBounds(), player.getBounds()) && playerAlive) {
-            playerLife -= 5;
+            playerLife -= 10;
             player.setTint('0xff0000');
             playerDmg = true;
             this.setActive(false);
@@ -1188,7 +1213,7 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), enemy1.getBounds())) && enemy1Alive) {
             this.setActive(false);
             this.setVisible(false);
-            enemy1Life -= 5;
+            enemy1Life -= 10;
             if (!playerDetected) {
                 playerDetected = true;
             }
@@ -1199,7 +1224,7 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), enemy2.getBounds())) && enemy2Alive) {
             this.setActive(false);
             this.setVisible(false);
-            enemy2Life -= 5;
+            enemy2Life -= 10;
             if (!playerDetected) {
                 playerDetected = true;
             }
@@ -1210,7 +1235,7 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), enemy3.getBounds())) && enemy3Alive) {
             this.setActive(false);
             this.setVisible(false);
-            enemy3Life -= 5;
+            enemy3Life -= 10;
             if (!playerDetected) {
                 playerDetected = true;
             }

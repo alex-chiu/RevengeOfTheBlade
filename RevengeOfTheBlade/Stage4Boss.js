@@ -214,20 +214,20 @@ class Stage4Boss extends Phaser.Scene {
 
         // Reset Values
         //playerLife = Math.floor(playerLife);
-        playerLife = 150;
+        playerLife = 155;
         daggersAlive = true;
         swordAlive = true;
         playerAlive = true;
 
         lootCounter1 = 0;
 
-        helicopterLife = 150;
+        helicopterLife = 130;
         helicopterAlive = true;
-        helicopterLifeText = 150;
+        helicopterLifeText = 130;
 
-        helicopter2Life = 200;
+        helicopter2Life = 140;
         helicopter2Alive = true;
-        helicopter2LifeText = 200;
+        helicopter2LifeText = 140;
 
         tankLife = 200;
         tankAlive = true;
@@ -313,8 +313,8 @@ class Stage4Boss extends Phaser.Scene {
         this.physics.add.collider(spike2, platforms);
 
 
-        this.label = this.add.text(8, 570, '', { fontSize: '17px' }).setWordWrapWidth(800);
-        this.typewriteText('You have entered a warzone. Jump on the clouds to collect the weapons!');
+        this.label = this.add.text(8, 570, '', { fontSize: '13px' }).setWordWrapWidth(800);
+        this.typewriteText('You have entered a warzone. Jump on the pollution clouds to collect the weapons!');
     }
 
     // Constantly Updating Game Loop
@@ -866,12 +866,16 @@ class Stage4Boss extends Phaser.Scene {
 
     pickupLoot(player, swordLoot) {
         swordLoot.disableBody(true, true);
-        swordAlive = false
+        swordAlive = false;
+        playerLife += 5;
+
     }
 
     pickupDag(player, daggerLoot) {
         daggerLoot.disableBody(true, true);
-        daggersAlive = false
+        daggersAlive = false;
+        playerLife += 5;
+
     }
 
     // Makes sure each sprite is in the same position.
@@ -1106,7 +1110,7 @@ class Stage4Boss extends Phaser.Scene {
                 tankLife = 0
             }
             else {
-                tankLife -= 10
+                tankLife -= 17
             }
             tankLifeText.setText('Tank Life: ' + tankLife);
             tank.setTint('0xff0000');
@@ -1132,7 +1136,7 @@ class Stage4Boss extends Phaser.Scene {
                 helicopterLife = 0
             }
             else {
-                helicopterLife -= 10
+                helicopterLife -= 17
             }
             helicopterLifeText.setText('Attack Helicopter Life: ' + helicopterLife);
             helicopter.setTint('0xff0000');
@@ -1158,7 +1162,7 @@ class Stage4Boss extends Phaser.Scene {
                 helicopter2Life = 0
             }
             else {
-                helicopter2Life -= 10
+                helicopter2Life -= 17
             }
             helicopter2LifeText.setText('Missile Helicopter Life: ' + helicopter2Life);
             helicopter2.setTint('0xff0000');
@@ -1269,7 +1273,7 @@ class Ammo4 extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
         }
         else if (Phaser.Geom.Rectangle.Overlaps(this.getBounds(), player.getBounds()) && playerAlive) {
-            playerLife -= 5;
+            playerLife -= 8;
             player.setTint('0xff0000');
             playerDmg = true;
             this.setActive(false);
@@ -1398,10 +1402,11 @@ class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
         }
         // Check dagger overlap with enemies
+        // S4 RANGE DPS: 9
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), tank.getBounds())) && tankAlive) {
             this.setActive(false);
             this.setVisible(false);
-            tankLife -= 5;
+            tankLife -= 9;
             if (!playerDetected) {
                 playerDetected = true;
             }
@@ -1412,7 +1417,7 @@ class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), helicopter.getBounds())) && helicopterAlive) {
             this.setActive(false);
             this.setVisible(false);
-            helicopterLife -= 5;
+            helicopterLife -= 9;
             if (!playerDetected) {
                 playerDetected = true;
             }
@@ -1423,7 +1428,7 @@ class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), helicopter2.getBounds())) && helicopter2Alive) {
             this.setActive(false);
             this.setVisible(false);
-            helicopter2Life -= 5;
+            helicopter2Life -= 9;
             if (!playerDetected) {
                 playerDetected = true;
             }

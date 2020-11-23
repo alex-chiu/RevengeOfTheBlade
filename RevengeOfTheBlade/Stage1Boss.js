@@ -200,7 +200,7 @@ class Stage1Boss extends Phaser.Scene {
         // Reset Values
         //playerLife = Math.floor(playerLife);
         playerLife = 100;
-        trexLife = 100;
+        trexLife = 170;
         playerAlive = true;
         trexAlive = true;
         trexLifeText = 100;
@@ -696,7 +696,7 @@ class Stage1Boss extends Phaser.Scene {
           playerLife = 0
         }
         else{
-          playerLife -= 5;
+          playerLife -= 6;
         }
         lifeText.setText('Life: ' + playerLife);
         player.setTint('0xff0000')
@@ -729,7 +729,7 @@ class Stage1Boss extends Phaser.Scene {
               trexLife = 0
             }
             else{
-              trexLife -= 10
+              trexLife -= 12
             }
             trexLifeText.setText('T-Rex Life: ' + trexLife);
             trex.setTint('0xff0000');
@@ -830,7 +830,7 @@ class DaggerS1B extends Phaser.Physics.Arcade.Sprite {
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), trex.getBounds())) && trexAlive) {
             this.setActive(false);
             this.setVisible(false);
-            trexLife -= 5;
+            trexLife -= 6;
             if (!playerDetected) {
                 playerDetected = true;
             }
@@ -855,7 +855,7 @@ class DaggerS1B extends Phaser.Physics.Arcade.Sprite {
         }
 
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), balloon.getBounds())) && balloonAlive) {
-            balloonLife -= 5;
+            balloonLife -= 6;
             balloon.setTint('0xff0000')
             balloonDmg = true;
 

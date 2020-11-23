@@ -230,20 +230,20 @@ class Stage4 extends Phaser.Scene {
         // Reset Values
         playerLife = 150;
 
-        policeLife = 180;
+        policeLife = 95;
         playerAlive = true;
         policeAlive = true;
-        policeLifeText = 180;
+        policeLifeText = 95;
 
-        carLife = 200;
+        carLife = 165;
         carAlive = true;
         carAlive = true;
-        carLifeText = 200;
+        carLifeText = 165;
 
-        politicianLife = 150;
+        politicianLife = 80;
         politicianAlive = true;
         politicianAlive = true;
-        politicianLifeText = 150;
+        politicianLifeText = 80;
 
         lootCounter1 = 0;
         lootCounterCar = 0;
@@ -552,7 +552,7 @@ class Stage4 extends Phaser.Scene {
         var boundsC = car.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsPl, boundsC)) && playerAlive && carAlive) {
-            playerLife -= 0.15;
+            playerLife -= 0.19;
             if (playerLife <= 0) {
                 player.disableBody(true, true);
                 player.setActive(false);
@@ -981,10 +981,11 @@ class DaggerS4 extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
         }
         // Check dagger overlap with enemies
+        // S4 RANGE DPS: 8
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), police.getBounds())) && policeAlive) {
             this.setActive(false);
             this.setVisible(false);
-            policeLife -= 5;
+            policeLife -= 8;
             if (!playerDetected) {
                 playerDetected = true;
             }
@@ -995,7 +996,7 @@ class DaggerS4 extends Phaser.Physics.Arcade.Sprite {
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), politician.getBounds())) && politicianAlive) {
             this.setActive(false);
             this.setVisible(false);
-            politicianLife -= 5;
+            politicianLife -= 8;
             if (!playerDetected) {
                 playerDetected = true;
             }
@@ -1006,7 +1007,7 @@ class DaggerS4 extends Phaser.Physics.Arcade.Sprite {
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), car.getBounds())) && carAlive) {
             this.setActive(false);
             this.setVisible(false);
-            carLife -= 5;
+            carLife -= 8;
             if (!playerDetected) {
                 playerDetected = true;
             }

@@ -16,7 +16,7 @@ var delX, atkDir, callAttack, delX1;
 var laserGroup, laserGroupSecond;
 var cursors, spaceBar;
 var W, A, S, D;
-var life = 100, bossLife = 100, boss1Life = 100;
+var life = 175, bossLife = 250, boss1Life = 150;
 var lifeText, bossLifeText, boss1LifeText;
 var attackAnimPlaying = false;
 var sky, clouds;
@@ -85,9 +85,9 @@ class RobotBossFight extends Phaser.Scene {
         preattack2 = this.sound.add('preattack2', {volume: 0.15});
 
         // Reset Values
-        life = 100;
-        bossLife = 100;
-        boss1Life = 100;
+        life = 175;
+        bossLife = 250;
+        boss1Life = 150;
         playerAlive = true;
         bossAlive = true;
         boss1Alive = true;
@@ -111,9 +111,9 @@ class RobotBossFight extends Phaser.Scene {
         sky.fixedToCamera = true;
 
         // Text
-        lifeText = this.add.text(15, 15, 'Life: 100', { fontSize: '25px', fill: '#ffffff' });
-        bossLifeText = this.add.text(580, 15, 'Boss Life: 100', { fontSize: '15px', fill: '#ffffff' });
-        boss1LifeText = this.add.text(350, 15, 'Boss1 Life: 100', { fontSize: '15px', fill: '#ffffff' });
+        lifeText = this.add.text(15, 15, 'Life: 175', { fontSize: '25px', fill: '#ffffff' });
+        bossLifeText = this.add.text(580, 15, 'Android Life: 250', { fontSize: '15px', fill: '#ffffff' });
+        boss1LifeText = this.add.text(350, 15, 'Robot Life: 150', { fontSize: '15px', fill: '#ffffff' });
 
         // Platforms
         platforms = this.physics.add.staticGroup();
@@ -406,7 +406,7 @@ class RobotBossFight extends Phaser.Scene {
         var boundsRB1 = boss1.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsPlayer, boundsRB1)) && playerAlive && boss1Alive) {
-            life -= 0.1
+            life -= 0.13
             if (life <= 0) {
                 player.disableBody(true, true);
                 player.setActive(false);
@@ -572,9 +572,9 @@ class RobotBossFight extends Phaser.Scene {
               bossLife = 0
             }
             else{
-              bossLife -= 10
+              bossLife -= 20
             }
-            bossLifeText.setText('Boss Life: ' + bossLife);
+            bossLifeText.setText('Android Life: ' + bossLife);
             boss.setTint('0xff0000')
             this.time.addEvent({
                 delay: 400,
@@ -608,9 +608,9 @@ class RobotBossFight extends Phaser.Scene {
               boss1Life = 0
             }
             else{
-              boss1Life -= 10
+              boss1Life -= 20
             }
-            boss1LifeText.setText('Boss1 Life: ' + boss1Life);
+            boss1LifeText.setText('Robot Life: ' + boss1Life);
             boss1.setTint('0xff0000')
             this.time.addEvent({
                 delay: 400,
@@ -880,7 +880,7 @@ class Laser extends Phaser.Physics.Arcade.Sprite {
               life = 0
             }
             else{
-              life -= 5;
+              life -= 8;
               this.setActive(false);
               this.setVisible(false);
             }
@@ -932,7 +932,7 @@ class LaserSecond extends Phaser.Physics.Arcade.Sprite {
               life = 0
             }
             else{
-              life -= 5;
+              life -= 8;
               this.setActive(false);
               this.setVisible(false);
             }
@@ -1007,13 +1007,13 @@ class Dagger1 extends Phaser.Physics.Arcade.Sprite {
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), boss.getBounds())) && bossAlive) {
             this.setActive(false);
             this.setVisible(false);
-            bossLife -= 5;
+            bossLife -= 10;
 
             if (!playerDetected) {
                 playerDetected = true;
             }
 
-            bossLifeText.setText('Boss Life: ' + bossLife);
+            bossLifeText.setText('Android Life: ' + bossLife);
             boss.setTint('0xff0000');
             bossDmg = true;
 
@@ -1027,13 +1027,13 @@ class Dagger1 extends Phaser.Physics.Arcade.Sprite {
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), boss1.getBounds())) && boss1Alive) {
             this.setActive(false);
             this.setVisible(false);
-            boss1Life -= 5;
+            boss1Life -= 10;
 
             if (!playerDetected) {
                 playerDetected = true;
             }
 
-            boss1LifeText.setText('Boss1 Life: ' + boss1Life);
+            boss1LifeText.setText('Robot Life: ' + boss1Life);
             boss1.setTint('0xff0000');
             boss1Dmg = true;
 
