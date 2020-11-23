@@ -16,7 +16,7 @@ var delX, atkDir, callAttack, delX1;
 var laserGroup, laserGroupSecond;
 var cursors, spaceBar;
 var W, A, S, D;
-var life = 175, bossLife = 250, boss1Life = 150;
+var life = 175, bossLife = 150, boss1Life = 250;
 var lifeText, bossLifeText, boss1LifeText;
 var attackAnimPlaying = false;
 var sky, clouds;
@@ -86,8 +86,8 @@ class RobotBossFight extends Phaser.Scene {
 
         // Reset Values
         life = 175;
-        bossLife = 250;
-        boss1Life = 150;
+        bossLife = 150;
+        boss1Life = 250;
         playerAlive = true;
         bossAlive = true;
         boss1Alive = true;
