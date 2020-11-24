@@ -23,8 +23,6 @@ var healthLoot;
 var lavaF;
 
 var balloon;
-var balloonLife = 5;
-var balloonDmg;
 var balloonAlive = true;
 var dirB = 1, dirDa = 1;
 var dags, dagsAlive = true;
@@ -209,7 +207,6 @@ class Stage1Boss extends Phaser.Scene {
         attackAnimPlaying = false;
         dirB = 1;
         dirDa = 1;
-        balloonLife = 10;
         balloonAlive = true;
         textAlive = true;
 
@@ -440,15 +437,7 @@ class Stage1Boss extends Phaser.Scene {
             })
         }
 
-        if (balloonDmg) {
-            this.time.addEvent({
-                delay: 200,
-                callback: () => {
-                    balloon.clearTint();
-                    balloonDmg = false;
-                }
-            })
-        }
+
 
         if (playerDmg) {
             this.time.addEvent({
@@ -855,10 +844,11 @@ class DaggerS1B extends Phaser.Physics.Arcade.Sprite {
         }
 
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), balloon.getBounds())) && balloonAlive) {
-            balloonLife -= 6;
-            balloon.setTint('0xff0000')
-            balloonDmg = true;
-
+            balloon.disableBody(true, true);
+            balloonAlive = false;
+            dags.body.setAllowGravity(true);
+            dags.setCollideWorldBounds(true);
+            dags.setBounce(0.3);
             var x0 = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
             var x1 = Phaser.Math.Between(50, 750);
             var x2 = Phaser.Math.Between(200, 600);
@@ -883,14 +873,7 @@ class DaggerS1B extends Phaser.Physics.Arcade.Sprite {
             lootCounter1 += 1
         }
 
-        if (balloonLife == 0) {
-            balloon.disableBody(true, true);
-            balloonAlive = false;
-            dags.body.setAllowGravity(true);
-            dags.setCollideWorldBounds(true);
-            dags.setBounce(0.3);
 
-        }
 
 
     }
