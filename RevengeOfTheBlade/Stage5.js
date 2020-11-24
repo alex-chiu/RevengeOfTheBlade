@@ -29,9 +29,9 @@ var dir5 = 1;
 // Enemies
 var enemy1, enemy2, enemy3, enemy4;
 var delX1, delX2, dronePos, delX3, delY3, delX4, delY4;
-var enemy1Life = 150, enemy2Life = 160, enemy3Life = 70, enemy3Life = 70, enemy4Life = 70;
+var enemy1Life = 150, enemy2Life = 160, enemy3Life = 140;
 var enemy1Alive = true, enemy2Alive = true, enemy3Alive = true, enemy4Alive = true;
-var enemy1LifeText = 150, enemy2LifeText = 160, enemy3LifeText = 70, enemy4LifeText = 70;
+var enemy1LifeText = 150, enemy2LifeText = 160, enemy3LifeText = 140;
 var enemy1Dmg = false, enemy2Dmg = false, enemy3Dmg = false, enemy4Dmg = false;
 
 var dirE4 = 1;
@@ -224,15 +224,14 @@ class Stage5 extends Phaser.Scene {
         playerLife = 175;
         enemy1Life = 150;
         enemy2Life = 160;
-        enemy3Life = 70;
-        enemy4Life = 70;
+        enemy3Life = 140;
         playerAlive = true;
         enemy1Alive = true;
         enemy2Alive = true;
         enemy3Alive = true;
-        enemy1LifeText = 50;
-        enemy2LifeText = 70;
-        enemy3LifeText = 40;
+        enemy1LifeText = 150;
+        enemy2LifeText = 160;
+        enemy3LifeText = 140;
         lootCounter1 = 0;
         lootCounter2 = 0;
         lootCounter3 = 0;
@@ -265,7 +264,7 @@ class Stage5 extends Phaser.Scene {
         // Enemy Life Text
         enemy1LifeText = this.add.text(590, 20, 'Robot Life: 150', { fontSize: '15px', fill: '#ffffff' });
         enemy2LifeText = this.add.text(390, 20, 'Spy Bot Life: 160', { fontSize: '15px', fill: '#ffffff' });
-        enemy3LifeText = this.add.text(190, 20, 'Drone Life: 70', { fontSize: '15px', fill: '#ffffff' });
+        enemy3LifeText = this.add.text(190, 20, 'Drone Life: 140', { fontSize: '15px', fill: '#ffffff' });
 
         // Enemy Overlap
         this.physics.add.collider(enemy1, platforms);
@@ -831,7 +830,7 @@ class Stage5 extends Phaser.Scene {
         var boundsB = enemy1.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && enemy1Alive) {
-            if (enemy1Life < 10) {
+            if (enemy1Life < 20) {
               enemy1Life = 0
             }
             else {
@@ -862,7 +861,7 @@ class Stage5 extends Phaser.Scene {
         var boundsB = enemy2.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && enemy2Alive) {
-            if (enemy2Life < 10) {
+            if (enemy2Life < 20) {
               enemy2Life = 0
             }
             else {
@@ -894,7 +893,7 @@ class Stage5 extends Phaser.Scene {
         var boundsB = enemy3.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && enemy3Alive) {
-            if (enemy3Life < 5) {
+            if (enemy3Life < 20) {
               enemy3Life = 0
             }
             else {
@@ -1211,9 +1210,14 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
         }
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), enemy1.getBounds())) && enemy1Alive) {
+            if (enemy1Life < 10){
+              enemy1Life = 0
+            }
+            else{
+              enemy1Life -= 10
+            }
             this.setActive(false);
             this.setVisible(false);
-            enemy1Life -= 10;
             if (!playerDetected) {
                 playerDetected = true;
             }
@@ -1222,9 +1226,14 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
             enemy1Dmg = true;
         }
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), enemy2.getBounds())) && enemy2Alive) {
+            if (enemy2Life < 10){
+              enemy2Life = 0
+            }
+            else{
+              enemy2Life -= 10
+            }
             this.setActive(false);
             this.setVisible(false);
-            enemy2Life -= 10;
             if (!playerDetected) {
                 playerDetected = true;
             }
@@ -1233,9 +1242,14 @@ class Dagger5 extends Phaser.Physics.Arcade.Sprite {
             enemy2Dmg = true;
         }
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), enemy3.getBounds())) && enemy3Alive) {
+            if (enemy3Life < 10){
+              enemy3Life = 0
+            }
+            else{
+              enemy3Life -= 10
+            }
             this.setActive(false);
             this.setVisible(false);
-            enemy3Life -= 10;
             if (!playerDetected) {
                 playerDetected = true;
             }

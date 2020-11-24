@@ -437,7 +437,7 @@ class Stage1 extends Phaser.Scene {
         // if (W.isDown && D.isDown && player.body.touching.down) {
         //     player.setVelocityY(-100);
         //     player.setVelocityX(50);
-        // } 
+        // }
 
         // Melee Attack
         if (spaceBar.isDown) {
@@ -1062,7 +1062,7 @@ class Stage1 extends Phaser.Scene {
         var boundsB = ptero.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && pteroAlive) {
-            if (pteroLife < 5) {
+            if (pteroLife < 10) {
               pteroLife = 0
             }
             else {
@@ -1093,7 +1093,7 @@ class Stage1 extends Phaser.Scene {
         var boundsB = ptero2.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && ptero2Alive) {
-            if (ptero2Life < 5) {
+            if (ptero2Life < 10) {
                 ptero2Life = 0
             }
             else {
@@ -1172,9 +1172,14 @@ class DaggerS1 extends Phaser.Physics.Arcade.Sprite {
         }
         // Check dagger overlap with enemies
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), raptor.getBounds())) && raptorAlive) {
+            if (raptorLife < 5){
+              raptorLife = 0
+            }
+            else{
+              raptorLife -= 5;
+            }
             this.setActive(false);
             this.setVisible(false);
-            raptorLife -= 5;
             attack1_creature1.play();
             if (!playerDetected) {
                 playerDetected = true;
@@ -1185,9 +1190,14 @@ class DaggerS1 extends Phaser.Physics.Arcade.Sprite {
         }
 
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), ptero.getBounds())) && pteroAlive) {
+            if (pteroLife < 5){
+              pteroLife = 0
+            }
+            else{
+              pteroLife -= 5;
+            }
             this.setActive(false);
             this.setVisible(false);
-            pteroLife -= 5;
             attack1_creature.play();
             if (!playerDetected) {
                 playerDetected = true;
@@ -1198,9 +1208,14 @@ class DaggerS1 extends Phaser.Physics.Arcade.Sprite {
         }
 
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), ptero2.getBounds())) && ptero2Alive) {
+            if (ptero2Life < 5){
+              ptero2Life = 0
+            }
+            else{
+              ptero2Life -= 5;
+            }
             this.setActive(false);
             this.setVisible(false);
-            ptero2Life -= 5;
             attack1_creature.play();
             if (!playerDetected) {
                 playerDetected = true;

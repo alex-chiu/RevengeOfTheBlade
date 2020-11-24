@@ -274,9 +274,9 @@ class Stage4 extends Phaser.Scene {
         politician.body.setGravityY(300);
 
         // Enemy Life Text
-        policeLifeText = this.add.text(590, 20, 'Police Life: 180', { fontSize: '15px', fill: '#ffffff' });
-        carLifeText = this.add.text(190, 20, 'Car Battery: 200', { fontSize: '15px', fill: '#ffffff' });
-        politicianLifeText = this.add.text(375, 20, 'Politician Life: 150', { fontSize: '15px', fill: '#ffffff' });
+        policeLifeText = this.add.text(590, 20, 'Police Life: 95', { fontSize: '15px', fill: '#ffffff' });
+        carLifeText = this.add.text(190, 20, 'Car Battery: 165', { fontSize: '15px', fill: '#ffffff' });
+        politicianLifeText = this.add.text(375, 20, 'Politician Life: 80', { fontSize: '15px', fill: '#ffffff' });
 
 
         // Enemy Overlap
@@ -857,7 +857,7 @@ class Stage4 extends Phaser.Scene {
         var boundsB = police.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && policeAlive) {
-            if (policeLife < 10) {
+            if (policeLife < 15) {
               policeLife = 0
             }
             else {
@@ -883,7 +883,7 @@ class Stage4 extends Phaser.Scene {
         var boundsB = car.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && carAlive) {
-            if (carLife < 10) {
+            if (carLife < 15) {
                 carLife = 0;
             }
             else {
@@ -909,7 +909,7 @@ class Stage4 extends Phaser.Scene {
         var boundsB = politician.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && politicianAlive) {
-            if (politicianLife < 10) {
+            if (politicianLife < 15) {
                 politicianLife = 0
             }
             else {
@@ -983,9 +983,14 @@ class DaggerS4 extends Phaser.Physics.Arcade.Sprite {
         // Check dagger overlap with enemies
         // S4 RANGE DPS: 8
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), police.getBounds())) && policeAlive) {
+            if (policeLife < 8){
+              policeLife = 0
+            }
+            else{
+              policeLife -= 8;
+            }
             this.setActive(false);
             this.setVisible(false);
-            policeLife -= 8;
             if (!playerDetected) {
                 playerDetected = true;
             }
@@ -994,9 +999,14 @@ class DaggerS4 extends Phaser.Physics.Arcade.Sprite {
             policeDmg = true;
         }
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), politician.getBounds())) && politicianAlive) {
+            if (politicianLife < 8){
+              politicianLife = 0
+            }
+            else{
+              politicianLife -= 8;
+            }
             this.setActive(false);
             this.setVisible(false);
-            politicianLife -= 8;
             if (!playerDetected) {
                 playerDetected = true;
             }
@@ -1005,9 +1015,14 @@ class DaggerS4 extends Phaser.Physics.Arcade.Sprite {
             politicianDmg = true;
         }
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), car.getBounds())) && carAlive) {
+            if (carLife < 8){
+              carLife = 0
+            }
+            else{
+              carLife -= 8;
+            }
             this.setActive(false);
             this.setVisible(false);
-            carLife -= 8;
             if (!playerDetected) {
                 playerDetected = true;
             }

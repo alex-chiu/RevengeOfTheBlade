@@ -568,7 +568,7 @@ class RobotBossFight extends Phaser.Scene {
         var boundsB = boss.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && bossAlive) {
-            if (bossLife < 10){
+            if (bossLife < 20){
               bossLife = 0
             }
             else{
@@ -604,7 +604,7 @@ class RobotBossFight extends Phaser.Scene {
         var boundsB1 = boss1.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB1)) && boss1Alive) {
-            if (boss1Life < 10){
+            if (boss1Life < 20){
               boss1Life = 0
             }
             else{
@@ -876,7 +876,7 @@ class Laser extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
         }
         else if (Phaser.Geom.Rectangle.Overlaps(this.getBounds(), player.getBounds()) && playerAlive) {
-            if (life < 5){
+            if (life < 8){
               life = 0
             }
             else{
@@ -928,7 +928,7 @@ class LaserSecond extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
         }
         else if (Phaser.Geom.Rectangle.Overlaps(this.getBounds(), player.getBounds()) && playerAlive) {
-            if (life < 5){
+            if (life < 8){
               life = 0
             }
             else{
@@ -1005,9 +1005,14 @@ class Dagger1 extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
         }
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), boss.getBounds())) && bossAlive) {
+            if (bossLife < 10){
+              bossLife = 0
+            }
+            else{
+              bossLife -= 10
+            }
             this.setActive(false);
             this.setVisible(false);
-            bossLife -= 10;
 
             if (!playerDetected) {
                 playerDetected = true;
@@ -1025,9 +1030,14 @@ class Dagger1 extends Phaser.Physics.Arcade.Sprite {
         }
 
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), boss1.getBounds())) && boss1Alive) {
+            if (boss1Life < 10){
+              boss1Life = 0
+            }
+            else{
+              boss1Life -= 10
+            }
             this.setActive(false);
             this.setVisible(false);
-            boss1Life -= 10;
 
             if (!playerDetected) {
                 playerDetected = true;

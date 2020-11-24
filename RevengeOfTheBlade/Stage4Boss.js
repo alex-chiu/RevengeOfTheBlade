@@ -30,8 +30,8 @@ var cloud2Life = 100;
 var daggersAlive = true, swordAlive = true;
 var textAlive5 = true;
 
-var helicopter, helicopterAlive = true, helicopterLife = 140, helicopterLifeText, helicopterDmg;
-var helicopter2, helicopter2Alive = true, helicopter2Life = 150, helicopter2LifeText, helicopter2Dmg;
+var helicopter, helicopterAlive = true, helicopterLife = 130, helicopterLifeText, helicopterDmg;
+var helicopter2, helicopter2Alive = true, helicopter2Life = 140, helicopter2LifeText, helicopter2Dmg;
 var tank, tankAlive = true, tankLife = 200, tankLifeText, tankDmg;
 var ammo, missile;
 
@@ -221,13 +221,13 @@ class Stage4Boss extends Phaser.Scene {
 
         lootCounter1 = 0;
 
-        helicopterLife = 140;
+        helicopterLife = 130;
         helicopterAlive = true;
-        helicopterLifeText = 140;
+        helicopterLifeText = 130;
 
-        helicopter2Life = 150;
+        helicopter2Life = 140;
         helicopter2Alive = true;
-        helicopter2LifeText = 150;
+        helicopter2LifeText = 140;
 
         tankLife = 200;
         tankAlive = true;
@@ -272,8 +272,8 @@ class Stage4Boss extends Phaser.Scene {
         daggerLoot = this.physics.add.image(650, 70, 'dagger');
 
         // Enemy Life Text
-        helicopterLifeText = this.add.text(210, 20, 'Attack Helicopter: 140', { fontSize: '13px', fill: '#ffffff' });
-        helicopter2LifeText = this.add.text(430, 20, 'Missile Helicopter: 150', { fontSize: '13px', fill: '#ffffff' });
+        helicopterLifeText = this.add.text(210, 20, 'Attack Helicopter: 130', { fontSize: '13px', fill: '#ffffff' });
+        helicopter2LifeText = this.add.text(430, 20, 'Missile Helicopter: 140', { fontSize: '13px', fill: '#ffffff' });
         tankLifeText = this.add.text(660, 20, 'Tank Life: 200', { fontSize: '13px', fill: '#ffffff' });
 
 
@@ -313,7 +313,7 @@ class Stage4Boss extends Phaser.Scene {
         this.physics.add.collider(spike2, platforms);
 
 
-        this.label = this.add.text(8, 570, '', { fontSize: '13px' }).setWordWrapWidth(800);
+        this.label = this.add.text(8, 570, '', { fontSize: '16px' }).setWordWrapWidth(800);
         this.typewriteText('You have entered a warzone. Jump on the pollution clouds to collect the weapons!');
     }
 
@@ -469,7 +469,7 @@ class Stage4Boss extends Phaser.Scene {
                     }
                 }
             }
-            
+
         }
 
         // helicopter movement (steady height, fly horizontally while shooting)
@@ -489,12 +489,12 @@ class Stage4Boss extends Phaser.Scene {
         helicopter2.setVelocityY(0);
         if (helicopter2.body.position.x >= 550){
             dirH2 = -1;
-            helicopter2.anims.play('helicopterLeft', true); 
+            helicopter2.anims.play('helicopterLeft', true);
         }
         if (helicopter2.body.position.x <= 50){
             dirH2 = 1;
             helicopter2.anims.play('helicopterRight', true);
-            
+
         }
 
 
@@ -503,7 +503,7 @@ class Stage4Boss extends Phaser.Scene {
             playerDetected = true;
         }
 
-        
+
 
         var boundsPl = player.getBounds();
         var boundsT = tank.getBounds();
@@ -966,7 +966,7 @@ class Stage4Boss extends Phaser.Scene {
         var boundsB = tank.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && tankAlive) {
-            if (tankLife < 10) {
+            if (tankLife < 17) {
                 tankLife = 0
             }
             else {
@@ -992,7 +992,7 @@ class Stage4Boss extends Phaser.Scene {
         var boundsB = helicopter.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && helicopterAlive) {
-            if (helicopterLife < 10) {
+            if (helicopterLife < 17) {
                 helicopterLife = 0
             }
             else {
@@ -1018,7 +1018,7 @@ class Stage4Boss extends Phaser.Scene {
         var boundsB = helicopter2.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && helicopter2Alive) {
-            if (helicopter2Life < 10) {
+            if (helicopter2Life < 17) {
                 helicopter2Life = 0
             }
             else {
@@ -1264,9 +1264,14 @@ class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
         // Check dagger overlap with enemies
         // S4 RANGE DPS: 9
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), tank.getBounds())) && tankAlive) {
+            if (tankLife < 9){
+              tankLife = 0
+            }
+            else{
+              tanklife -= 9
+            }
             this.setActive(false);
             this.setVisible(false);
-            tankLife -= 9;
             if (!playerDetected) {
                 playerDetected = true;
             }
@@ -1275,9 +1280,14 @@ class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
             tankDmg = true;
         }
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), helicopter.getBounds())) && helicopterAlive) {
+            if (helicopterLife < 9){
+              helicopterLife = 0
+            }
+            else{
+              helicopterLife -= 9
+            }
             this.setActive(false);
             this.setVisible(false);
-            helicopterLife -= 9;
             if (!playerDetected) {
                 playerDetected = true;
             }
@@ -1286,9 +1296,14 @@ class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
             helicopterDmg = true;
         }
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), helicopter2.getBounds())) && helicopter2Alive) {
+            if (helicopter2Life < 9){
+              helicopter2Life = 0
+            }
+            else{
+              helicopter2Life -= 9
+            }
             this.setActive(false);
             this.setVisible(false);
-            helicopter2Life -= 9;
             if (!playerDetected) {
                 playerDetected = true;
             }

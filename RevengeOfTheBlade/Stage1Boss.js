@@ -18,7 +18,7 @@ var daggerGroup;
 var button1B;
 var textAlive = true;
 
-var trex, trexAlive = true, trexLife = 100, trexLifeText, trexDmg;
+var trex, trexAlive = true, trexLife = 170, trexLifeText, trexDmg;
 var healthLoot;
 var lavaF;
 
@@ -201,7 +201,7 @@ class Stage1Boss extends Phaser.Scene {
         trexLife = 170;
         playerAlive = true;
         trexAlive = true;
-        trexLifeText = 100;
+        trexLifeText = 170;
         lootCounter1 = 0;
         playerDetected = false;
         attackAnimPlaying = false;
@@ -219,7 +219,7 @@ class Stage1Boss extends Phaser.Scene {
         trex.body.setGravityY(300);
 
         // Enemy Life Text
-        trexLifeText = this.add.text(590, 20, 'T-Rex Life: 100', { fontSize: '15px', fill: '#ffffff' });
+        trexLifeText = this.add.text(590, 20, 'T-Rex Life: 170', { fontSize: '15px', fill: '#ffffff' });
 
         balloon = this.physics.add.image(150, 100, 'balloon');
         balloon.body.setAllowGravity(false);
@@ -681,7 +681,7 @@ class Stage1Boss extends Phaser.Scene {
 
     // Falling
     lavaFall(player, lava) {
-        if (playerLife < 5){
+        if (playerLife < 6){
           playerLife = 0
         }
         else{
@@ -714,7 +714,7 @@ class Stage1Boss extends Phaser.Scene {
         var boundsB = trex.getBounds();
 
         if ((Phaser.Geom.Rectangle.Overlaps(boundsA, boundsB)) && trexAlive) {
-            if (trexLife < 10){
+            if (trexLife < 12){
               trexLife = 0
             }
             else{
@@ -817,9 +817,14 @@ class DaggerS1B extends Phaser.Physics.Arcade.Sprite {
         }
         // Check dagger overlap with enemies
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), trex.getBounds())) && trexAlive) {
+            if (trexLife < 6){
+              trexLife = 0
+            }
+            else{
+              trexLife -= 6
+            }
             this.setActive(false);
             this.setVisible(false);
-            trexLife -= 6;
             if (!playerDetected) {
                 playerDetected = true;
             }
