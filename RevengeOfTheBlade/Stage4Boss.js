@@ -34,6 +34,7 @@ var helicopter, helicopterAlive = true, helicopterLife = 130, helicopterLifeText
 var helicopter2, helicopter2Alive = true, helicopter2Life = 140, helicopter2LifeText, helicopter2Dmg;
 var tank, tankAlive = true, tankLife = 200, tankLifeText, tankDmg;
 var ammo, missile;
+var ammoGroup;
 
 var dirH = 1;
 var dirH2 = 1;
@@ -233,7 +234,7 @@ class Stage4Boss extends Phaser.Scene {
         tankAlive = true;
         tankLifeText = 200;
 
-        playerDetected = false;
+        playerDetected = true;
         attackAnimPlaying = false;
 
         dir = 1;
@@ -265,6 +266,8 @@ class Stage4Boss extends Phaser.Scene {
         tank.displayWidth = game.config.width * 0.4;
         tank.scaleY = tank.scaleX;
         tank.body.setGravityY(300);
+
+        ammoGroup = new AmmoGroup4(this);
 
         cloud = this.physics.add.image(650, 100, 'cloud');
         cloud1 = this.physics.add.image(400, 200, 'cloud');
@@ -425,7 +428,7 @@ class Stage4Boss extends Phaser.Scene {
             tank.anims.play('tankLeft');
         }
         else {
-            delX0 = tank.body.position.x - tank.body.position.x;
+            delX0 = tank.body.position.x - player.body.position.x;
 
             delX1 = helicopter.body.position.x - player.body.position.x;
             delX2 = helicopter2.body.position.x - player.body.position.x;
@@ -474,7 +477,7 @@ class Stage4Boss extends Phaser.Scene {
 
         // helicopter movement (steady height, fly horizontally while shooting)
         // upper heli
-        helicopter.setVelocityX(dirH*45);
+        helicopter.setVelocityX(dirH*70);
         helicopter.setVelocityY(0);
         if (helicopter.body.position.x >= 500){
             dirH = -1;
@@ -485,7 +488,7 @@ class Stage4Boss extends Phaser.Scene {
             helicopter.anims.play('helicopterRight', true);
         }
         // lower heli
-        helicopter2.setVelocityX(dirH2*30);
+        helicopter2.setVelocityX(dirH2*60);
         helicopter2.setVelocityY(0);
         if (helicopter2.body.position.x >= 550){
             dirH2 = -1;
@@ -1103,7 +1106,7 @@ class AmmoGroup4 extends Phaser.Physics.Arcade.Group {
         super(scene.physics.world, scene);
 
         this.createMultiple({
-            classType: Ammo5,
+            classType: Ammo4,
             frameQuantity: 1,
             active: false,
             visible: false,
@@ -1268,7 +1271,7 @@ class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
               tankLife = 0
             }
             else{
-              tanklife -= 9
+              tankLife -= 9
             }
             this.setActive(false);
             this.setVisible(false);
