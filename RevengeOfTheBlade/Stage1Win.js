@@ -20,8 +20,10 @@ class Stage1Win extends Phaser.Scene {
 
       this.add.text(game.config.width/2, 210,'Mission Phase I Part I Complete', { fontSize: '23px', fill: '#37F121' }).setOrigin(0.5);
       this.add.text(game.config.width/2, 240,'Weapon Upgraded: Iron', { fontSize: '23px', fill: '#37F121' }).setOrigin(0.5);
+      this.add.text(game.config.width/2, 270,'Range ATK DMG: 6 // Melee ATK DMG: 12', { fontSize: '22px', fill: '#37F121' }).setOrigin(0.5);
 
-      const finalBossButton = this.add.text(game.config.width/2, 360, 'CONTINUE TO BOSS', { fontSize: '35px', fill: '#b5dbf7' }).setOrigin(0.5);
+
+      const finalBossButton = this.add.text(game.config.width/2, 390, 'CONTINUE TO BOSS', { fontSize: '35px', fill: '#b5dbf7' }).setOrigin(0.5);
       finalBossButton.setInteractive();
       finalBossButton.on('pointerdown', () => {
         this.scene.restart('Stage1');
@@ -29,7 +31,7 @@ class Stage1Win extends Phaser.Scene {
         this.scene.start('Stage1Boss');
       });
 
-      const menuButton = this.add.text(game.config.width/2, 290, 'MENU', { fontSize: '40px', fill: '#8db9d9' }).setOrigin(0.5);
+      const menuButton = this.add.text(game.config.width/2, 330, 'MENU', { fontSize: '40px', fill: '#8db9d9' }).setOrigin(0.5);
       menuButton.setInteractive();
       menuButton.on('pointerdown', () => {
         this.scene.restart('Stage1');
