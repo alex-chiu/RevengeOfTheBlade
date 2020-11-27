@@ -276,8 +276,8 @@ class Stage4Boss extends Phaser.Scene {
 
         // Enemy Life Text
         helicopterLifeText = this.add.text(210, 20, 'Attack Helicopter: 130', { fontSize: '13px', fill: '#ffffff' });
-        helicopter2LifeText = this.add.text(430, 20, 'Missile Helicopter: 140', { fontSize: '13px', fill: '#ffffff' });
-        tankLifeText = this.add.text(660, 20, 'Tank Life: 200', { fontSize: '13px', fill: '#ffffff' });
+        helicopter2LifeText = this.add.text(450, 20, 'Missile Helicopter: 140', { fontSize: '13px', fill: '#ffffff' });
+        tankLifeText = this.add.text(670, 20, 'Tank Life: 200', { fontSize: '13px', fill: '#ffffff' });
 
 
         // Enemy Overlap
@@ -438,11 +438,11 @@ class Stage4Boss extends Phaser.Scene {
             // TANK: shoot if close, else keep moving left /  right
             // Player is left of Tank
             if (player.body.position.x < tank.body.position.x) {
-                if (delX0 > 160) {
+                if (delX0 > 110) {
                     tank.anims.play('tankLeft', true);
                     tank.setVelocityX(-50);
                 }
-                else if (delX0 < 130) {
+                else if (delX0 < 80) {
                     tank.anims.play('tankLeft', true);
                     tank.setVelocityX(50);
                 }
@@ -456,11 +456,11 @@ class Stage4Boss extends Phaser.Scene {
             }
             // Player is right of tank
             else if (player.body.position.x > tank.body.position.x) {
-                if (delX0 > -130) {
+                if (delX0 > -340) {
                     tank.anims.play('tankRight', true);
                     tank.setVelocityX(-35);
                 }
-                else if (delX0 < -160) {
+                else if (delX0 < -370) {
                     tank.anims.play('tankRight', true);
                     tank.setVelocityX(35);
                 }
@@ -1056,10 +1056,10 @@ class Stage4Boss extends Phaser.Scene {
     // Function that shoots ammo from tanks
     shootAmmo(direction) {
         if (direction == 'L') {
-            ammoGroup.fireAmmo(tank.body.position.x - 20, tank.body.position.y + 75, direction);
+            ammoGroup.fireAmmo(tank.body.position.x - 20, tank.body.position.y + 50, direction);
         }
         else if (direction == 'R') {
-            ammoGroup.fireAmmo(tank.body.position.x + 100, tank.body.position.y + 75, direction);
+            ammoGroup.fireAmmo(tank.body.position.x + 335, tank.body.position.y + 50, direction);
         }
     }
 
@@ -1136,7 +1136,7 @@ class Ammo4 extends Phaser.Physics.Arcade.Sprite {
             this.setVisible(false);
         }
         else if (Phaser.Geom.Rectangle.Overlaps(this.getBounds(), player.getBounds()) && playerAlive) {
-            playerLife -= 8;
+            playerLife -= 2;
             player.setTint('0xff0000');
             playerDmg = true;
             this.setActive(false);
