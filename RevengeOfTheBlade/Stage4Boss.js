@@ -81,7 +81,7 @@ class Stage4Boss extends Phaser.Scene {
 
 
         // Boss ammunition
-        this.load.image('ammo', 'assets/ammo.png');
+        this.load.image('ammo', 'assets/ammo1.png');
         this.load.image('missile', 'assets/missile.png');
 
         this.load.image('cloud', 'assets/cloud.png');
