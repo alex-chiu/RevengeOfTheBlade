@@ -38,6 +38,7 @@ var ammoGroup;
 
 var dirH = 1;
 var dirH2 = 1;
+var lootCounter1 = 0, lootCounter1H = 0, lootCounter1T = 0;
 
 var delX0, delX1, delX2, delY1, delY2;
 
@@ -221,6 +222,8 @@ class Stage4Boss extends Phaser.Scene {
         playerAlive = true;
 
         lootCounter1 = 0;
+        lootCounter1T = 0;
+        lootCounter1H = 0;
 
         helicopterLife = 130;
         helicopterAlive = true;
@@ -430,11 +433,12 @@ class Stage4Boss extends Phaser.Scene {
         else {
             delX0 = tank.body.position.x - player.body.position.x;
 
-            delX1 = helicopter.body.position.x - player.body.position.x;
-            delX2 = helicopter2.body.position.x - player.body.position.x;
+            //delX1 = helicopter.body.position.x - player.body.position.x;
+            //delX2 = helicopter2.body.position.x - player.body.position.x;
 
-            delY1 = helicopter.body.position.y - player.body.position.y;
-            delY2 = helicopter2.body.position.y - player.body.position.y;
+            //delY1 = helicopter.body.position.y - player.body.position.y;
+            //delY2 = helicopter2.body.position.y - player.body.position.y;
+
             // TANK: shoot if close, else keep moving left /  right
             // Player is left of Tank
             if (player.body.position.x < tank.body.position.x) {
@@ -980,13 +984,13 @@ class Stage4Boss extends Phaser.Scene {
             attack2_metal.play();
             tank = true;
         }
-        if (tankLife == 0 && lootCounter1 == 0) {
+        if (tankLife == 0 && lootCounter1T == 0) {
             var hLootB1 = swordLoot.create(game.config.width/2, 200, 'swordLoot');
             hLootB1.setBounce(0.5);
             hLootB1.setCollideWorldBounds(true);
             tank.disableBody(true, true);
             tankAlive = false;
-            lootCounter1 += 1
+            lootCounter1T += 1
         }
     }
 
@@ -1006,13 +1010,13 @@ class Stage4Boss extends Phaser.Scene {
             attack2_metal.play();
             helicopter = true;
         }
-        if (helicopterLife == 0 && lootCounter1 == 0) {
+        if (helicopterLife == 0 && lootCounter1H == 0) {
             var hLootB1 = swordLoot.create(game.config.width/2, 200, 'swordLoot');
             hLootB1.setBounce(0.5);
             hLootB1.setCollideWorldBounds(true);
             helicopter.disableBody(true, true);
             helicopterAlive = false;
-            lootCounter1 += 1
+            lootCounter1H += 1
         }
     }
 
@@ -1316,18 +1320,18 @@ class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
         }
 
         // Disable enemies if their health reaches 0
-        if (tankLife == 0 && lootCounter1 == 0) {
+        if (tankLife == 0 && lootCounter1T == 0) {
             var hLoot = swordLoot.create(game.config.width/2, 200, 'swordLoot');
             hLoot.setBounce(0.5);
             hLoot.setCollideWorldBounds(true);
             tank.disableBody(true, true);
             tankAlive = false;
-            lootCounter1 += 1
+            lootCounter1T += 1
         }
-        if (helicopterLife == 0 && lootCounter1 == 0) {
+        if (helicopterLife == 0 && lootCounter1H == 0) {
             helicopter.disableBody(true, true);
             helicopter = false;
-            lootCounter1 += 1
+            lootCounter1H += 1
         }
         if (helicopter2Life == 0 && lootCounter1 == 0) {
             helicopter2.disableBody(true, true);
