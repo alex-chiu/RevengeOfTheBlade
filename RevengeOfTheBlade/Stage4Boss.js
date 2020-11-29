@@ -44,6 +44,7 @@ var delX0;
 
 var swordLoot;
 var daggerLoot;
+var healthLoot;
 var spike, spike1, spike2;
 
 var soundtrack4;
@@ -113,7 +114,9 @@ class Stage4Boss extends Phaser.Scene {
         // Loot
         this.load.image('swordLoot', 'assets/swordLoot.png');
         this.load.image('spikes', 'assets/spikes1.png');
+        this.load.image('healthLoot', 'assets/healthLoot.png');
     }
+
 
     // Create all the Sprites/Images/Platforms
     create() {
@@ -188,6 +191,11 @@ class Stage4Boss extends Phaser.Scene {
         this.physics.add.overlap(player, swordLoot, this.pickupLoot, null, this);
         this.physics.add.overlap(playerMeleeAtk, swordLoot, this.pickupLoot, null, this);
         this.physics.add.collider(swordLoot, platforms);
+
+        healthLoot = this.physics.add.group();
+        this.physics.add.overlap(player, healthLoot, this.pickupHLoot, null, this);
+        this.physics.add.overlap(playerMeleeAtk, healthLoot, this.pickupHLoot, null, this);
+        this.physics.add.collider(healthLoot, platforms);
 
         // Graphics for drawing debug line
         graphics = this.add.graphics();
@@ -737,6 +745,17 @@ class Stage4Boss extends Phaser.Scene {
 
     }
 
+    pickupHLoot(player, healthLoot) {
+        healthLoot.disableBody(true, true);
+        if (playerLife < 145){
+          playerLife += 10;
+        }
+        else {
+          playerLife = 155
+        }
+        this.updatePlayerLifeText()
+    }
+
     pickupDag(player, daggerLoot) {
         daggerLoot.disableBody(true, true);
         daggersAlive = false;
@@ -1010,9 +1029,9 @@ class Stage4Boss extends Phaser.Scene {
             helicopterDmg = true;
         }
         if (helicopterLife == 0 && lootCounter1H == 0) {
-            var hLootB1 = swordLoot.create(game.config.width/2, 200, 'swordLoot');
-            hLootB1.setBounce(0.5);
-            hLootB1.setCollideWorldBounds(true);
+            var hLootH1 = healthLoot.create(helicopter.body.x, helicopter.body.y, 'healthLoot');
+            hLootH1.setBounce(0.5);
+            hLootH1.setCollideWorldBounds(true);
             helicopter.disableBody(true, true);
             helicopterAlive = false;
             lootCounter1H += 1
@@ -1036,9 +1055,9 @@ class Stage4Boss extends Phaser.Scene {
             helicopter2Dmg = true;
         }
         if (helicopter2Life == 0 && lootCounter1 == 0) {
-            var hLootB1 = swordLoot.create(game.config.width/2, 200, 'swordLoot');
-            hLootB1.setBounce(0.5);
-            hLootB1.setCollideWorldBounds(true);
+            var hLootH1 = healthLoot.create(helicopter2.body.x, helicopter2.body.y, 'healthLoot');
+            hLootH1.setBounce(0.5);
+            hLootH1.setCollideWorldBounds(true);
             helicopter2.disableBody(true, true);
             helicopter2Alive = false;
             lootCounter1 += 1
@@ -1343,11 +1362,17 @@ class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
             lootCounter1T += 1
         }
         if (helicopterLife == 0 && lootCounter1H == 0) {
+            var hLootH1 = healthLoot.create(helicopter.body.x, helicopter.body.y, 'healthLoot');
+            hLootH1.setBounce(0.5);
+            hLootH1.setCollideWorldBounds(true);
             helicopter.disableBody(true, true);
             helicopterAlive = false;
             lootCounter1H += 1
         }
         if (helicopter2Life == 0 && lootCounter1 == 0) {
+            var hLootH1 = healthLoot.create(helicopter2.body.x, helicopter2.body.y, 'healthLoot');
+            hLootH1.setBounce(0.5);
+            hLootH1.setCollideWorldBounds(true);
             helicopter2.disableBody(true, true);
             helicopter2Alive = false;
             lootCounter1 += 1
