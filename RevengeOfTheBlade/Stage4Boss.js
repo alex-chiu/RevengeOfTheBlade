@@ -981,7 +981,7 @@ class Stage4Boss extends Phaser.Scene {
             tankLifeText.setText('Tank Life: ' + tankLife);
             tank.setTint('0xff0000');
             attack2_metal.play();
-            tank = true;
+            tankDmg = true;
         }
         if (tankLife == 0 && lootCounter1T == 0) {
             var hLootB1 = swordLoot.create(game.config.width/2, 200, 'swordLoot');
