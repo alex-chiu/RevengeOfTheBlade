@@ -21,7 +21,7 @@ class Storyline1 extends Phaser.Scene {
     create() {
       opendoor = this.sound.add('opendoor', {volume: 0.35});
 
-      script = '⍟ COORDINATES ⍟\n\nPangaea, Earth \n68 Million BCE [Cretaceous Period] \nDimension 46B03 \n\n\nCommencing interdimensional time travel \n\n▁▁▁▂▂▂▃▃▃▃▄▄▄▅▅▅▆▆▆▇▇▇███\n\n\nCaution: Beware of carnivorous dinosaurs. \n\nNote: Your booster suit allows you to leap on top of enemies and reach high above them. \n\nCurrent Weapon Material: Stone \nRange ATK DMG: 5 // Melee ATK DMG: 10 \n\n\n▋▋▋▋▋▋▋▋▋▋ ARRIVED ▋▋▋▋▋▋▋▋▋▋ '
+      script = '⍟ COORDINATES ⍟\n\nPangaea, Earth \n68 Million B.C.E. [Cretaceous Period] \nDimension 46B03 \n\n\nCommencing interdimensional time travel \n\n▁▁▁▂▂▂▃▃▃▃▄▄▄▅▅▅▆▆▆▇▇▇███\n\n\nCaution: Beware of carnivorous dinosaurs. \n\nNote: Your booster suit allows you to leap on top of enemies and reach high above them. \n\nCurrent Weapon Material: Stone \nRange ATK DMG: 5 // Melee ATK DMG: 10 \n\n\n▋▋▋▋▋▋▋▋▋▋ ARRIVED ▋▋▋▋▋▋▋▋▋▋ '
       this.label = this.add.text(95, 95, '', { fontSize: '17px', fill: '#37F121' }).setWordWrapWidth(600);
       this.typewriteText(script);
       ENTER = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);

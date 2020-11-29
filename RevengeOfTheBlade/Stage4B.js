@@ -30,17 +30,17 @@ var cloud2Life = 100;
 var daggersAlive = true, swordAlive = true;
 var textAlive5 = true;
 
-var helicopter, helicopterAlive = true, helicopterLife = 130, helicopterLifeText, helicopterDmg;
-var helicopter2, helicopter2Alive = true, helicopter2Life = 140, helicopter2LifeText, helicopter2Dmg;
-var tank, tankAlive = true, tankLife = 200, tankLifeText, tankDmg;
+var helicopter, helicopterAlive = true, helicopterLife = 130, helicopterLifeText = 130, helicopterDmg = false;
+var helicopter2, helicopter2Alive = true, helicopter2Life = 140, helicopter2LifeText = 140, helicopter2Dmg = false;
+var tank, tankAlive = true, tankLife = 200, tankLifeText, tankDmg = false;
 var ammo, missile;
-var ammoGroup;
+var ammoGroup, missileGroup;
 
 var dirH = 1;
 var dirH2 = 1;
 var lootCounter1 = 0, lootCounter1H = 0, lootCounter1T = 0;
 
-var delX0, delX1, delX2, delY1, delY2;
+var delX0;
 
 var swordLoot;
 var daggerLoot;
@@ -271,6 +271,8 @@ class Stage4Boss extends Phaser.Scene {
         tank.body.setGravityY(300);
 
         ammoGroup = new AmmoGroup4(this);
+        missileGroup = new MissileGroup4(this);
+
 
         cloud = this.physics.add.image(650, 100, 'cloud');
         cloud1 = this.physics.add.image(400, 200, 'cloud');
@@ -433,12 +435,6 @@ class Stage4Boss extends Phaser.Scene {
         else {
             delX0 = tank.body.position.x - player.body.position.x;
 
-            //delX1 = helicopter.body.position.x - player.body.position.x;
-            //delX2 = helicopter2.body.position.x - player.body.position.x;
-
-            //delY1 = helicopter.body.position.y - player.body.position.y;
-            //delY2 = helicopter2.body.position.y - player.body.position.y;
-
             // TANK: shoot if close, else keep moving left /  right
             // Player is left of Tank
             if (player.body.position.x < tank.body.position.x) {
@@ -486,10 +482,12 @@ class Stage4Boss extends Phaser.Scene {
         if (helicopter.body.position.x >= 500){
             dirH = -1;
             helicopter.anims.play('helicopterLeft', true);
+            // this.shootMissile('L');
         }
         if (helicopter.body.position.x <= 5){
             dirH = 1;
             helicopter.anims.play('helicopterRight', true);
+            this.shootMissile('R');
         }
         // lower heli
         helicopter2.setVelocityX(dirH2*60);
@@ -497,10 +495,12 @@ class Stage4Boss extends Phaser.Scene {
         if (helicopter2.body.position.x >= 550){
             dirH2 = -1;
             helicopter2.anims.play('helicopterLeft', true);
+            // this.shootMissile('L');
         }
         if (helicopter2.body.position.x <= 50){
             dirH2 = 1;
             helicopter2.anims.play('helicopterRight', true);
+            this.shootMissile('R');
 
         }
 
@@ -1067,13 +1067,22 @@ class Stage4Boss extends Phaser.Scene {
         }
     }
 
-    // Function that shoots ammo from tanks
+    // Function that shoots missiles from helicopters
     shootMissile(direction) {
-        if (direction == 'L') {
-            missileGroup.fireAmmo(missile.body.position.x - 20, missile.body.position.y + 75, direction);
+        if (direction == 'D') {
+            missileGroup.fireMissile(helicopter.body.position.x - 20, helicopter.body.position.y + 75, direction);
+            missileGroup.fireMissile(helicopter2.body.position.x - 20, helicopter2.body.position.y + 75, direction);
+
         }
         else if (direction == 'R') {
-            missileGroup.fireAmmo(missile.body.position.x + 100, missile.body.position.y + 75, direction);
+            missileGroup.fireMissile(helicopter.body.position.x + 200, helicopter.body.position.y - 30, direction);
+            missileGroup.fireMissile(helicopter2.body.position.x + 200, helicopter2.body.position.y - 30, direction);
+
+        }
+        else if (direction == 'L') {
+            missileGroup.fireMissile(helicopter.body.position.x - 20, helicopter.body.position.y - 30, direction);
+            missileGroup.fireMissile(helicopter2.body.position.x - 20, helicopter2.body.position.y - 30, direction);
+
         }
     }
 }
@@ -1184,7 +1193,7 @@ class MissileGroup4 extends Phaser.Physics.Arcade.Group {
         super(scene.physics.world, scene);
 
         this.createMultiple({
-            classType: Ammo5,
+            classType: Missile4,
             frameQuantity: 1,
             active: false,
             visible: false,
@@ -1192,7 +1201,7 @@ class MissileGroup4 extends Phaser.Physics.Arcade.Group {
         })
     }
 
-    fireAmmo (x, y, direction) {
+    fireMissile (x, y, direction) {
         const missile = this.getFirstDead(false);
         if (missile) {
             missile.fire(x, y, direction);
@@ -1203,7 +1212,7 @@ class MissileGroup4 extends Phaser.Physics.Arcade.Group {
 // Missile Class
 class Missile4 extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
-        super(scene, x, y, 'ammo');
+        super(scene, x, y, 'missile');
     }
 
     preUpdate(time, delta) {
@@ -1236,16 +1245,22 @@ class Missile4 extends Phaser.Physics.Arcade.Sprite {
         this.setVisible(true);
         this.body.setGravityY(0);
 
-        if (direction == 'L') {
-            this.setVelocityX(-250);
-            this.setVelocityY(100);
-            var angle = Math.atan2(-100, 250);
-            this.rotation = angle;
+        if (direction == 'D') {
+            this.setVelocityX(20);
+            this.setVelocityY(20);
+            var angle = Math.atan2(-252, 200);
+            this.rotation = 0.9;
         }
         else if (direction == 'R') {
-            this.setVelocityX(250);
-            this.setVelocityY(100);
-            var angle = Math.atan2(-100, -250);
+            this.setVelocityX(50);
+            this.setVelocityY(20);
+            var angle = Math.atan2(300, 150);
+            this.rotation = angle;
+        }
+        else if (direction == 'L') {
+            this.setVelocityX(50);
+            this.setVelocityY(20);
+            var angle = Math.atan2(-300, 150);
             this.rotation = angle;
         }
     }
