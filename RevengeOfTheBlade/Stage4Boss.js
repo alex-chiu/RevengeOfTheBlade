@@ -255,13 +255,15 @@ class Stage4Boss extends Phaser.Scene {
         helicopter.setCollideWorldBounds(true);
         helicopter.displayWidth = game.config.width * 0.24;
         helicopter.scaleY = helicopter.scaleX;
-        helicopter.body.setAllowGravity(false);
+        //helicopter.body.setAllowGravity(false);
+        helicopter.setGravityY(0);
 
         helicopter2 = this.physics.add.sprite(550, 220, 'helicopter');
         helicopter2.setCollideWorldBounds(true);
         helicopter2.displayWidth = game.config.width * 0.26;
         helicopter2.scaleY = helicopter2.scaleX;
-        helicopter2.body.setAllowGravity(false);
+        //helicopter2.body.setAllowGravity(false);
+        helicopter2.setGravityY(0);
 
         tank = this.physics.add.sprite(650, 400, 'tank');
         tank.setBounce(0);
@@ -273,7 +275,6 @@ class Stage4Boss extends Phaser.Scene {
         ammoGroup = new AmmoGroup4(this);
         missileGroup = new MissileGroup4(this);
 
-
         cloud = this.physics.add.image(650, 100, 'cloud');
         cloud1 = this.physics.add.image(400, 200, 'cloud');
         cloud2 = this.physics.add.image(150, 300, 'cloud');
@@ -281,9 +282,8 @@ class Stage4Boss extends Phaser.Scene {
 
         // Enemy Life Text
         helicopterLifeText = this.add.text(210, 20, 'Attack Helicopter: 130', { fontSize: '13px', fill: '#ffffff' });
-        helicopter2LifeText = this.add.text(450, 20, 'Missile Helicopter: 140', { fontSize: '13px', fill: '#ffffff' });
+        helicopter2LifeText = this.add.text(435, 20, 'Missile Helicopter: 140', { fontSize: '13px', fill: '#ffffff' });
         tankLifeText = this.add.text(670, 20, 'Tank Life: 200', { fontSize: '13px', fill: '#ffffff' });
-
 
         // Enemy Overlap
         this.physics.add.collider(tank, platforms);
@@ -295,7 +295,6 @@ class Stage4Boss extends Phaser.Scene {
 
         this.physics.add.overlap(playerMeleeAtk, helicopter);
         this.physics.add.overlap(playerMeleeAtk, helicopter2);
-
 
         this.physics.add.overlap(player, cloud);
         this.physics.add.overlap(playerMeleeAtk, cloud);
@@ -1008,7 +1007,7 @@ class Stage4Boss extends Phaser.Scene {
             helicopterLifeText.setText('Attack Helicopter Life: ' + helicopterLife);
             helicopter.setTint('0xff0000');
             attack2_metal.play();
-            helicopter = true;
+            helicopterDmg = true;
         }
         if (helicopterLife == 0 && lootCounter1H == 0) {
             var hLootB1 = swordLoot.create(game.config.width/2, 200, 'swordLoot');
@@ -1034,7 +1033,7 @@ class Stage4Boss extends Phaser.Scene {
             helicopter2LifeText.setText('Missile Helicopter Life: ' + helicopter2Life);
             helicopter2.setTint('0xff0000');
             attack2_metal.play();
-            helicopter2 = true;
+            helicopter2Dmg = true;
         }
         if (helicopter2Life == 0 && lootCounter1 == 0) {
             var hLootB1 = swordLoot.create(game.config.width/2, 200, 'swordLoot');
@@ -1345,12 +1344,12 @@ class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
         }
         if (helicopterLife == 0 && lootCounter1H == 0) {
             helicopter.disableBody(true, true);
-            helicopter = false;
+            helicopterAlive = false;
             lootCounter1H += 1
         }
         if (helicopter2Life == 0 && lootCounter1 == 0) {
             helicopter2.disableBody(true, true);
-            helicopter2 = false;
+            helicopter2Alive = false;
             lootCounter1 += 1
         }
     }
