@@ -18,8 +18,8 @@ class Stage4Win extends Phaser.Scene {
       this.background.fillRoundedRect(150, 175, 500, 250, 25)
       this.background.fillStyle('#9ba3a0')
 
-      this.add.text(game.config.width/2, 210,'Mission Phase II part I completed.', { fontSize: '23px', fill: '#37F121' }).setOrigin(0.5);
-      this.add.text(game.config.width/2, 240,'Weapon upgraded from Iron to Steel.', { fontSize: '23px', fill: '#37F121' }).setOrigin(0.5);
+      this.add.text(game.config.width/2, 210,'Mission Phase II Part I completed.', { fontSize: '23px', fill: '#37F121' }).setOrigin(0.5);
+      this.add.text(game.config.width/2, 240,'Weapon upgraded from Steel to Titanium.', { fontSize: '23px', fill: '#37F121' }).setOrigin(0.5);
       this.add.text(game.config.width/2, 270,'Range ATK DMG: 9 // Melee ATK DMG: 17', { fontSize: '22px', fill: '#37F121' }).setOrigin(0.5);
 
 

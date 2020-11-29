@@ -26,7 +26,7 @@ class Storyline3 extends Phaser.Scene {
 
       opendoor = this.sound.add('opendoor', {volume: 0.35});
 
-      script = '✉ Incoming message ✉ \nYour training has served you well, Agent. You have survived Earth\'s modern era. \n\nWeapon material: Upgraded from [ STEEL ] to [ TITANIUM ] to [CHROMIUM ALLOY] \nRange ATK DMG: 10 // Melee ATK DMG: 20 \nHealth restored and wounds treated \n\n\n⍟ COORDINATES ⍟\n\nEurope, Earth \nA.D. 2300 [Era of Android Uprising] \n\nCommencing time travel \n\n▁▁▁▂▂▂▃▃▃▃▄▄▄▅▅▅▆▆▆▇▇▇███\n\nMessage: The mission\'s final phase and ultimate goal is to save humanity from extinction. The technological singularity was reached and humans have lost control of androids taking over civiliation, now under attack by the very technology it brought about. \n\n▋▋▋▋▋▋▋▋▋▋ ARRIVED ▋▋▋▋▋▋▋▋▋▋'
+      script = '✉ Incoming Message ✉ \nYour training has served you well, Agent. You have survived Earth\'s modern era. \n\nWeapon material: Upgraded from [ STEEL ] to [ TITANIUM ] to [CHROMIUM ALLOY] \nRange ATK DMG: 10 // Melee ATK DMG: 20 \nHealth restored and wounds treated \n\n\n⍟ COORDINATES ⍟\n\nEurope, Earth \nA.D. 2300 [Era of Android Uprising] \n\nCommencing time travel \n\n▁▁▁▂▂▂▃▃▃▃▄▄▄▅▅▅▆▆▆▇▇▇███\n\nMessage: The mission\'s final phase and ultimate goal is to save humanity from extinction. Humans have lost control of their own technology, and are now under attack. \n\n▋▋▋▋▋▋▋▋▋▋ ARRIVED ▋▋▋▋▋▋▋▋▋▋'
       this.label = this.add.text(70, 60, '', { fontSize: '17px', fill: '#37F121'}).setWordWrapWidth(650);
       this.typewriteText(script);
       ENTER = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
@@ -46,11 +46,11 @@ class Storyline3 extends Phaser.Scene {
           ++i
         },
         repeat: length -1,
-        delay: 45
+        delay: 30
       })
 
       this.time.addEvent({
-          delay: 6000,
+          delay: 30 * text.length + 1000,
           callback: () => {
               enterText.visible = true;
           }
