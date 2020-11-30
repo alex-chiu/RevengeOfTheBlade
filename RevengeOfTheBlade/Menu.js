@@ -10,6 +10,7 @@ var playButton, tutorialButton, creditButton, audioButton;
 var soundState = 'off';
 var buttonSound, soundtrack;
 var clouds;
+var source, canvas, ctx, imageData;
 
 class Menu extends Phaser.Scene {
     constructor() {
@@ -36,12 +37,12 @@ class Menu extends Phaser.Scene {
       clouds = this.add.tileSprite(400, 300, 800, 600, 'clouds1');
 
       var source = this.textures.get('heroStatic').source[0].image;
-      var canvas = this.textures.createCanvas('pad', 125, 227).source[0].image;
-      var ctx = canvas.getContext('2d');
+      canvas = this.textures.createCanvas('pad', 125, 227).source[0].image;
+      ctx = canvas.getContext('2d');
 
       ctx.drawImage(source, 0, 0);
 
-      var imageData = ctx.getImageData(0, 0, 125, 227);
+      imageData = ctx.getImageData(0, 0, 125, 227);
 
       var x = 0;
       var y = 0;
