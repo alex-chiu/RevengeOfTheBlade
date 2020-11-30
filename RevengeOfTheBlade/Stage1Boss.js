@@ -29,6 +29,7 @@ var dags, dagsAlive = true;
 var swordLoot, swordAlive = true;
 
 var soundtrack1;
+var trexMove;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -90,7 +91,8 @@ class Stage1Boss extends Phaser.Scene {
         this.load.audio('attack2_metal', ['assets/audio/soundeffects/player/preattack2.mp3']);
         // Both
         this.load.audio('attack_noenemy', ['assets/audio/soundeffects/player/attack1_noenemy.mp3']);
-
+        // Enemy
+        this.load.audio('trexMove', ['assets/audio/soundeffects/Stage1/trex_move.wav']);
         // Loot
         this.load.image('healthLoot', 'assets/healthLoot.png');
         this.load.image('swordLoot', 'assets/swordLoot.png');
@@ -102,6 +104,8 @@ class Stage1Boss extends Phaser.Scene {
         soundtrack1 = this.sound.add('stage1Music', {volume: 0.35, loop: true});
         soundtrack1.play();
 
+        this.cameras.main.shake(8000, 0.005);
+
         // Player attack sound effects
         preattack1 = this.sound.add('preattack1', {volume: 0.15});
         attack1_metal = this.sound.add('attack1_metal', {volume: 0.15});
@@ -111,6 +115,9 @@ class Stage1Boss extends Phaser.Scene {
         attack2_throw = this.sound.add('attack2_throw', {volume: 0.15});
         attack2_metal = this.sound.add('attack2_metal', {volume: 0.15});
         attack_noenemy = this.sound.add('attack_noenemy', {volume: 0.15});
+        // Enemy sound effect
+        trexMove = this.sound.add('trexMove', {volume: 0.4, loop: true});
+        trexMove.play();
 
         // Background
         sky = this.add.tileSprite(400, 300, 800, 600, 'sky01');
@@ -189,6 +196,7 @@ class Stage1Boss extends Phaser.Scene {
         button1B.on('pointerdown', () => {
           //soundtrack5.stop();
           soundtrack1.stop();
+          trexMove.stop();
           this.scene.stop('Stage1Boss');
           this.scene.start('Storyline2');
         });
@@ -234,14 +242,13 @@ class Stage1Boss extends Phaser.Scene {
         this.physics.add.overlap(player, dags, this.pickupDag, null, this);
         this.physics.add.overlap(playerMeleeAtk, dags, this.pickupDag, null, this);
 
-        this.label = this.add.text(13, 570, '', { fontSize: '20px' }).setWordWrapWidth(800);
-        this.typewriteText('In boss fights, collect both the daggers and sword to win!');
+        this.label = this.add.text(13, 563, '', { fontSize: '16px' }).setWordWrapWidth(800);
+        this.typewriteText('In boss fights, collect both the daggers and sword to win. \nA volcano has erupted! Avoid contact with lava.');
 
 
         lavaF = this.physics.add.group();
         // this.physics.add.collider(lavaF, platforms);
         this.physics.add.collider(player, lavaF, this.lavaFall, null, this);
-
 
         //game.input.onDown.addOnce(this.label.destroy());
         /*this.label.on('pointerdown', () => {
@@ -257,6 +264,7 @@ class Stage1Boss extends Phaser.Scene {
             this.scene.pause('Stage1Boss');
             this.scene.launch('Stage1BossWin');
             soundtrack1.stop();
+            trexMove.stop();
         }
         else if (!playerAlive) {
             this.scene.pause('Stage1Boss');
@@ -331,10 +339,12 @@ class Stage1Boss extends Phaser.Scene {
             if (player.body.position.x < trex.body.position.x - 5) {
                 trex.anims.play('trexLeft', true);
                 trex.setVelocityX(-70);
+                trexMove.play();
             }
             else if (player.body.position.x > trex.body.position.x + 5) {
                 trex.anims.play('trexRight', true);
                 trex.setVelocityX(70);
+                trexMove.play();
             }
             else {
                 trex.anims.play('trexStatic');
@@ -394,7 +404,7 @@ class Stage1Boss extends Phaser.Scene {
           dags.setVelocityX(0);
         }
 
-        if (D.isDown && this.label.text.length == 58){
+        if (trexLife <= 50){
           this.label.destroy();
           textAlive = false;
         }
@@ -419,7 +429,7 @@ class Stage1Boss extends Phaser.Scene {
 
         },
         repeat: length -1,
-        delay: 30
+        delay: 40
       })
     }
 

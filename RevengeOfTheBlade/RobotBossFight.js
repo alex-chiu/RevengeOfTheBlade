@@ -32,6 +32,7 @@ var lootCounterSw = 0, lootCounterDag = 0;
 // DEBUG PARAMETERS
 var debug = false;
 var graphics, testLine;
+var laserE, laserL, laserR, robot1Move, robot2Move;
 
 // Robot Boss Fight Class
 class RobotBossFight extends Phaser.Scene {
@@ -72,14 +73,33 @@ class RobotBossFight extends Phaser.Scene {
         // soundeffects
         this.load.audio('preattack1', ['assets/audio/soundeffects/player/preattack1.mp3']);
         this.load.audio('preattack2', ['assets/audio/soundeffects/player/preattack2.mp3']);
+        // enemies
+        this.load.audio('laserE', ['assets/audio/soundeffects/Stage5/laser_e.wav']);
+        this.load.audio('laserR', ['assets/audio/soundeffects/Stage5/laser_r.wav']);
+        this.load.audio('laserL', ['assets/audio/soundeffects/Stage5/laser_l.mp3']);
+        this.load.audio('robotMove', ['assets/audio/soundeffects/Stage5/robot_move.wav']);
+        
+        
+        this.load.image('pixel', 'assets/16x16.png');
     }
 
     // Create all the Sprites/Images/Platforms
     create() {
         this.cameras.main.setBackgroundColor('#828b99')
 
-        soundtrack5 = this.sound.add('stage5Music', {volume: 0.15, loop: true});
+        soundtrack5 = this.sound.add('stage5Music', {volume: 0.3, loop: true});
         soundtrack5.play();
+
+        // Enemy sound effects
+        robot1Move = this.sound.add('robotMove', {volume: 0.33, loop: true});
+        robot2Move = this.sound.add('robotMove', {volume: 0.33, loop: true});
+        laserE = this.sound.add('laserE', {volume: 0.2, loop: false});
+        laserR = this.sound.add('laserR', {volume: 0.2, loop: false});
+        laserL = this.sound.add('laserL', {volume: 0.2, loop: false});
+        robot1Move.play();
+        robot2Move.play();
+
+        this.cameras.main.shake(10000, 0.005);
 
         preattack1 = this.sound.add('preattack1', {volume: 0.15});
         preattack2 = this.sound.add('preattack2', {volume: 0.15});
@@ -213,6 +233,21 @@ class RobotBossFight extends Phaser.Scene {
         this.physics.add.overlap(player, boss1);
         this.physics.add.overlap(playerMeleeAtk, boss1);
         this.physics.add.collider(boss1, platforms);
+
+        // let particles = this.add.particles('pixel');
+
+        // let emitter = particles.createEmitter({
+        //     x: 100,
+        //     y: 100,
+        //     frame: 0,
+        //     quantity: 1,
+        //     frequency: 200,
+        //     angle: { min: 0, max: 30 },
+        //     speed: 200,
+        //     gravityY: 100,
+        //     lifespan: { min: 1000, max: 2000 },
+        //     particleClass: Particle
+        // });
     }
 
     // Constantly Updating Game Loop
@@ -228,6 +263,8 @@ class RobotBossFight extends Phaser.Scene {
         }
         if (!swordAlive && !dagsAlive) {
             soundtrack5.stop();
+            robot1Move.stop();
+            robot2Move.stop();
             this.scene.pause('RobotBossFight')
             this.scene.launch('GameCompleted');
         }
@@ -270,6 +307,7 @@ class RobotBossFight extends Phaser.Scene {
 
         // Melee Attack
         if (spaceBar.isDown) {
+            this.cameras.main.shake(2000, 0.0035);
             if (player.body.velocity.x >= 0) {
                 meleeAtkDir = 'R';
             }
@@ -314,6 +352,7 @@ class RobotBossFight extends Phaser.Scene {
                     boss.setVelocityX(0);
                     if (bossAlive) {
                       this.shootLaser('L');
+                      laserR.play();
                     }
                 }
             }
@@ -329,6 +368,7 @@ class RobotBossFight extends Phaser.Scene {
                     boss.setVelocityX(0);
                     if (bossAlive){
                       this.shootLaser('R');
+                      laserL.play();
                     }
 
                 }
@@ -352,6 +392,7 @@ class RobotBossFight extends Phaser.Scene {
                     boss.setVelocityX(0);
                     if (boss1Alive) {
                       this.shootLaser1('L');
+                      laserE.play();
                     }
                 }
             }
@@ -367,6 +408,7 @@ class RobotBossFight extends Phaser.Scene {
                     boss1.setVelocityX(0);
                     if (boss1Alive){
                       this.shootLaser1('R');
+                      laserE.play();
                     }
 
                 }
@@ -392,6 +434,7 @@ class RobotBossFight extends Phaser.Scene {
                 player.setVisible(false);
                 playerAlive = false;
                 soundtrack5.stop();
+
             }
             this.updatePlayerLifeText()
             player.setTint('0xff0000');

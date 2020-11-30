@@ -17,6 +17,7 @@ var daggerGroup;
 // SCENE SPECIFIC VARIABLES
 var buttonS4;
 var soundtrack4;
+var city, protest;
 
 // enemies
 var police, policeAlive = true, policeLife = 180, policeLifeText, policeDmg;
@@ -98,6 +99,10 @@ class Stage4 extends Phaser.Scene {
         // Both
         this.load.audio('attack_noenemy', ['assets/audio/soundeffects/player/attack1_noenemy.mp3']);
 
+        // background
+        this.load.audio('city', ['assets/audio/soundeffects/Stage4/city.wav']);
+        this.load.audio('protest', ['assets/audio/soundeffects/Stage4/protest.mp3']);
+
         // Loot
         this.load.image('healthLoot', 'assets/healthLoot.png');
     }
@@ -106,8 +111,15 @@ class Stage4 extends Phaser.Scene {
     create() {
         this.cameras.main.setBackgroundColor('#828b99');
         // Play background music
-        soundtrack4 = this.sound.add('stage4Music', {volume: 0.23, loop: true});
+        soundtrack4 = this.sound.add('stage4Music', {volume: 0.24, loop: true});
         soundtrack4.play();
+
+        city = this.sound.add('city', {volume: 0.15, loop: true});
+        city.play();
+        protest = this.sound.add('protest', {volume: 0.15, loop: true});
+        protest.play();
+
+        this.cameras.main.shake(5000, 0.0025);
 
         // Player attack sound effects
         preattack1 = this.sound.add('preattack1', {volume: 0.15});
@@ -221,6 +233,8 @@ class Stage4 extends Phaser.Scene {
         buttonS4.setInteractive();
         buttonS4.on('pointerdown', () => {
           soundtrack4.stop();
+          protest.stop();
+          city.stop();
           this.scene.stop('Stage4');
           this.scene.start('Stage4Boss');
         });
@@ -319,6 +333,8 @@ class Stage4 extends Phaser.Scene {
             this.scene.pause('Stage4');
             this.scene.launch('Stage4Win');
             soundtrack4.stop();
+            protest.stop();
+            city.stop();
         }
         else if (!playerAlive) {
             this.scene.pause('Stage4');
@@ -873,6 +889,7 @@ class Stage4 extends Phaser.Scene {
             hLootB1.setBounce(0.5);
             hLootB1.setCollideWorldBounds(true);
             police.disableBody(true, true);
+            this.cameras.main.shake(5000, 0.003);
             policeAlive = false;
             lootCounter1 += 1
         }
@@ -899,6 +916,7 @@ class Stage4 extends Phaser.Scene {
             hLootB1.setBounce(0.5);
             hLootB1.setCollideWorldBounds(true);
             car.disableBody(true, true);
+            this.cameras.main.shake(5000, 0.003);
             carAlive = false;
             lootCounterCar += 1
         }
@@ -925,6 +943,7 @@ class Stage4 extends Phaser.Scene {
             hLootB1.setBounce(0.5);
             hLootB1.setCollideWorldBounds(true);
             politician.disableBody(true, true);
+            this.cameras.main.shake(5000, 0.003);
             politicianAlive = false;
             lootCounterPolit += 1
         }

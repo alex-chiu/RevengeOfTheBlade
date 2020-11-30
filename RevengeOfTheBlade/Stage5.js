@@ -44,6 +44,7 @@ var lootCounter3 = 0;
 
 // SFX
 var soundtrack5;
+var laserE, laserL, laserR, robot1Move, robot2Move;
 var preattack1, preattack2, attack1_metal, attack1_object, attack1_platform;
 var attack2_throw, attack2_metal, attack_noenemy;
 
@@ -74,7 +75,12 @@ class Stage5 extends Phaser.Scene {
         this.load.audio('attack2_metal', ['assets/audio/soundeffects/player/preattack2.mp3']);
         // Both
         this.load.audio('attack_noenemy', ['assets/audio/soundeffects/player/attack1_noenemy.mp3']);
-
+        // Enemies
+        this.load.audio('laserE', ['assets/audio/soundeffects/Stage5/laser_e.wav']);
+        this.load.audio('laserR', ['assets/audio/soundeffects/Stage5/laser_r.wav']);
+        this.load.audio('laserL', ['assets/audio/soundeffects/Stage5/laser_l.mp3']);
+        this.load.audio('robotMove', ['assets/audio/soundeffects/Stage5/robot_move.wav']);
+        
         // Enemy Spritesheets
         this.load.spritesheet('enemy1', 'assets/sprites/robot1.png', { frameWidth: 167, frameHeight: 280 });
         this.load.spritesheet('enemy2', 'assets/sprites/robot2.png', { frameWidth: 133, frameHeight: 195 });
@@ -116,7 +122,17 @@ class Stage5 extends Phaser.Scene {
 
         // Play background music
         soundtrack5 = this.sound.add('stage5Music', {volume: 0.35, loop: true});
-        soundtrack5.play();
+        soundtrack5.play(); 
+
+        // Enemy sound effects
+        robot1Move = this.sound.add('robotMove', {volume: 0.33, loop: true});
+        robot2Move = this.sound.add('robotMove', {volume: 0.33, loop: true});
+        laserE = this.sound.add('laserE', {volume: 0.2, loop: false});
+        laserR = this.sound.add('laserR', {volume: 0.2, loop: false});
+        laserL = this.sound.add('laserL', {volume: 0.2, loop: false});
+
+
+        this.cameras.main.shake(5000, 0.0035);
 
         // Player attack sound effects
         preattack1 = this.sound.add('preattack1', {volume: 0.15});
@@ -298,6 +314,8 @@ class Stage5 extends Phaser.Scene {
         button.setInteractive();
         button.on('pointerdown', () => {
           soundtrack5.stop();
+          robot1Move.stop();
+          robot2Move.stop();
           this.scene.stop('Stage5');
           this.scene.start('RobotBossFight');
         });
@@ -308,6 +326,8 @@ class Stage5 extends Phaser.Scene {
         // Scene End Condition
         if (!enemy1Alive && !enemy2Alive && !enemy3Alive) {
             soundtrack5.stop();
+            robot1Move.stop();
+            robot2Move.stop();
             this.scene.pause('Stage5');
             this.scene.launch('Stage5Win');
         }
@@ -469,14 +489,17 @@ class Stage5 extends Phaser.Scene {
                 enemy1.anims.play('enemy1LeftAtk');
                 if (delX1 > 160) {
                     enemy1.setVelocityX(-50);
+                    robot1Move.play();
                 }
                 else if (delX1 < 130) {
                     enemy1.setVelocityX(50);
+                    robot1Move.play();
                 }
                 else {
                     enemy1.setVelocityX(0);
                     if (enemy1Alive) {
                         this.shootLaser('L');
+                        laserE.play();
                     }
                 }
             }
@@ -485,14 +508,17 @@ class Stage5 extends Phaser.Scene {
                 enemy1.anims.play('enemy1RightAtk');
                 if (delX1 > -130) {
                     enemy1.setVelocityX(-35);
+                    robot1Move.play();
                 }
                 else if (delX1 < -160) {
                     enemy1.setVelocityX(35);
+                    robot1Move.play();
                 }
                 else {
                     enemy1.setVelocityX(0);
                     if (enemy1Alive){
                         this.shootLaser('R');
+                        laserR.play();
                     }
                 }
             }
@@ -501,18 +527,22 @@ class Stage5 extends Phaser.Scene {
                 enemy2.anims.play('enemy2LeftAtk');
                 if (delX2 > 50) {
                     enemy2.setVelocityX(-50);
+                    robot2Move.play();
                 }
                 else if (delX2 <= 50) {
                     enemy2.setVelocityX(50);
+                    robot2Move.play();
                 }
             }
             else if (player.body.position.x > enemy2.body.position.x) {
                 enemy2.anims.play('enemy2RightAtk');
                 if (delX2 < -50) {
                     enemy2.setVelocityX(50);
+                    robot2Move.play();
                 }
                 else if (delX2 > -50) {
                     enemy2.setVelocityX(-50);
+                    robot2Move.play();
                 }
             }
 

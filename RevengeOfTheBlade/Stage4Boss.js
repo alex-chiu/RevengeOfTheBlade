@@ -48,6 +48,7 @@ var healthLoot;
 var spike, spike1, spike2;
 
 var soundtrack4;
+var warzone, missile1, missile2, shooting, tankShoot, tankMove;
 
 // DEBUG PARAMETERS
 var debug = false;
@@ -110,6 +111,13 @@ class Stage4Boss extends Phaser.Scene {
         this.load.audio('attack2_metal', ['assets/audio/soundeffects/player/preattack2.mp3']);
         // Both
         this.load.audio('attack_noenemy', ['assets/audio/soundeffects/player/attack1_noenemy.mp3']);
+        // Enemies 
+        this.load.audio('warzone', ['assets/audio/soundeffects/Stage4/warzone.wav']);
+        this.load.audio('missile1', ['assets/audio/soundeffects/Stage4/missile_s.wav']);
+        this.load.audio('missile2', ['assets/audio/soundeffects/Stage4/missile_f.wav']);
+        this.load.audio('shooting', ['assets/audio/soundeffects/Stage4/shooting.mp3']);
+        this.load.audio('tankMove', ['assets/audio/soundeffects/Stage4/tank_move.mp3']);
+        this.load.audio('tankShoot', ['assets/audio/soundeffects/Stage4/tank_shoot.mp3']);
 
         // Loot
         this.load.image('swordLoot', 'assets/swordLoot.png');
@@ -124,6 +132,21 @@ class Stage4Boss extends Phaser.Scene {
 
         soundtrack4 = this.sound.add('stage4Music', {volume: 0.23, loop: true});
         soundtrack4.play();
+
+        // background noise
+        warzone = this.sound.add('warzone', {volume: 0.06, loop: true});
+        warzone.play();
+        shooting = this.sound.add('shooting', {volume: 0.07, loop: true});
+        shooting.play();
+
+        // sfx
+        missile1 = this.sound.add('missile1', {volume: 0.08, loop: false});
+        missile2 = this.sound.add('missile2', {volume: 0.08, loop: false});
+        tankMove = this.sound.add('tankMove', {volume: 0.08, loop: true});
+        tankShoot = this.sound.add('tankShoot', {volume: 0.05, loop: false});
+        
+
+        this.cameras.main.shake(8000, 0.005);
 
         // Player attack sound effects
         preattack1 = this.sound.add('preattack1', {volume: 0.15});
@@ -216,6 +239,9 @@ class Stage4Boss extends Phaser.Scene {
         buttonB4.setInteractive();
         buttonB4.on('pointerdown', () => {
           soundtrack4.stop();
+          shooting.stop();
+          warzone.stop();
+          tankMove.stop();
           this.scene.stop('Stage4Boss');
           this.scene.start('Storyline3');
         });
@@ -337,6 +363,8 @@ class Stage4Boss extends Phaser.Scene {
         // Scene End Condition
         if (!swordAlive && !daggersAlive) {
             soundtrack4.stop();
+            shooting.stop();
+            warzone.stop();
             this.scene.pause('Stage4Boss');
             this.scene.launch('Stage4BossWin');
         }
@@ -438,9 +466,10 @@ class Stage4Boss extends Phaser.Scene {
         // Enemy Movement
         if (!playerDetected) {
             tank.anims.play('tankLeft');
+            
         }
         else {
-            //delXT = tank.body.position.x - player.body.position.x;
+            delXT = tank.body.position.x - player.body.position.x;
 
             // TANK: shoot if close, else keep moving left /  right
             // Player is left of Tank
@@ -448,16 +477,19 @@ class Stage4Boss extends Phaser.Scene {
                 if (delXT > 110) {
                     tank.anims.play('tankLeft', true);
                     tank.setVelocityX(-50);
+                    tankMove.play();
                 }
                 else if (delXT < 80) {
                     tank.anims.play('tankLeft', true);
                     tank.setVelocityX(50);
+                    tankMove.play();
                 }
                 else {
                     tank.anims.play('tankLeftAtk');
                     tank.setVelocityX(0);
                     if (tankAlive) {
                         this.shootAmmo('L');
+                        tankShoot.play();
                     }
                 }
             }
@@ -466,16 +498,19 @@ class Stage4Boss extends Phaser.Scene {
                 if (delXT > -340) {
                     tank.anims.play('tankRight', true);
                     tank.setVelocityX(-35);
+                    tankMove.play();
                 }
                 else if (delXT < -370) {
                     tank.anims.play('tankRight', true);
                     tank.setVelocityX(35);
+                    tankMove.play();
                 }
                 else {
                     tank.anims.play('tankRightAtk');
                     tank.setVelocityX(0);
                     if (tankAlive){
                         this.shootAmmo('R');
+                        tankShoot.play();
                     }
                 }
             }
@@ -485,7 +520,7 @@ class Stage4Boss extends Phaser.Scene {
         // helicopter movement (steady height, fly horizontally while shooting)
         // upper heli
         helicopter.setVelocityX(dirH*70);
-        helicopter.setVelocityY(0);
+        helicopter.setVelocityY(5);
         if (helicopter.body.position.x >= 500){
             dirH = -1;
             helicopter.anims.play('helicopterLeft', true);
@@ -495,10 +530,11 @@ class Stage4Boss extends Phaser.Scene {
             dirH = 1;
             helicopter.anims.play('helicopterRight', true);
             this.shootMissile('R');
+            missile1.play();
         }
         // lower heli
         helicopter2.setVelocityX(dirH2*60);
-        helicopter2.setVelocityY(0);
+        helicopter2.setVelocityY(5);
         if (helicopter2.body.position.x >= 550){
             dirH2 = -1;
             helicopter2.anims.play('helicopterLeft', true);
@@ -508,6 +544,7 @@ class Stage4Boss extends Phaser.Scene {
             dirH2 = 1;
             helicopter2.anims.play('helicopterRight', true);
             this.shootMissile('R');
+            missile2.play();
 
         }
 
@@ -529,7 +566,10 @@ class Stage4Boss extends Phaser.Scene {
                 player.setActive(false);
                 player.setVisible(false);
                 playerAlive = false;
-                soundtrack1.stop();
+                soundtrack4.stop();
+                warzone.stop();
+                shooting.stop();
+                tankMove.stop();
             }
             this.updatePlayerLifeText()
             player.setTint('0xff0000');
@@ -550,7 +590,10 @@ class Stage4Boss extends Phaser.Scene {
                 player.setActive(false);
                 player.setVisible(false);
                 playerAlive = false;
-                soundtrack1.stop();
+                soundtrack4.stop();
+                warzone.stop();
+                shooting.stop();
+                tankMove.stop();
             }
             this.updatePlayerLifeText()
             player.setTint('0xff0000');
@@ -1090,17 +1133,17 @@ class Stage4Boss extends Phaser.Scene {
         if (direction == 'D') {
             missileGroup.fireMissile(helicopter.body.position.x - 20, helicopter.body.position.y + 75, direction);
             missileGroup.fireMissile(helicopter2.body.position.x - 20, helicopter2.body.position.y + 75, direction);
-
+            this.cameras.main.shake(3000, 0.004)
         }
         else if (direction == 'R') {
             missileGroup.fireMissile(helicopter.body.position.x + 200, helicopter.body.position.y - 30, direction);
             missileGroup.fireMissile(helicopter2.body.position.x + 200, helicopter2.body.position.y - 30, direction);
-
+            this.cameras.main.shake(3000, 0.004)
         }
         else if (direction == 'L') {
             missileGroup.fireMissile(helicopter.body.position.x - 20, helicopter.body.position.y - 30, direction);
             missileGroup.fireMissile(helicopter2.body.position.x - 20, helicopter2.body.position.y - 30, direction);
-
+            this.cameras.main.shake(3000, 0.004)
         }
     }
 }
@@ -1180,6 +1223,9 @@ class Ammo4 extends Phaser.Physics.Arcade.Sprite {
             player.setVisible(false);
             playerAlive = false;
             soundtrack4.stop();
+            shooting.stop();
+            warzone.stop();
+            tankMove.stop();
         }
     }
 
@@ -1390,6 +1436,7 @@ class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
         this.rotation = angle + Math.PI/4;
 
         this.setVelocityX(Math.cos(angle) * 1000);
-        this.setVelocityY(Math.sin(angle) * 1000)
+        this.setVelocityY(Math.sin(angle) * 1000);
     }
 }
+
