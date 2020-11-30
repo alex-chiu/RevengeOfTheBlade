@@ -25,6 +25,11 @@ class Stage5Die extends Phaser.Scene {
       tryAgainButton.on('pointerdown', () => {
         this.scene.stop('Stage5');
         this.scene.stop('Stage5Die');
+        robot1Move.stop();
+        robot2Move.stop();
+        laserE.stop();
+        laserR.stop();
+        laserL.stop();
         this.scene.start('Stage5');
       });
 
@@ -33,6 +38,11 @@ class Stage5Die extends Phaser.Scene {
       menuButton.on('pointerdown', () => {
         this.scene.stop('Stage5');
         this.scene.stop('Stage5Die');
+        robot1Move.stop();
+        robot2Move.stop();
+        laserE.stop();
+        laserR.stop();
+        laserL.stop();
         this.scene.start('MenuBoss4C');
       });
     }

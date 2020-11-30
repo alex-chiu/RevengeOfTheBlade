@@ -111,7 +111,7 @@ class Stage4Boss extends Phaser.Scene {
         this.load.audio('attack2_metal', ['assets/audio/soundeffects/player/preattack2.mp3']);
         // Both
         this.load.audio('attack_noenemy', ['assets/audio/soundeffects/player/attack1_noenemy.mp3']);
-        // Enemies 
+        // Enemies
         this.load.audio('warzone', ['assets/audio/soundeffects/Stage4/warzone.wav']);
         this.load.audio('missile1', ['assets/audio/soundeffects/Stage4/missile_s.wav']);
         this.load.audio('missile2', ['assets/audio/soundeffects/Stage4/missile_f.wav']);
@@ -144,7 +144,7 @@ class Stage4Boss extends Phaser.Scene {
         missile2 = this.sound.add('missile2', {volume: 0.08, loop: false});
         tankMove = this.sound.add('tankMove', {volume: 0.08, loop: true});
         tankShoot = this.sound.add('tankShoot', {volume: 0.05, loop: false});
-        
+
 
         this.cameras.main.shake(8000, 0.005);
 
@@ -362,13 +362,17 @@ class Stage4Boss extends Phaser.Scene {
     update() {
         // Scene End Condition
         if (!swordAlive && !daggersAlive) {
-            soundtrack4.stop();
             shooting.stop();
             warzone.stop();
+            tankMove.stop();
+            soundtrack4.stop();
             this.scene.pause('Stage4Boss');
             this.scene.launch('Stage4BossWin');
         }
         else if (!playerAlive) {
+            shooting.stop();
+            warzone.stop();
+            tankMove.stop();
             soundtrack4.stop();
             this.scene.pause('Stage4Boss');
             this.scene.launch('Stage4BossDie')
@@ -466,7 +470,7 @@ class Stage4Boss extends Phaser.Scene {
         // Enemy Movement
         if (!playerDetected) {
             tank.anims.play('tankLeft');
-            
+
         }
         else {
             delXT = tank.body.position.x - player.body.position.x;
@@ -570,6 +574,7 @@ class Stage4Boss extends Phaser.Scene {
                 warzone.stop();
                 shooting.stop();
                 tankMove.stop();
+                tank.disableBody(true, true)
             }
             this.updatePlayerLifeText()
             player.setTint('0xff0000');
@@ -1050,6 +1055,7 @@ class Stage4Boss extends Phaser.Scene {
             hLootB1.setBounce(0.5);
             hLootB1.setCollideWorldBounds(true);
             tank.disableBody(true, true);
+            tankMove.stop();
             tankAlive = false;
             lootCounter1T += 1
         }
@@ -1352,6 +1358,7 @@ class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
         else if ((Phaser.Geom.Rectangle.Overlaps(this.getBounds(), tank.getBounds())) && tankAlive) {
             if (tankLife < 9){
               tankLife = 0
+              tankMove.stop();
             }
             else{
               tankLife -= 9
@@ -1401,6 +1408,7 @@ class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
         // Disable enemies if their health reaches 0
         if (tankLife == 0 && lootCounter1T == 0) {
             var hLoot = swordLoot.create(game.config.width/2, 200, 'swordLoot');
+            tankMove.stop();
             hLoot.setBounce(0.5);
             hLoot.setCollideWorldBounds(true);
             tank.disableBody(true, true);
@@ -1439,4 +1447,3 @@ class DaggerB4 extends Phaser.Physics.Arcade.Sprite {
         this.setVelocityY(Math.sin(angle) * 1000);
     }
 }
-

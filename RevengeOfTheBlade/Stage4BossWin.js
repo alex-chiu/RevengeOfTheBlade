@@ -26,6 +26,12 @@ class Stage4BossWin extends Phaser.Scene {
       tryAgainButton.on('pointerdown', () => {
         this.scene.restart('Stage4Boss');
         this.scene.stop('Stage4Boss');
+        tankMove.stop();
+        shooting.stop();
+        warzone.stop();
+        missile1.stop();
+        missile2.stop();
+        tankShoot.stop();
         this.scene.start('Storyline3');
       });
 
@@ -34,6 +40,12 @@ class Stage4BossWin extends Phaser.Scene {
       menuButton.on('pointerdown', () => {
         this.scene.restart('Stage4Boss');
         this.scene.stop('Stage4Boss');
+        tankMove.stop();
+        shooting.stop();
+        warzone.stop();
+        missile1.stop();
+        missile2.stop();
+        tankShoot.stop();
         this.scene.start('MenuBoss4C');
       });
     }

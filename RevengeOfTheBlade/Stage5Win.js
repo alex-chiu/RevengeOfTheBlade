@@ -26,6 +26,11 @@ class Stage5Win extends Phaser.Scene {
       finalBossButton.on('pointerdown', () => {
         this.scene.stop('Stage5');
         this.scene.stop('Stage5Win');
+        robot1Move.stop();
+        robot2Move.stop();
+        laserE.stop();
+        laserR.stop();
+        laserL.stop();
         this.scene.start('RobotBossFight');
       });
 
@@ -34,6 +39,11 @@ class Stage5Win extends Phaser.Scene {
       menuButton.on('pointerdown', () => {
         this.scene.stop('Stage5');
         this.scene.stop('Stage5Win');
+        robot1Move.stop();
+        robot2Move.stop();
+        laserE.stop();
+        laserR.stop();
+        laserL.stop();
         this.scene.start('MenuStage5C');
       });
     }

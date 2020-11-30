@@ -261,12 +261,16 @@ class Stage1Boss extends Phaser.Scene {
     update() {
         // Scene End Condition
         if (!swordAlive && !dagsAlive) {
+            trex.disableBody(true, true);
+            trexAlive = false;
+            trexMove.stop();
+            soundtrack1.stop();
             this.scene.pause('Stage1Boss');
             this.scene.launch('Stage1BossWin');
-            soundtrack1.stop();
-            trexMove.stop();
+
         }
         else if (!playerAlive) {
+            trexMove.stop();
             this.scene.pause('Stage1Boss');
             this.scene.launch('Stage1BossDie');
             soundtrack1.stop();
@@ -462,6 +466,7 @@ class Stage1Boss extends Phaser.Scene {
 
     pickupLoot(player, swordLoot) {
         swordLoot.disableBody(true, true);
+        trexMove.stop();
         swordAlive = false;
     }
 

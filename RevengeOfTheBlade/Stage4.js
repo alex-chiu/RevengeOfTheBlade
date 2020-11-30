@@ -330,13 +330,15 @@ class Stage4 extends Phaser.Scene {
     update() {
         // Scene End Condition
         if (!policeAlive && !carAlive && !politicianAlive) {
+            protest.stop();
+            city.stop();
             this.scene.pause('Stage4');
             this.scene.launch('Stage4Win');
             soundtrack4.stop();
-            protest.stop();
-            city.stop();
         }
         else if (!playerAlive) {
+            protest.stop();
+            city.stop();
             this.scene.pause('Stage4');
             this.scene.launch('Stage4Die');
             soundtrack4.stop();

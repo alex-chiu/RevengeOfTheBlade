@@ -24,6 +24,12 @@ class Stage4BossDie extends Phaser.Scene {
       tryAgainButton.setInteractive();
       tryAgainButton.on('pointerdown', () => {
         this.scene.restart('Stage4Boss');
+        tankMove.stop();
+        shooting.stop();
+        warzone.stop();
+        missile1.stop();
+        missile2.stop();
+        tankShoot.stop();
         this.scene.start('Stage4Boss');
       });
 
@@ -32,6 +38,12 @@ class Stage4BossDie extends Phaser.Scene {
       menuButton.on('pointerdown', () => {
         this.scene.restart('Stage4Boss');
         this.scene.stop('Stage4Boss');
+        tankMove.stop();
+        shooting.stop();
+        warzone.stop();
+        missile1.stop();
+        missile2.stop();
+        tankShoot.stop();
         this.scene.start('MenuStage4C');
       });
     }

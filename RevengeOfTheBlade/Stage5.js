@@ -80,7 +80,7 @@ class Stage5 extends Phaser.Scene {
         this.load.audio('laserR', ['assets/audio/soundeffects/Stage5/laser_r.wav']);
         this.load.audio('laserL', ['assets/audio/soundeffects/Stage5/laser_l.mp3']);
         this.load.audio('robotMove', ['assets/audio/soundeffects/Stage5/robot_move.wav']);
-        
+
         // Enemy Spritesheets
         this.load.spritesheet('enemy1', 'assets/sprites/robot1.png', { frameWidth: 167, frameHeight: 280 });
         this.load.spritesheet('enemy2', 'assets/sprites/robot2.png', { frameWidth: 133, frameHeight: 195 });
@@ -122,7 +122,7 @@ class Stage5 extends Phaser.Scene {
 
         // Play background music
         soundtrack5 = this.sound.add('stage5Music', {volume: 0.35, loop: true});
-        soundtrack5.play(); 
+        soundtrack5.play();
 
         // Enemy sound effects
         robot1Move = this.sound.add('robotMove', {volume: 0.33, loop: true});
@@ -333,6 +333,8 @@ class Stage5 extends Phaser.Scene {
         }
         else if (!playerAlive) {
             soundtrack5.stop();
+            robot1Move.stop();
+            robot2Move.stop();
             this.scene.pause('Stage5');
             this.scene.launch('Stage5Die')
         }

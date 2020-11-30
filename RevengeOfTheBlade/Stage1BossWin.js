@@ -26,6 +26,7 @@ class Stage1BossWin extends Phaser.Scene {
       tryAgainButton.on('pointerdown', () => {
         this.scene.restart('Stage1Boss');
         this.scene.stop('Stage1Boss');
+        trexMove.stop();
         this.scene.start('Storyline2') // change to Stage2 later on
       });
 
