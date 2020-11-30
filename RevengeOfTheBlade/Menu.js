@@ -99,6 +99,7 @@ class Menu extends Phaser.Scene {
         soundtrack.stop();
         this.scene.stop('Menu');
         this.scene.start('StorylineT');
+        this.textures.remove('pad')
       });
       tutorialButton.on('pointerover', () => { this.buttonOver(tutorialButton); });
       tutorialButton.on('pointerout', () => { this.buttonNotOver(tutorialButton); });
@@ -111,6 +112,7 @@ class Menu extends Phaser.Scene {
         soundtrack.stop();
         this.scene.stop('Menu');
         this.scene.start('Storyline0');
+        this.textures.remove('pad')
       });
       playButton.on('pointerover', () => { this.buttonOver(playButton); });
       playButton.on('pointerout', () => { this.buttonNotOver(playButton); });
@@ -123,6 +125,7 @@ class Menu extends Phaser.Scene {
         soundtrack.stop();
         this.scene.stop('Menu');
         this.scene.start('EndCredits');
+        this.textures.remove('pad')
       });
       creditButton.on('pointerover', () => { this.buttonOver(creditButton); });
       creditButton.on('pointerout', () => { this.buttonNotOver(creditButton); });
@@ -181,5 +184,7 @@ class Menu extends Phaser.Scene {
 
     update() {
       clouds.tilePositionX -= 0.9;
+
+      
     }
 }
