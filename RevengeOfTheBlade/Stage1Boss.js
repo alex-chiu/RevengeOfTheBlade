@@ -190,17 +190,6 @@ class Stage1Boss extends Phaser.Scene {
         this.physics.add.collider(playerArm, platforms);
         this.physics.add.collider(playerArmFinal, platforms);
 
-        // temporary buttons
-        button1B = this.add.text(50, 50, '> travel to: MODERN ERA', { fontSize: '20px', fill: '#b5dbf7' });
-        button1B.setInteractive();
-        button1B.on('pointerdown', () => {
-          //soundtrack5.stop();
-          soundtrack1.stop();
-          trexMove.stop();
-          this.scene.stop('Stage1Boss');
-          this.scene.start('Storyline2');
-        });
-
         // SCENE SPECIFIC GAME OBJECTS
 
         // Reset Values

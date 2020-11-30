@@ -308,17 +308,6 @@ class Stage5 extends Phaser.Scene {
         this.physics.add.overlap(enemy1, pf5);
         this.physics.add.overlap(enemy2, pf5);
 
-
-        // temporary button
-        button = this.add.text(50, 50, '> combat: FUTURE ERA BOSS', { fontSize: '20px', fill: '#b5dbf7' });
-        button.setInteractive();
-        button.on('pointerdown', () => {
-          soundtrack5.stop();
-          robot1Move.stop();
-          robot2Move.stop();
-          this.scene.stop('Stage5');
-          this.scene.start('RobotBossFight');
-        });
     }
 
     // Constantly Updating Game Loop

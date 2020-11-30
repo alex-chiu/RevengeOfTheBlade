@@ -234,17 +234,6 @@ class Stage4Boss extends Phaser.Scene {
         this.physics.add.collider(playerArm, platforms);
         this.physics.add.collider(playerArmFinal, platforms);
 
-        // temporary buttons
-        buttonB4 = this.add.text(50, 50, 'travel to: FUTURE ERA', { fontSize: '10px', fill: '#b5dbf7' });
-        buttonB4.setInteractive();
-        buttonB4.on('pointerdown', () => {
-          soundtrack4.stop();
-          shooting.stop();
-          warzone.stop();
-          tankMove.stop();
-          this.scene.stop('Stage4Boss');
-          this.scene.start('Storyline3');
-        });
 
         // SCENE SPECIFIC GAME OBJECTS
 
