@@ -9,7 +9,7 @@
 var playButton, tutorialButton, creditButton, audioButton;
 var soundState = 'off';
 var buttonSound, soundtrack;
-var clouds;
+var clouds, titleback;
 var source, canvas, ctx, imageData;
 
 class Menu extends Phaser.Scene {
@@ -25,6 +25,8 @@ class Menu extends Phaser.Scene {
       this.load.image('heroStatic', 'assets/sprites/hero.png');
       this.load.image('pixel', 'assets/16x16.png');
       this.load.audio('buttonSound', ['assets/audio/soundeffects/button3.wav']);
+      this.load.image('title', 'assets/title.png');
+      this.load.image('titleback', 'assets/titleback.png');
     }
 
     create() {
@@ -34,7 +36,10 @@ class Menu extends Phaser.Scene {
 
       // Background
       this.add.tileSprite(400, 300, 800, 600, 'sky0');
+      
       clouds = this.add.tileSprite(400, 300, 800, 600, 'clouds1');
+      titleback = this.add.tileSprite(400, 300, 800, 600, 'titleback');
+      this.add.tileSprite(400, 300, 800, 600, 'title');
 
       var source = this.textures.get('heroStatic').source[0].image;
       canvas = this.textures.createCanvas('pad', 125, 227).source[0].image;
@@ -88,8 +93,8 @@ class Menu extends Phaser.Scene {
           }
       }
       // Title
-      this.add.text(80,90,'Revenge of The', { fontSize: '75px', fill: '#ffffff'});
-      this.add.text(280,170,'Blade', { fontSize: '75px', fill: '#ffffff' });
+      // this.add.text(80,90,'Revenge of The', { fontSize: '75px', fill: '#ffffff'});
+      // this.add.text(280,170,'Blade', { fontSize: '75px', fill: '#ffffff' });
 
       // Play tutorial
       tutorialButton = this.add.text(310, 300, 'TUTORIAL', { fontSize: '35px', fill: '#b5dbf7' });
@@ -184,6 +189,7 @@ class Menu extends Phaser.Scene {
 
     update() {
       clouds.tilePositionX -= 1;
+      titleback.tilePositionX += 8;
 
       
     }
