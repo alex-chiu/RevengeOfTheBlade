@@ -183,7 +183,7 @@ class Menu extends Phaser.Scene {
     }
 
     update() {
-      clouds.tilePositionX -= 0.9;
+      clouds.tilePositionX -= 1;
 
       
     }

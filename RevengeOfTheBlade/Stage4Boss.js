@@ -1296,6 +1296,9 @@ class Missile4 extends Phaser.Physics.Arcade.Sprite {
             player.setVisible(false);
             playerAlive = false;
             soundtrack4.stop();
+            // warzone.stop();
+            // shooting.stop();
+            // tankMove.stop();
         }
     }
 
