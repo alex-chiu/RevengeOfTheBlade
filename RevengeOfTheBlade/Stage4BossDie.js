@@ -20,7 +20,7 @@ class Stage4BossDie extends Phaser.Scene {
 
       this.add.text(game.config.width/2, 220,'YOU DIED', { fontSize: '55px', fill: '#ffffff' }).setOrigin(0.5);
 
-      const tryAgainButton = this.add.text(game.config.width/2, 360, '> revive & try again <', { fontSize: '35px', fill: '#b5dbf7' }).setOrigin(0.5);
+      const tryAgainButton = this.add.text(game.config.width/2, 360, '> Revive & Try Again <', { fontSize: '35px', fill: '#b5dbf7' }).setOrigin(0.5);
       tryAgainButton.setInteractive();
       tryAgainButton.on('pointerdown', () => {
         this.scene.restart('Stage4Boss');

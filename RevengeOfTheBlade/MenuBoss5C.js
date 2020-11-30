@@ -3,7 +3,7 @@
     Has options for entering the tutorial or starting stage2.
 */
 
-var ironlevelButton, tutorialButton, audioButton;
+var ironlevelButton, tutorialButton, audioButton, creditButtonGC;
 var soundState = 'off';
 
 class MenuBoss5C extends Phaser.Scene {
@@ -61,6 +61,47 @@ class MenuBoss5C extends Phaser.Scene {
       });
       audioButton.on('pointerover', () => { this.buttonOver(audioButton); });
       audioButton.on('pointerout', () => { this.buttonNotOver(audioButton); });
+
+      // View Game Credits
+      creditButtonGC = this.add.text(340, 268, 'CREDITS', { fontSize: '25px', fill: '#8db9d9' });
+      creditButtonGC.setInteractive();
+      creditButtonGC.on('pointerdown', () => {
+        buttonSound.play();
+        this.scene.stop('MenuBoss5C');
+        this.scene.start('EndCreditsGC');
+      });
+      creditButtonGC.on('pointerover', () => { this.buttonOver(creditButtonGC); });
+      creditButtonGC.on('pointerout', () => { this.buttonNotOver(creditButtonGC); });
+    }
+
+    buttonOver(button) {
+      if (button == playButton) {
+        playButton.setStyle({fill:'#37F121'});
+      }
+      if (button == tutorialButton) {
+        tutorialButton.setStyle({fill:'#37F121'});
+      }
+      if (button == creditButtonGC) {
+        creditButtonGC.setStyle({fill:'#37F121'});
+      }
+      if (button == audioButton) {
+        audioButton.setStyle({fill:'#37F121'});
+      }
+    }
+
+    buttonNotOver(button) {
+      if (button == playButton) {
+        playButton.setStyle({fill:'#8db9d9'})
+      }
+      if (button == tutorialButton) {
+        tutorialButton.setStyle({fill:'#8db9d9'});
+      }
+      if (button == creditButtonGC) {
+        creditButtonGC.setStyle({fill:'#8db9d9'});
+      }
+      if (button == audioButton) {
+        audioButton.setStyle({fill:'#8db9d9'});
+      }
     }
 
     switchSound() {
@@ -74,29 +115,6 @@ class MenuBoss5C extends Phaser.Scene {
       }
     }
 
-    buttonOver(button) {
-      if (button == ironlevelButton) {
-        ironlevelButton.setStyle({fill:'#fffb00'});
-      }
-      if (button == tutorialButton) {
-        tutorialButton.setStyle({fill:'#fffb00'});
-      }
-      if (button == audioButton) {
-        audioButton.setStyle({fill:'#fffb00'});
-      }
-    }
-
-    buttonNotOver(button) {
-      if (button == ironlevelButton) {
-        ironlevelButton.setStyle({fill:'#02a3d9'})
-      }
-      if (button == tutorialButton) {
-        tutorialButton.setStyle({fill:'#8db9d9'});
-      }
-      if (button == audioButton) {
-        audioButton.setStyle({fill:'#8db9d9'});
-      }
-    }
 
     update() {
 

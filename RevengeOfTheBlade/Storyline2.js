@@ -27,7 +27,7 @@ class Storyline2 extends Phaser.Scene {
 
       opendoor = this.sound.add('opendoor', {volume: 0.35});
 
-      script = '✉ Incoming message ✉ \nWell done, Agent. You have survived Earth\'s prehistoric age. \nWeapon material: Upgraded from [ STONE ] to [ IRON ] to [ STEEL ] \nRange ATK DMG: 8 // Melee ATK DMG: 15 \nHealth restored and injuries treated \n\n\n⍟ COORDINATES ⍟\n\nNorth America, Earth \nA.D. 2020 [Digital Age] \n\nCommencing time travel \n\n▁▁▁▂▂▂▃▃▃▃▄▄▄▅▅▅▆▆▆▇▇▇███\n\nMessage: The next part of the mission is to defeat foes of Earth\'s modern era, a period of great social and political unrest. You will need to defend civilians caught in the crossfire.\n\n▋▋▋▋▋▋▋▋▋▋ ARRIVED ▋▋▋▋▋▋▋▋▋▋'
+      script = '✉ Incoming Message ✉ \nWell done, Agent. You have survived Earth\'s prehistoric age. \nWeapon: Upgraded from [ STONE ] to [ IRON ] to [ STEEL ] \nRange ATK DMG: 8 // Melee ATK DMG: 15 \nHealth restored and injuries treated \n\n\n⍟ COORDINATES ⍟\n\nNorth America, Earth \nA.D. 2020 [Digital Age] \n\nCommencing time travel \n\n▁▁▁▂▂▂▃▃▃▃▄▄▄▅▅▅▆▆▆▇▇▇███\n\nMessage: In this era you must defeat foes of Earth\'s modern era, a period of great social and political unrest. You need to protect civilians caught in the crossfire.\n\n▋▋▋▋▋▋▋▋▋▋ ARRIVED ▋▋▋▋▋▋▋▋▋▋'
       this.label = this.add.text(60, 60, '', { fontSize: '17px', fill: '#37F121'}).setWordWrapWidth(645);
       this.typewriteText(script);
       ENTER = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
@@ -47,11 +47,11 @@ class Storyline2 extends Phaser.Scene {
           ++i
         },
         repeat: length -1,
-        delay: 45
+        delay: 30
       })
 
       this.time.addEvent({
-          delay: 6000,
+          delay: 30 * text.length + 1000,
           callback: () => {
               enterText.visible = true;
           }

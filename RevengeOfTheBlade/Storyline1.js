@@ -41,11 +41,11 @@ class Storyline1 extends Phaser.Scene {
           ++i
         },
         repeat: length -1,
-        delay: 40
+        delay: 30
       })
 
       this.time.addEvent({
-          delay: 40 * text.length + 1000,
+          delay: 30 * text.length + 1000,
           callback: () => {
               enterText.visible = true;
           }
