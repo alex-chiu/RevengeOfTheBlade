@@ -40,7 +40,7 @@ var dirH = 1;
 var dirH2 = 1;
 var lootCounter1 = 0, lootCounter1H = 0, lootCounter1T = 0;
 
-var delX0;
+var delXT;
 
 var swordLoot;
 var daggerLoot;
@@ -433,16 +433,16 @@ class Stage4Boss extends Phaser.Scene {
             tank.anims.play('tankLeft');
         }
         else {
-            delX0 = tank.body.position.x - player.body.position.x;
+            //delXT = tank.body.position.x - player.body.position.x;
 
             // TANK: shoot if close, else keep moving left /  right
             // Player is left of Tank
             if (player.body.position.x < tank.body.position.x) {
-                if (delX0 > 110) {
+                if (delXT > 110) {
                     tank.anims.play('tankLeft', true);
                     tank.setVelocityX(-50);
                 }
-                else if (delX0 < 80) {
+                else if (delXT < 80) {
                     tank.anims.play('tankLeft', true);
                     tank.setVelocityX(50);
                 }
@@ -456,11 +456,11 @@ class Stage4Boss extends Phaser.Scene {
             }
             // Player is right of tank
             else if (player.body.position.x > tank.body.position.x) {
-                if (delX0 > -340) {
+                if (delXT > -340) {
                     tank.anims.play('tankRight', true);
                     tank.setVelocityX(-35);
                 }
-                else if (delX0 < -370) {
+                else if (delXT < -370) {
                     tank.anims.play('tankRight', true);
                     tank.setVelocityX(35);
                 }
