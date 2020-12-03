@@ -1,5 +1,4 @@
-/*  STORYLINE SCENE (before Tutorial)
-
+/*  END CREDITS SCENE
 
 */
 

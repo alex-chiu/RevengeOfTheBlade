@@ -97,7 +97,7 @@ class Menu extends Phaser.Scene {
       // this.add.text(280,170,'Blade', { fontSize: '75px', fill: '#ffffff' });
 
       // Play tutorial
-      tutorialButton = this.add.text(310, 300, 'TUTORIAL', { fontSize: '35px', fill: '#b5dbf7' });
+      tutorialButton = this.add.text(315, 317, 'TUTORIAL', { fontSize: '35px', fill: '#9082AF' });
       tutorialButton.setInteractive();
       tutorialButton.on('pointerdown', () => {
         buttonSound.play();
@@ -110,7 +110,7 @@ class Menu extends Phaser.Scene {
       tutorialButton.on('pointerout', () => { this.buttonNotOver(tutorialButton); });
 
       // Play main levels
-      playButton = this.add.text(275, 375, '▸PLAY', { fontSize: '75px', fill: '#8db9d9' });
+      playButton = this.add.text(275, 376, '▸PLAY', { fontSize: '75px', fill: '#A79BC2' });
       playButton.setInteractive();
       playButton.on('pointerdown', () => {
         buttonSound.play();
@@ -123,7 +123,7 @@ class Menu extends Phaser.Scene {
       playButton.on('pointerout', () => { this.buttonNotOver(playButton); });
 
       // View Game Credits
-      creditButton = this.add.text(325, 485, 'CREDITS', { fontSize: '30px', fill: '#8db9d9' });
+      creditButton = this.add.text(328, 485, 'CREDITS', { fontSize: '30px', fill: '#8678A5' });
       creditButton.setInteractive();
       creditButton.on('pointerdown', () => {
         buttonSound.play();
@@ -136,7 +136,7 @@ class Menu extends Phaser.Scene {
       creditButton.on('pointerout', () => { this.buttonNotOver(creditButton); });
 
       // Play Audio
-      audioButton = this.add.text(5, 570, 'audio ☊', { fontSize: '25px', fill: '#8db9d9' });
+      audioButton = this.add.text(5, 570, 'audio ☊', { fontSize: '25px', fill: '#9681C1' });
       audioButton.setInteractive();
       audioButton.on('pointerdown', () => {
         this.switchSound();
@@ -165,31 +165,31 @@ class Menu extends Phaser.Scene {
         tutorialButton.setStyle({fill:'#37F121'});
       }
       if (button == creditButton) {
-        creditButton.setStyle({fill:'#37F121'});
+        creditButton.setStyle({fill:'#7357AD'});
       }
       if (button == audioButton) {
-        audioButton.setStyle({fill:'#37F121'});
+        audioButton.setStyle({fill:'#7357AD'});
       }
     }
 
     buttonNotOver(button) {
       if (button == playButton) {
-        playButton.setStyle({fill:'#8db9d9'})
+        playButton.setStyle({fill:'#A79BC2'})
       }
       if (button == tutorialButton) {
-        tutorialButton.setStyle({fill:'#8db9d9'});
+        tutorialButton.setStyle({fill:'#9082AF'});
       }
       if (button == creditButton) {
-        creditButton.setStyle({fill:'#8db9d9'});
+        creditButton.setStyle({fill:'#8678A5'});
       }
       if (button == audioButton) {
-        audioButton.setStyle({fill:'#8db9d9'});
+        audioButton.setStyle({fill:'#9681C1'});
       }
     }
 
     update() {
       clouds.tilePositionX -= 1;
-      titleback.tilePositionX += 8;
+      titleback.tilePositionX -= 8;
 
       
     }
