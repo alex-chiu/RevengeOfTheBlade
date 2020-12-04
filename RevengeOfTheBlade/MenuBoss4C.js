@@ -40,7 +40,7 @@ class MenuBoss4C extends Phaser.Scene {
       // Title
       titleback = this.add.tileSprite(400, 300, 800, 600, 'titleback');
       this.add.tileSprite(400, 300, 800, 600, 'title');
-      
+
       var source = this.textures.get('heroStatic').source[0].image;
       canvas = this.textures.createCanvas('pad', 125, 227).source[0].image;
       ctx = canvas.getContext('2d');
@@ -74,7 +74,7 @@ class MenuBoss4C extends Phaser.Scene {
             duration: 2000,
             x: dx,
             y: dy,
-            scaleX: 1,              
+            scaleX: 1,
             scaleY: 1,
             angle: 360,
             delay: i / 1.5,
@@ -92,7 +92,7 @@ class MenuBoss4C extends Phaser.Scene {
               y++;
           }
       }
-      
+
       // Play tutorial
       tutorialButton = this.add.text(350, 278, 'TUTORIAL', { fontSize: '20px', fill: '#9082AF' });
       tutorialButton.setInteractive();
@@ -107,7 +107,7 @@ class MenuBoss4C extends Phaser.Scene {
 
 
       // level crosses
-      // level 1 
+      // level 1
       this.add.image(510, 345, 'check');
       // level 2
       this.add.image(540, 435, 'check');
@@ -118,7 +118,7 @@ class MenuBoss4C extends Phaser.Scene {
       // level 2 boss
       this.add.image(483, 460, 'check');
       // level 3 boss
-      this.add.image(460, 539, 'cross');
+      this.add.image(460, 550, 'cross');
 
 
       this.add.text(300,330,'Stone Level', { fontSize: '30px', fill: '#7C5EBF' });

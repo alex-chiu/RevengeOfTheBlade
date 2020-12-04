@@ -36,7 +36,7 @@ class Menu extends Phaser.Scene {
 
       // Background
       this.add.tileSprite(400, 300, 800, 600, 'sky0');
-      
+
       clouds = this.add.tileSprite(400, 300, 800, 600, 'clouds1');
       titleback = this.add.tileSprite(400, 300, 800, 600, 'titleback');
       this.add.tileSprite(400, 300, 800, 600, 'title');
@@ -74,7 +74,7 @@ class Menu extends Phaser.Scene {
             duration: 2000,
             x: dx,
             y: dy,
-            scaleX: 1,              
+            scaleX: 1,
             scaleY: 1,
             angle: 360,
             delay: i / 1.5,
@@ -191,6 +191,6 @@ class Menu extends Phaser.Scene {
       clouds.tilePositionX -= 1;
       titleback.tilePositionX -= 8;
 
-      
+
     }
 }
