@@ -41,7 +41,7 @@ class MenuStage1C extends Phaser.Scene {
       // Title
       titleback = this.add.tileSprite(400, 300, 800, 600, 'titleback');
       this.add.tileSprite(400, 300, 800, 600, 'title');
-      
+
       var source = this.textures.get('heroStatic').source[0].image;
       canvas = this.textures.createCanvas('pad', 125, 227).source[0].image;
       ctx = canvas.getContext('2d');
@@ -75,7 +75,7 @@ class MenuStage1C extends Phaser.Scene {
             duration: 2000,
             x: dx,
             y: dy,
-            scaleX: 1,              
+            scaleX: 1,
             scaleY: 1,
             angle: 360,
             delay: i / 1.5,
@@ -111,8 +111,8 @@ class MenuStage1C extends Phaser.Scene {
       // level 1
       this.add.image(510, 345, 'check');
       // level 2
-      this.add.image(280, 420, 'cross');
-      // level 3 
+      this.add.image(540, 435, 'cross');
+      // level 3
       this.add.image(590, 525, 'cross');
 
       // boss crosses

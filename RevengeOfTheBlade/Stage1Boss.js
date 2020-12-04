@@ -206,6 +206,8 @@ class Stage1Boss extends Phaser.Scene {
         dirDa = 1;
         balloonAlive = true;
         textAlive = true;
+        dagsAlive = true;
+        swordAlive = true;
 
         // Create Enemies
         trex = this.physics.add.sprite(650, 400, 'trex')
