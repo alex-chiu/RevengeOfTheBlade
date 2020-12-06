@@ -100,6 +100,7 @@ class MenuBoss3C extends Phaser.Scene {
         this.soundtrack.stop();
         this.scene.stop('MenuBoss3C');
         this.scene.start('InstructionsB3C');
+        this.textures.remove('pad')
       });
       tutorialButton.on('pointerover', () => { this.buttonOver(tutorialButton); });
       tutorialButton.on('pointerout', () => { this.buttonNotOver(tutorialButton); });
@@ -138,6 +139,7 @@ class MenuBoss3C extends Phaser.Scene {
         this.soundtrack.stop();
         this.scene.stop('MenuBoss3C');
         this.scene.start('Stage4');
+        this.textures.remove('pad')
       });
       stage4Button.on('pointerover', () => { this.buttonOver(stage4Button); });
       stage4Button.on('pointerout', () => { this.buttonNotOver(stage4Button); });

@@ -130,7 +130,7 @@ class Menu extends Phaser.Scene {
         soundtrack.stop();
         this.scene.stop('Menu');
         this.scene.start('EndCredits');
-        this.textures.remove('pad')
+        this.textures.remove('pad');
       });
       creditButton.on('pointerover', () => { this.buttonOver(creditButton); });
       creditButton.on('pointerout', () => { this.buttonNotOver(creditButton); });

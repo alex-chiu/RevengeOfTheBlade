@@ -134,6 +134,7 @@ class MenuBoss5C extends Phaser.Scene {
         buttonSound.play();
         this.scene.stop('MenuBoss5C');
         this.scene.start('EndCreditsGC');
+        this.textures.remove('pad')
       });
       creditButtonGC.on('pointerover', () => { this.buttonOver(creditButtonGC); });
       creditButtonGC.on('pointerout', () => { this.buttonNotOver(creditButtonGC); });
