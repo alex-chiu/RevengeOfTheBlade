@@ -190,6 +190,6 @@ class MenuBoss3C extends Phaser.Scene {
     }
 
     update() {
-
+      titleback.tilePositionX -= 8;
     }
 }

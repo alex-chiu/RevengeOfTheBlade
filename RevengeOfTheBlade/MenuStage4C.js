@@ -185,6 +185,6 @@ class MenuStage4C extends Phaser.Scene {
     }
 
     update() {
-
+      titleback.tilePositionX -= 8;
     }
 }
