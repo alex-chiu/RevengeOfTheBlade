@@ -35,6 +35,7 @@ class Stage1BossWin extends Phaser.Scene {
       menuButton.on('pointerdown', () => {
         this.scene.restart('Stage1Boss');
         this.scene.stop('Stage1Boss');
+        trexMove.stop();
         this.scene.start('MenuBoss1C');
       });
     }
