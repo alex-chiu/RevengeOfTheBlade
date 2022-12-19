@@ -2,7 +2,7 @@
 Code for a side-scrolling, rogue-like platformer game developed for C S 329E, Elements of Game Development.
 
 ## Features
-* Custom-drawn art and assets.
+* Custom-made art, sound and assets.
 * Full projectile and physics system.
 * Different types of enemies, with varying levels of AI difficulty.
 
