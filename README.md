@@ -6,6 +6,9 @@ Code for a side-scrolling, rogue-like platformer game developed for C S 329E, El
 * Full projectile and physics system.
 * Different types of enemies, with varying levels of AI difficulty.
 
+## License
+MIT
+
 ## Contributors:
 
 Alex Chiu - https://github.com/alex-chiu
